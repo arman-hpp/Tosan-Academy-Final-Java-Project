@@ -1,11 +1,9 @@
 package com.tosan.core_banking;
 
-import com.tosan.core_banking.dtos.LoginInputDto;
-import com.tosan.core_banking.dtos.RegisterInputDto;
+import com.tosan.core_banking.dtos.*;
 import com.tosan.core_banking.exceptions.BankException;
-import com.tosan.model.User;
-import com.tosan.model.UserTypes;
-import com.tosan.repository.UserRepository;
+import com.tosan.model.*;
+import com.tosan.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 

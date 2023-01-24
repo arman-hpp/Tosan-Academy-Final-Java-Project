@@ -23,16 +23,16 @@ public class CustomerController {
         }
 
         if(customerNo != null) {
-            List<CustomerDto> users = new ArrayList<>();
-            users.add(new CustomerDto(2L,1L, "Arash", "HAA", "Babol"));
+            List<CustomerOutputDto> users = new ArrayList<>();
+            users.add(new CustomerOutputDto(2L,1L, "Arash", "HAA", "Babol"));
             model.addAttribute("customerList", users);
-            model.addAttribute("searchCustomerInputsDto", new SearchCustomerInputsDto(customerNo));
+            model.addAttribute("searchCustomerInputsDto", new SearchCustomerInputDto(customerNo));
         } else {
-            List<CustomerDto> users = new ArrayList<>();
-            users.add(new CustomerDto(1L,0L,"Arman", "Arian", "Babol"));
-            users.add(new CustomerDto(2L, 1L,"Arash", "HAA", "Babol"));
+            List<CustomerOutputDto> users = new ArrayList<>();
+            users.add(new CustomerOutputDto(1L,0L,"Arman", "Arian", "Babol"));
+            users.add(new CustomerOutputDto(2L, 1L,"Arash", "HAA", "Babol"));
             model.addAttribute("customerList", users);
-            model.addAttribute("searchCustomerInputsDto", new SearchCustomerInputsDto());
+            model.addAttribute("searchCustomerInputsDto", new SearchCustomerInputDto());
         }
 
         return "customer";
@@ -70,7 +70,7 @@ public class CustomerController {
     }
 
     @PostMapping("/searchCustomer")
-    public String searchSubmit(@ModelAttribute SearchCustomerInputsDto searchCustomerInputsDto, Model model) {
+    public String searchSubmit(@ModelAttribute SearchCustomerInputDto searchCustomerInputsDto, Model model) {
         return "redirect:/customer/index?customerNo=" + searchCustomerInputsDto.getCustomerNo().toString();
     }
 }

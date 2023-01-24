@@ -9,10 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CustomerDto extends BaseDto {
-    private Long id;
+public class SearchCustomerInputDto extends BaseDto {
     private Long customerNo;
-    private String firstName;
-    private String lastName;
-    private String address;
 }
