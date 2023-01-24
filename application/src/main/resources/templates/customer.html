@@ -6,19 +6,20 @@
 </head>
 <body>
     <div th:fragment="content">
+      <p th:text="${param.error}"></p>
 
-      <form action="#" th:action="@{/customer}" th:object="${customerInputDto}" method="post">
+      <form action="#" th:action="@{/customer/addCustomer}" th:object="${customerInputDto}" method="post">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
           <div class="col-4">
             <div class="mb-3">
               <label for="firstname" class="form-label">First Name</label>
-              <input type="text" class="form-control" id="firstname" placeholder="First Name" th:field="*{firstName}" required>
+              <input type="text" class="form-control" id="firstname" placeholder="First Name" th:field="*{firstName}" required />
             </div>
           </div>
           <div class="col-4">
             <div class="mb-3">
               <label for="lastname" class="form-label">Last Name</label>
-              <input type="text" class="form-control" id="lastname" placeholder="Last Name" th:field="*{lastName}" required>
+              <input type="text" class="form-control" id="lastname" placeholder="Last Name" th:field="*{lastName}" required />
             </div>
           </div>
         </div>
@@ -27,7 +28,7 @@
           <div class="col-8">
             <div class="mb-3">
               <label for="address" class="form-label">Address</label>
-              <input type="text" class="form-control" id="address" placeholder="Address" th:field="*{address}">
+              <input type="text" class="form-control" id="address" placeholder="Address" th:field="*{address}" />
             </div>
           </div>
         </div>
@@ -36,12 +37,21 @@
           <div class="col-2">
             <button class="btn btn-primary" type="submit">Save</button>
           </div>
-
-          <p th:text="${param.error}"></p>
         </div>
       </form>
 
-      <form action="#" th:action="@{/customer}" th:object="${customerInputDto}" method="post">
+      <form action="#" th:action="@{/customer/searchCustomer}" th:object="${searchCustomerInputsDto}" method="post">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+          <div class="col-auto">
+            <label for="search-input" class="visually-hidden">Search By CustomerNo</label>
+            <input type="text" class="form-control" id="search-input" placeholder="CustomerNo" th:field="*{customerNo}">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">Search</button>
+          </div>
+        </div>
+      </form>
+
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
         <table class="table table-striped">
           <thead>
@@ -60,13 +70,20 @@
             <td class="align-middle" th:text="${customer.firstName}"></td>
             <td class="align-middle" th:text="${customer.lastName}"></td>
             <td class="align-middle" th:text="${customer.address}"></td>
-            <td><a th:href="@{/edit/{id}(id=${customer.id})}">Edit</a></td>
-            <td><a th:href="@{/delete/{id}(id=${customer.id})}">Delete</a></td>
+            <td>
+              <form method="POST" th:action="@{/customer/editCustomer/{id}(id=${customer.id})}">
+                <button class="btn btn-primary btn-sm" type="submit">Edit</button>
+              </form>
+            </td>
+            <td>
+              <form method="POST" th:action="@{/customer/deleteCustomer/{id}(id=${customer.id})}">
+                <button class="btn btn-secondary btn-sm" type="submit">Delete</button>
+              </form>
+            </td>
           </tr>
           </tbody>
         </table>
       </div>
-      </form>
     </div>
 </body>
 </html>

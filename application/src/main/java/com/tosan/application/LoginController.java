@@ -1,5 +1,6 @@
 package com.tosan.application;
 
+import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.UserService;
 import com.tosan.core_banking.dtos.LoginInputDto;
 import com.tosan.core_banking.exceptions.BankException;
@@ -8,8 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller("/auth")
+@Controller
+@Layout(value = Layout.NONE)
+@RequestMapping(("/auth"))
 public class LoginController {
     private final UserService _userService;
 
