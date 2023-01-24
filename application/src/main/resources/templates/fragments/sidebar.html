@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sidebar</title>
+</head>
+<body>
+<nav th:fragment="sidebar" id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse overflow-auto">
+    <div class="position-sticky pt-3 flex-shrink-0 p-3">
+        <div class="d-flex text-muted pb-3">
+            <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="48" height="48" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 64x64" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <title>Placeholder</title>
+                <rect width="100%" height="100%" fill="#007bff"></rect>
+                <text x="50%" y="50%" fill="#007bff" dy=".3em">64x64</text>
+            </svg>
+            <div class="mb-0 w-100 pt-1">
+                <div class="d-flex justify-content-between">
+                    <strong class="text-gray-dark">Full Name</strong>
+                </div>
+                <a class="nav-link dropdown-toggle p-0 m-0" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> @username </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="#">Profile</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">Books</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">Invoices</a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">Administration</a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">Sign out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <a href="/" class="d-flex align-items-center pb-2 mb-2 link-dark text-decoration-none border-bottom">
+            <span class="fs-5 fw-semibold">Categories</span>
+        </a>
+        <ul class="list-unstyled ps-0">
+            <li class="mb-1">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false"> Home </button>
+                <div class="collapse" id="home-collapse" style="">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li>
+                            <a href="#" class="link-dark rounded">Overview</a>
+                        </li>
+                        <li>
+                            <a href="#" class="link-dark rounded">Updates</a>
+                        </li>
+                        <li>
+                            <a href="#" class="link-dark rounded">Reports</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-1">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false"> Dashboard </button>
+                <div class="collapse" id="dashboard-collapse">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li>
+                            <a href="#" class="link-dark rounded">Overview</a>
+                        </li>
+                        <li>
+                            <a href="#" class="link-dark rounded">Weekly</a>
+                        </li>
+                        <li>
+                            <a href="#" class="link-dark rounded">Monthly</a>
+                        </li>
+                        <li>
+                            <a href="#" class="link-dark rounded">Annually</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-1">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false"> Orders </button>
+                <div class="collapse" id="orders-collapse">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li>
+                            <a href="#" class="link-dark rounded">New</a>
+                        </li>
+                        <li>
+                            <a href="#" class="link-dark rounded">Processed</a>
+                        </li>
+                        <li>
+                            <a href="#" class="link-dark rounded">Shipped</a>
+                        </li>
+                        <li>
+                            <a href="#" class="link-dark rounded">Returned</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="border-top my-3"></li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>

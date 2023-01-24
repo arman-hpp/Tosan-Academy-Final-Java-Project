@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    Login
+    <form action="#" th:action="@{/login}" th:object="${loginInputDto}" method="post">
+        <input type="text" id="username" class="form-control" placeholder="Username" th:field="*{username}"
+               autocomplete="username" spellcheck="false" autocapitalize="none"  tabindex="1"
+               aria-label="Username"
+               required />
+        <input type="password" id="password" class="form-control" placeholder="Password" th:field="*{password}"
+               autocomplete="current-password" spellcheck="false" autocapitalize="none" tabindex="2"
+               aria-label="Password" required/>
+        <button type="submit" class="btn btn-outline-success btn-block mb-4">Sign In</button>
+        <p th:text="${param.error}"></p>
+    </form>
+</body>
+</html>
