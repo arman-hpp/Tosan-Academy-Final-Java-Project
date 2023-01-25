@@ -3,6 +3,9 @@ package com.tosan.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -17,4 +20,7 @@ public class User extends BaseEntity {
     @Column(name = "user_type", nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private UserTypes userType;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Transaction> transactions = new HashSet<>();
 }

@@ -10,4 +10,6 @@ public interface TransactionRepository extends BaseRepository<Transaction, Long>
     List<Transaction> findTop5ByAccountIdOrderByRegDateDesc(Long accountId);
 
     List<Transaction> findTop5ByOrderByRegDateDesc();
+
+    List<Transaction> findByUserIdOrderByRegDateDesc(Long userId);
 }

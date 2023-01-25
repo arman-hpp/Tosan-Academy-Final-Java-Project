@@ -55,6 +55,16 @@ public class TransactionService {
         return outputDto;
     }
 
+    public List<TransactionDto> loadLastBranchTransactions(Long userId) {
+        var transactions = _transactionRepository.findByUserIdOrderByRegDateDesc(userId);
+        var outputDto = new ArrayList<TransactionDto>();
+        for(var transaction : transactions) {
+            outputDto.add(_modelMapper.map(transaction, TransactionDto.class));
+        }
+
+        return outputDto;
+    }
+
     @Transactional
     public void doTransaction(TransactionDto inputDto) {
         var account = _accountRepository.findById(inputDto.getAccountId()).orElse(null);
