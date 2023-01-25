@@ -6,6 +6,6 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SearchCustomerInputDto extends BaseDto {
+public class CustomerSearchInputDto extends BaseDto {
     private Long id;
 }

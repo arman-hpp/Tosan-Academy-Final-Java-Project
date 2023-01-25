@@ -8,9 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Controller
 @RequestMapping("/customer")
 @Layout(title = "Customers", value = "layouts/default")
@@ -25,15 +22,28 @@ public class CustomerController {
     public String customerForm(@RequestParam(required = false) Long id, Model model) {
         if(id != null) {
             var foundCustomer = _customerService.loadCustomer(id);
-            model.addAttribute("customerInputs", foundCustomer);
+            model.addAttribute("customerInputs", new CustomerDto());
             model.addAttribute("customerOutputs", foundCustomer);
-            model.addAttribute("customerSearchInputs", new SearchCustomerInputDto(id));
+            model.addAttribute("customerSearchInputs", new CustomerSearchInputDto(id));
         } else {
             var customers = _customerService.loadCustomers();
             model.addAttribute("customerInputs", new CustomerDto());
             model.addAttribute("customerOutputs", customers);
-            model.addAttribute("customerSearchInputs", new SearchCustomerInputDto());
+            model.addAttribute("customerSearchInputs", new CustomerSearchInputDto());
         }
+
+        return "customer";
+    }
+
+    @GetMapping("/index/{id}")
+    public String customerFormById(@PathVariable Long id, Model model) {
+        var foundCustomer = _customerService.loadCustomer(id);
+        model.addAttribute("customerInputs", foundCustomer);
+
+        var customers = _customerService.loadCustomers();
+        model.addAttribute("customerOutputs", customers);
+
+        model.addAttribute("customerSearchInputs", new CustomerSearchInputDto());
 
         return "customer";
     }
@@ -70,11 +80,11 @@ public class CustomerController {
 
     @PostMapping("/editCustomer/{id}")
     public String editSubmit(@PathVariable Long id) {
-        return "redirect:/customer/index?id=" + id.toString();
+        return "redirect:/customer/index/" + id.toString();
     }
 
     @PostMapping("/searchCustomer")
-    public String searchSubmit(@ModelAttribute SearchCustomerInputDto searchCustomerInputsDto, Model model) {
+    public String searchSubmit(@ModelAttribute CustomerSearchInputDto searchCustomerInputsDto, Model model) {
         return "redirect:/customer/index?id=" + searchCustomerInputsDto.getId().toString();
     }
 }
