@@ -18,4 +18,5 @@ public final class TransactionDto extends BaseDto {
     private LocalDateTime regDate;
     private String description;
     private Long accountId;
+    private Long userId;
 }
