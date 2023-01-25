@@ -51,12 +51,12 @@ public class CustomerController {
 
     @GetMapping("/index/{id}")
     public String customerFormById(@PathVariable String id, Model model) {
-        try {
-            var idLong = Convertors.tryParseLong(id, -1L);
-            if(idLong <= 0) {
-                return "redirect:/customer/index?error=Invalid+input+parameters";
-            }
+        var idLong = Convertors.tryParseLong(id, -1L);
+        if(idLong <= 0) {
+            return "redirect:/customer/index?error=Invalid+input+parameters";
+        }
 
+        try {
             var foundCustomer = _customerService.loadCustomer(idLong);
             model.addAttribute("customerInputs", foundCustomer);
 
@@ -93,9 +93,14 @@ public class CustomerController {
     }
 
     @PostMapping("/deleteCustomer/{id}")
-    public String deleteSubmit(@PathVariable Long id) {
+    public String deleteSubmit(@PathVariable String id) {
+        var idLong = Convertors.tryParseLong(id, -1L);
+        if(idLong <= 0) {
+            return "redirect:/customer/index?error=Invalid+input+parameters";
+        }
+
         try {
-            _customerService.removeCustomer(id);
+            _customerService.removeCustomer(idLong);
 
             return "redirect:/customer/index";
         }
@@ -108,8 +113,13 @@ public class CustomerController {
     }
 
     @PostMapping("/editCustomer/{id}")
-    public String editSubmit(@PathVariable Long id) {
-        return "redirect:/customer/index/" + id.toString();
+    public String editSubmit(@PathVariable String id) {
+        var idLong = Convertors.tryParseLong(id, -1L);
+        if(idLong <= 0) {
+            return "redirect:/customer/index?error=Invalid+input+parameters";
+        }
+
+        return "redirect:/customer/index/" + idLong;
     }
 
     @PostMapping("/searchCustomer")
