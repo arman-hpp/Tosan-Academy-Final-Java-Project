@@ -19,25 +19,33 @@ public class UserService {
         this._modelMapper = modelMapper;
     }
 
-    public Long login(LoginInputDto loginInputDto) {
-        var user = _userRepository.findByUsername(loginInputDto.getUsername()).orElse(null);
+    public void login(UserLoginInputDto inputDto) {
+        var user = _userRepository.findByUsername(inputDto.getUsername()).orElse(null);
         if(user == null)
             throw new BankException("user not found!");
 
-        if (!Objects.equals(user.getPassword(), loginInputDto.getPassword()))
+        if (!Objects.equals(user.getPassword(), inputDto.getPassword()))
             throw new BankException("username or password is invalid");
-
-        return user.getId();
     }
 
-    public User register(RegisterInputDto registerInputDto) {
-        if(_userRepository.findByUsername(registerInputDto.getUsername()).orElse(null) != null)
+    public void register(UserRegisterInputDto inputDto) {
+        if(_userRepository.findByUsername(inputDto.getUsername()).orElse(null) != null)
             throw new BankException("the user is exists. choose new username");
 
-        var user = _modelMapper.map(registerInputDto, User.class);
+        var user = _modelMapper.map(inputDto, User.class);
         user.setUserType(UserTypes.User);
         _userRepository.save(user);
+    }
 
-        return user;
+    public void changePassword(UserChangePasswordInputDto inputDto) {
+        var user = _userRepository.findByUsername(inputDto.getUsername()).orElse(null);
+        if(user == null)
+            throw new BankException("user not found!");
+
+        if (!Objects.equals(user.getPassword(), inputDto.getOldPassword()))
+            throw new BankException("password is invalid");
+
+        user.setPassword(inputDto.getNewPassword());
+        _userRepository.save(user);
     }
 }

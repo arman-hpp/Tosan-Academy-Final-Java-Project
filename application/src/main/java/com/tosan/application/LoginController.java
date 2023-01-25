@@ -2,7 +2,7 @@ package com.tosan.application;
 
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.services.UserService;
-import com.tosan.core_banking.dtos.LoginInputDto;
+import com.tosan.core_banking.dtos.UserLoginInputDto;
 import com.tosan.core_banking.exceptions.BankException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,13 +23,13 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginForm(Model model) {
-        model.addAttribute("loginInputDto", new LoginInputDto());
+        model.addAttribute("loginInputDto", new UserLoginInputDto());
 
         return "login";
     }
 
     @PostMapping("/login")
-    public String loginSubmit(@ModelAttribute LoginInputDto loginInputDto, Model model) {
+    public String loginSubmit(@ModelAttribute UserLoginInputDto loginInputDto, Model model) {
         try {
             _userService.login(loginInputDto);
 
