@@ -1,7 +1,7 @@
 package com.tosan.application;
 
 import com.tosan.application.extensions.thymeleaf.Layout;
-import com.tosan.core_banking.CustomerService;
+import com.tosan.core_banking.services.CustomerService;
 import com.tosan.core_banking.dtos.*;
 import com.tosan.core_banking.exceptions.BankException;
 import org.springframework.stereotype.Controller;

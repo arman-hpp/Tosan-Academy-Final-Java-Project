@@ -1,6 +1,7 @@
 package com.tosan.core_banking.dtos;
 
 import com.tosan.model.TransactionTypes;
+
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TransactionDto extends BaseDto {
+public final class TransactionDto extends BaseDto {
     private Long id;
     private BigDecimal amount;
     private TransactionTypes transactionType;

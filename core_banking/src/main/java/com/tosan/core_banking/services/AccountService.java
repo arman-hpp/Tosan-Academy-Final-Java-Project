@@ -1,4 +1,4 @@
-package com.tosan.core_banking;
+package com.tosan.core_banking.services;
 
 import com.tosan.core_banking.exceptions.BankException;
 import com.tosan.model.*;

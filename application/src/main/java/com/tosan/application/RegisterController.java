@@ -1,6 +1,6 @@
 package com.tosan.application;
 
-import com.tosan.core_banking.UserService;
+import com.tosan.core_banking.services.UserService;
 import com.tosan.core_banking.dtos.RegisterInputDto;
 import com.tosan.core_banking.exceptions.BankException;
 import org.springframework.stereotype.Controller;

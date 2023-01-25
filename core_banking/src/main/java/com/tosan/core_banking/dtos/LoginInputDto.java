@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class LoginInputDto extends BaseDto {
+public final class LoginInputDto extends BaseDto {
     private String username;
     private String password;
 }

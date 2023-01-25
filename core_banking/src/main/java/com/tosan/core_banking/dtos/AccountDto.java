@@ -1,6 +1,7 @@
 package com.tosan.core_banking.dtos;
 
 import com.tosan.model.*;
+
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AccountDto extends BaseDto {
+public final class AccountDto extends BaseDto {
     private Long id;
     private BigDecimal balance;
     private Currencies currency;
