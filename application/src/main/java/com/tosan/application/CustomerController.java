@@ -61,7 +61,7 @@ public class CustomerController {
     }
 
     @PostMapping("/addCustomer")
-    public String addCustomerSubmit(@ModelAttribute CustomerDto customerDto, Model model) {
+    public String addCustomerSubmit(@ModelAttribute CustomerDto customerDto) {
         try {
             _customerService.addOrEditCustomer(customerDto);
 
@@ -96,7 +96,7 @@ public class CustomerController {
     }
 
     @PostMapping("/searchCustomer")
-    public String searchSubmit(@ModelAttribute CustomerSearchInputDto searchCustomerInputsDto, Model model) {
+    public String searchSubmit(@ModelAttribute CustomerSearchInputDto searchCustomerInputsDto) {
         return "redirect:/customer/index?id=" + searchCustomerInputsDto.getId().toString();
     }
 }

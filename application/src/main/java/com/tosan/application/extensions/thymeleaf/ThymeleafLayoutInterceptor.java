@@ -1,11 +1,9 @@
 package com.tosan.application.extensions.thymeleaf;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 import org.springframework.lang.Nullable;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.*;
 
 public class ThymeleafLayoutInterceptor implements HandlerInterceptor {
     private static final String DEFAULT_LAYOUT = "layouts/default";
@@ -18,7 +16,7 @@ public class ThymeleafLayoutInterceptor implements HandlerInterceptor {
             return;
         }
 
-        String originalViewName = modelAndView.getViewName();
+        var originalViewName = modelAndView.getViewName();
         if(originalViewName == null) {
             return;
         }
