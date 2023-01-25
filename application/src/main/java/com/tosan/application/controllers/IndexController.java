@@ -1,4 +1,4 @@
-package com.tosan.application;
+package com.tosan.application.controllers;
 
 import com.tosan.application.extensions.thymeleaf.Layout;
 import org.springframework.stereotype.Controller;
