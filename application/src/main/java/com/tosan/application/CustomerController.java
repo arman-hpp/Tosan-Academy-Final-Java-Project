@@ -20,32 +20,44 @@ public class CustomerController {
 
     @GetMapping("/index")
     public String customerForm(@RequestParam(required = false) Long id, Model model) {
-        if(id != null) {
-            var foundCustomer = _customerService.loadCustomer(id);
-            model.addAttribute("customerInputs", new CustomerDto());
-            model.addAttribute("customerOutputs", foundCustomer);
-            model.addAttribute("customerSearchInputs", new CustomerSearchInputDto(id));
-        } else {
-            var customers = _customerService.loadCustomers();
-            model.addAttribute("customerInputs", new CustomerDto());
-            model.addAttribute("customerOutputs", customers);
-            model.addAttribute("customerSearchInputs", new CustomerSearchInputDto());
-        }
+        try {
+            if (id != null) {
+                var foundCustomer = _customerService.loadCustomer(id);
+                model.addAttribute("customerInputs", new CustomerDto());
+                model.addAttribute("customerOutputs", foundCustomer);
+                model.addAttribute("customerSearchInputs", new CustomerSearchInputDto(id));
+            } else {
+                var customers = _customerService.loadCustomers();
+                model.addAttribute("customerInputs", new CustomerDto());
+                model.addAttribute("customerOutputs", customers);
+                model.addAttribute("customerSearchInputs", new CustomerSearchInputDto());
+            }
 
-        return "customer";
+            return "customer";
+        } catch (BankException ex) {
+            return "redirect:/customer/index?error=" + ex.getEncodedMessage();
+        } catch (Exception ex) {
+            return "redirect:/customer/index?error=unhandled+error+occurred";
+        }
     }
 
     @GetMapping("/index/{id}")
     public String customerFormById(@PathVariable Long id, Model model) {
-        var foundCustomer = _customerService.loadCustomer(id);
-        model.addAttribute("customerInputs", foundCustomer);
+        try {
+            var foundCustomer = _customerService.loadCustomer(id);
+            model.addAttribute("customerInputs", foundCustomer);
 
-        var customers = _customerService.loadCustomers();
-        model.addAttribute("customerOutputs", customers);
+            var customers = _customerService.loadCustomers();
+            model.addAttribute("customerOutputs", customers);
 
-        model.addAttribute("customerSearchInputs", new CustomerSearchInputDto());
+            model.addAttribute("customerSearchInputs", new CustomerSearchInputDto());
 
-        return "customer";
+            return "customer";
+        } catch (BankException ex) {
+            return "redirect:/customer/index?error=" + ex.getEncodedMessage();
+        } catch (Exception ex) {
+            return "redirect:/customer/index?error=unhandled+error+occurred";
+        }
     }
 
     @PostMapping("/addCustomer")
