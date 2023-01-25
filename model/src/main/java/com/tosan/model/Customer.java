@@ -12,9 +12,6 @@ import java.util.Set;
 @Entity
 @Table(name = "Customers")
 public class Customer extends BaseEntity {
-    @Column(name = "customer_no", nullable = false, unique = true)
-    private Long customerNo;
-
     @Column(name = "first_name", length = 40, nullable = false)
     private String firstName;
 

@@ -22,10 +22,6 @@ public class LoanService {
 
     }
 
-    public void loadLoanByLoanNo(Long loanNo) {
-
-    }
-
     public void addLoan() {
 
     }

@@ -1,6 +1,7 @@
 package com.tosan.application;
 
 import com.tosan.application.extensions.thymeleaf.Layout;
+import com.tosan.core_banking.CustomerService;
 import com.tosan.core_banking.dtos.*;
 import com.tosan.core_banking.exceptions.BankException;
 import org.springframework.stereotype.Controller;
@@ -14,33 +15,34 @@ import java.util.List;
 @RequestMapping("/customer")
 @Layout(title = "Customers", value = "layouts/default")
 public class CustomerController {
-    @GetMapping("/index")
-    public String customerForm(@RequestParam(required = false) Long id, @RequestParam(required = false) Long customerNo, Model model) {
-        if(id != null) {
-            model.addAttribute("customerInputDto", new CustomerInputDto("Arash", "HAA", "Babol"));
-        } else {
-            model.addAttribute("customerInputDto", new CustomerInputDto());
-        }
+    private final CustomerService _customerService;
 
-        if(customerNo != null) {
-            List<CustomerOutputDto> users = new ArrayList<>();
-            users.add(new CustomerOutputDto(2L,1L, "Arash", "HAA", "Babol"));
-            model.addAttribute("customerList", users);
-            model.addAttribute("searchCustomerInputsDto", new SearchCustomerInputDto(customerNo));
+    public CustomerController(CustomerService customerService) {
+        _customerService = customerService;
+    }
+
+    @GetMapping("/index")
+    public String customerForm(@RequestParam(required = false) Long id, Model model) {
+        if(id != null) {
+            var foundCustomer = _customerService.loadCustomer(id);
+            model.addAttribute("customerInputs", foundCustomer);
+            model.addAttribute("customerOutputs", foundCustomer);
+            model.addAttribute("customerSearchInputs", new SearchCustomerInputDto(id));
         } else {
-            List<CustomerOutputDto> users = new ArrayList<>();
-            users.add(new CustomerOutputDto(1L,0L,"Arman", "Arian", "Babol"));
-            users.add(new CustomerOutputDto(2L, 1L,"Arash", "HAA", "Babol"));
-            model.addAttribute("customerList", users);
-            model.addAttribute("searchCustomerInputsDto", new SearchCustomerInputDto());
+            var customers = _customerService.loadCustomers();
+            model.addAttribute("customerInputs", new CustomerDto());
+            model.addAttribute("customerOutputs", customers);
+            model.addAttribute("customerSearchInputs", new SearchCustomerInputDto());
         }
 
         return "customer";
     }
 
     @PostMapping("/addCustomer")
-    public String addCustomerSubmit(@ModelAttribute CustomerInputDto customerInputDto, Model model) {
+    public String addCustomerSubmit(@ModelAttribute CustomerDto customerDto, Model model) {
         try {
+            _customerService.addOrEditCustomer(customerDto);
+
             return "redirect:/customer/index";
         }
         catch (BankException ex) {
@@ -54,6 +56,8 @@ public class CustomerController {
     @PostMapping("/deleteCustomer/{id}")
     public String deleteSubmit(@PathVariable Long id) {
         try {
+            _customerService.removeCustomer(id);
+
             return "redirect:/customer/index";
         }
         catch (BankException ex) {
@@ -71,6 +75,6 @@ public class CustomerController {
 
     @PostMapping("/searchCustomer")
     public String searchSubmit(@ModelAttribute SearchCustomerInputDto searchCustomerInputsDto, Model model) {
-        return "redirect:/customer/index?customerNo=" + searchCustomerInputsDto.getCustomerNo().toString();
+        return "redirect:/customer/index?id=" + searchCustomerInputsDto.getId().toString();
     }
 }

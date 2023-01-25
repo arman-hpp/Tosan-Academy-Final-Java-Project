@@ -27,9 +27,6 @@ public class Loan extends BaseEntity {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @Column(name = "request_no", nullable = false, unique = true)
-    private Long loanNo;
-
     @Column(name = "request_date", nullable = false)
     private LocalDateTime requestDate;
 

@@ -19,44 +19,45 @@ public class CustomerService {
         _modelMapper = modelMapper;
     }
 
-    public List<CustomerOutputDto> loadCustomers() {
+    public List<CustomerDto> loadCustomers() {
         var customers = _customerRepository.findAll();
-        var outputDto = new ArrayList<CustomerOutputDto>();
+        var outputDto = new ArrayList<CustomerDto>();
         for(var customer : customers) {
-            outputDto.add(_modelMapper.map(customer, CustomerOutputDto.class));
+            outputDto.add(_modelMapper.map(customer, CustomerDto.class));
         }
 
         return outputDto;
     }
 
-    public CustomerOutputDto loadCustomer(Long id) {
-        var customer = _customerRepository.findById(id).orElse(null);
+    public CustomerDto loadCustomer(Long customerId) {
+        var customer = _customerRepository.findById(customerId).orElse(null);
         if(customer == null)
             throw new BankException("Can not find the customer");
 
-        return _modelMapper.map(customer, CustomerOutputDto.class);
+        return _modelMapper.map(customer, CustomerDto.class);
     }
 
-    public CustomerOutputDto loadCustomerByCustomerNo(Long customerNo) {
-        var customer = _customerRepository.findByCustomerNo(customerNo).orElse(null);
-        if(customer == null)
-            throw new BankException("Can not find the customer");
-
-        return _modelMapper.map(customer, CustomerOutputDto.class);
-    }
-
-    public void addCustomer(CustomerInputDto inputDto) {
+    public void addCustomer(CustomerDto inputDto) {
         var customer = _modelMapper.map(inputDto, Customer.class);
         _customerRepository.save(customer);
     }
 
-    public void editCustomer(Long customerId, CustomerInputDto inputDto) {
-        var customer = _customerRepository.findById(customerId).orElse(null);
+    public void editCustomer(CustomerDto inputDto) {
+        var customer = _customerRepository.findById(inputDto.getId()).orElse(null);
         if(customer == null)
             throw new BankException("Can not find the customer");
 
         _modelMapper.map(inputDto, customer);
         _customerRepository.save(customer);
+    }
+
+    public void addOrEditCustomer(CustomerDto inputDto) {
+        if(inputDto.getId()  == null || inputDto.getId() <= 0) {
+            addCustomer(inputDto);
+        }
+        else {
+            editCustomer(inputDto);
+        }
     }
 
     public void removeCustomer(Long customerId) {

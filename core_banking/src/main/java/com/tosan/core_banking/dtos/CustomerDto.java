@@ -1,15 +1,13 @@
 package com.tosan.core_banking.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class CustomerInputDto extends BaseDto {
+public class CustomerDto extends BaseDto {
+    private Long id;
     private String firstName;
     private String lastName;
     private String address;

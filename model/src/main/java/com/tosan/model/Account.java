@@ -13,9 +13,6 @@ import java.util.Set;
 @Entity
 @Table(name = "Accounts")
 public class Account extends BaseEntity {
-    @Column(name = "account_no", nullable = false, unique = true)
-    private Long accountNo;
-
     @Column(name = "balance", nullable = false, precision = 12, scale = 2)
     private BigDecimal balance;
 

@@ -22,10 +22,6 @@ public class AccountService {
 
     }
 
-    public void loadAccountByAccountNo(Long accountNo) {
-
-    }
-
     public void loadBankAccount() {
 
     }

@@ -8,7 +8,7 @@
     <div th:fragment="content">
       <p th:text="${param.error}"></p>
 
-      <form action="#" th:action="@{/customer/addCustomer}" th:object="${customerInputDto}" method="post">
+      <form action="#" th:action="@{/customer/addCustomer}" th:object="${customerInputs}" method="post">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
           <div class="col-4">
             <div class="mb-3">
@@ -40,11 +40,11 @@
         </div>
       </form>
 
-      <form action="#" th:action="@{/customer/searchCustomer}" th:object="${searchCustomerInputsDto}" method="post">
+      <form action="#" th:action="@{/customer/searchCustomer}" th:object="${customerSearchInputs}" method="post">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
           <div class="col-auto">
-            <label for="search-input" class="visually-hidden">Search By CustomerNo</label>
-            <input type="text" class="form-control" id="search-input" placeholder="CustomerNo" th:field="*{customerNo}">
+            <label for="search-input" class="visually-hidden">Search By CustomerId</label>
+            <input type="text" class="form-control" id="search-input" placeholder="CustomerNo" th:field="*{id}">
           </div>
           <div class="col-auto">
             <button type="submit" class="btn btn-primary mb-3">Search</button>
@@ -65,7 +65,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr th:each="customer : ${customerList}">
+          <tr th:each="customer : ${customerOutputs}">
             <td class="align-middle" th:text="${customer.id}"></td>
             <td class="align-middle" th:text="${customer.firstName}"></td>
             <td class="align-middle" th:text="${customer.lastName}"></td>
