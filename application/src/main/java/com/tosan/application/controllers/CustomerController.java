@@ -4,9 +4,11 @@ import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.services.CustomerService;
 import com.tosan.core_banking.dtos.*;
 import com.tosan.core_banking.exceptions.BankException;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
 
 @Controller
 @RequestMapping("/customer")
@@ -42,9 +44,11 @@ public class CustomerController {
     }
 
     @GetMapping("/index/{id}")
-    public String customerFormById(@PathVariable Long id, Model model) {
+    public String customerFormById(@PathVariable String id, Model model) {
         try {
-            var foundCustomer = _customerService.loadCustomer(id);
+            var idL = Long.parseLong(id);
+
+            var foundCustomer = _customerService.loadCustomer(idL);
             model.addAttribute("customerInputs", foundCustomer);
 
             var customers = _customerService.loadCustomers();
@@ -61,7 +65,11 @@ public class CustomerController {
     }
 
     @PostMapping("/addCustomer")
-    public String addCustomerSubmit(@ModelAttribute CustomerDto customerDto) {
+    public String addCustomerSubmit(@ModelAttribute CustomerDto customerDto, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "redirect:/customer/index?error=Invalid+input+parameters";
+        }
+
         try {
             _customerService.addOrEditCustomer(customerDto);
 
@@ -96,7 +104,11 @@ public class CustomerController {
     }
 
     @PostMapping("/searchCustomer")
-    public String searchSubmit(@ModelAttribute CustomerSearchInputDto searchCustomerInputsDto) {
+    public String searchSubmit(@ModelAttribute CustomerSearchInputDto searchCustomerInputsDto, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "redirect:/customer/index?error=Invalid+input+parameters";
+        }
+
         return "redirect:/customer/index?id=" + searchCustomerInputsDto.getId().toString();
     }
 }

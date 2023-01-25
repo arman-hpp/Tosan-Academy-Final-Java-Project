@@ -6,10 +6,7 @@ import com.tosan.core_banking.dtos.UserLoginInputDto;
 import com.tosan.core_banking.exceptions.BankException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @Layout(value = Layout.NONE)
