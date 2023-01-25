@@ -46,11 +46,11 @@
       <form action="#" th:action="@{/customer/searchCustomer}" th:object="${customerSearchInputs}" method="post">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
           <div class="col-auto">
-            <label for="search-input" class="visually-hidden">Search By CustomerId</label>
-            <input type="search" class="form-control" id="search-input" placeholder="Customer Id" th:field="*{id}">
-          </div>
-          <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-3">Search</button>
+            <div class="input-group mb-3">
+              <label for="search-input" class="visually-hidden">Search By CustomerId</label>
+              <input type="search" class="form-control" id="search-input" placeholder="Search By Customer Id" aria-label="Search By Customer Id" aria-describedby="button-addon2"  th:field="*{id}">
+              <button class="btn btn-outline-secondary" type="submit" id="search-submit">Search</button>
+            </div>
           </div>
         </div>
       </form>

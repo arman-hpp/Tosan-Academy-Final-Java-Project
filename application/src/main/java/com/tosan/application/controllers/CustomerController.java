@@ -5,6 +5,7 @@ import com.tosan.core_banking.services.CustomerService;
 import com.tosan.core_banking.dtos.*;
 import com.tosan.core_banking.exceptions.BankException;
 
+import com.tosan.utils.Convertors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,18 @@ public class CustomerController {
     }
 
     @GetMapping("/index")
-    public String customerForm(@RequestParam(required = false) Long id, Model model) {
+    public String customerForm(@RequestParam(required = false) String id, Model model) {
         try {
             if (id != null) {
-                var foundCustomer = _customerService.loadCustomer(id);
+                var idLong = Convertors.tryParseLong(id, -1L);
+                if(idLong <= 0) {
+                    return "redirect:/customer/index?error=Invalid+input+parameters";
+                }
+
+                var foundCustomer = _customerService.loadCustomer(idLong);
                 model.addAttribute("customerInputs", new CustomerDto());
                 model.addAttribute("customerOutputs", foundCustomer);
-                model.addAttribute("customerSearchInputs", new CustomerSearchInputDto(id));
+                model.addAttribute("customerSearchInputs", new CustomerSearchInputDto(idLong));
             } else {
                 var customers = _customerService.loadCustomers();
                 model.addAttribute("customerInputs", new CustomerDto());
@@ -46,9 +52,12 @@ public class CustomerController {
     @GetMapping("/index/{id}")
     public String customerFormById(@PathVariable String id, Model model) {
         try {
-            var idL = Long.parseLong(id);
+            var idLong = Convertors.tryParseLong(id, -1L);
+            if(idLong <= 0) {
+                return "redirect:/customer/index?error=Invalid+input+parameters";
+            }
 
-            var foundCustomer = _customerService.loadCustomer(idL);
+            var foundCustomer = _customerService.loadCustomer(idLong);
             model.addAttribute("customerInputs", foundCustomer);
 
             var customers = _customerService.loadCustomers();
@@ -109,6 +118,11 @@ public class CustomerController {
             return "redirect:/customer/index?error=Invalid+input+parameters";
         }
 
-        return "redirect:/customer/index?id=" + searchCustomerInputsDto.getId().toString();
+        var id = searchCustomerInputsDto.getId();
+        if(id == null){
+            return "redirect:/customer/index";
+        }
+
+        return "redirect:/customer/index?id=" + id;
     }
 }
