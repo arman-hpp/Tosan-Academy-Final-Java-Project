@@ -16,7 +16,7 @@ public class Customer extends BaseEntity {
     @Column(name = "last_name",length = 80, nullable = false)
     private String lastName;
 
-    @Column(name = "address",length = 200, nullable = false)
+    @Column(name = "address",length = 100, nullable = false)
     private String address;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

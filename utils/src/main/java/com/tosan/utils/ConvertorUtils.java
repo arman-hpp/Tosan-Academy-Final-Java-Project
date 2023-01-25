@@ -1,6 +1,6 @@
 package com.tosan.utils;
 
-public final class Convertors {
+public final class ConvertorUtils {
     public static Long tryParseLong(String value, Long defaultVal) {
         try {
             return Long.parseLong(value);

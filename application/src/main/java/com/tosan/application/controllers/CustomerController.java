@@ -5,7 +5,7 @@ import com.tosan.core_banking.services.CustomerService;
 import com.tosan.core_banking.dtos.*;
 import com.tosan.core_banking.exceptions.BankException;
 
-import com.tosan.utils.Convertors;
+import com.tosan.utils.ConvertorUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,7 @@ public class CustomerController {
     public String customerForm(@RequestParam(required = false) String id, Model model) {
         try {
             if (id != null) {
-                var idLong = Convertors.tryParseLong(id, -1L);
+                var idLong = ConvertorUtils.tryParseLong(id, -1L);
                 if(idLong <= 0) {
                     return "redirect:/customer/index?error=Invalid+input+parameters";
                 }
@@ -51,7 +51,7 @@ public class CustomerController {
 
     @GetMapping("/index/{id}")
     public String customerFormById(@PathVariable String id, Model model) {
-        var idLong = Convertors.tryParseLong(id, -1L);
+        var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if(idLong <= 0) {
             return "redirect:/customer/index?error=Invalid+input+parameters";
         }
@@ -94,7 +94,7 @@ public class CustomerController {
 
     @PostMapping("/deleteCustomer/{id}")
     public String deleteSubmit(@PathVariable String id) {
-        var idLong = Convertors.tryParseLong(id, -1L);
+        var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if(idLong <= 0) {
             return "redirect:/customer/index?error=Invalid+input+parameters";
         }
@@ -114,7 +114,7 @@ public class CustomerController {
 
     @PostMapping("/editCustomer/{id}")
     public String editSubmit(@PathVariable String id) {
-        var idLong = Convertors.tryParseLong(id, -1L);
+        var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if(idLong <= 0) {
             return "redirect:/customer/index?error=Invalid+input+parameters";
         }
