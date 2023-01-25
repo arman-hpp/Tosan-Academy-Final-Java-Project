@@ -2,13 +2,14 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Customers</title>
 </head>
 <body>
     <div th:fragment="content">
       <p th:text="${param.error}"></p>
 
       <form action="#" th:action="@{/customer/addCustomer}" th:object="${customerInputs}" method="post">
+        <input type="hidden" th:field="*{id}">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
           <div class="col-4">
             <div class="mb-3">
@@ -65,7 +66,8 @@
           </tr>
           </thead>
           <tbody>
-          <tr th:each="customer : ${customerOutputs}">
+          <!--/*@thymesVar id="customer" type="com.tosan.core_banking.dtos.CustomerDto"*/-->
+          <tr th:each="customer,iterStat : ${customerOutputs}" th:class="${iterStat.odd}? 'odd'">
             <td class="align-middle" th:text="${customer.id}"></td>
             <td class="align-middle" th:text="${customer.firstName}"></td>
             <td class="align-middle" th:text="${customer.lastName}"></td>
