@@ -1,4 +1,4 @@
-package com.tosan.core_banking.dtos;
+package com.tosan.dtos;
 
 import java.io.Serializable;
 

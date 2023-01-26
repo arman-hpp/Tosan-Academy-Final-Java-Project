@@ -23,4 +23,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Transaction> transactions = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return getUsername();
+    }
 }

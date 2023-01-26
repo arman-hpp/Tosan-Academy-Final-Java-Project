@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.*;
 
 @Getter
@@ -30,6 +30,9 @@ public class Loan extends BaseEntity {
 
     @Column(name = "deposit_date")
     private LocalDateTime depositDate;
+
+    @Column(name = "first_payment_date")
+    private LocalDate firstPaymentDate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "deposit_account_id", nullable = false)

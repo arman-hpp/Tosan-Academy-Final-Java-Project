@@ -24,4 +24,9 @@ public class Customer extends BaseEntity {
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Loan> loans = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return getFirstName() + " " + getLastName();
+    }
 }
