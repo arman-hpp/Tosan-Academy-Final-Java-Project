@@ -1,9 +1,10 @@
 package com.tosan.core_banking.services;
 
 import com.tosan.core_banking.dtos.TransactionDto;
-import com.tosan.core_banking.exceptions.BankException;
+import com.tosan.exceptions.BusinessException;
 import com.tosan.model.Transaction;
 import com.tosan.repository.*;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,10 +70,10 @@ public class TransactionService {
     public void doTransaction(TransactionDto inputDto) {
         var account = _accountRepository.findById(inputDto.getAccountId()).orElse(null);
         if(account == null)
-            throw new BankException("Can not find the account");
+            throw new BusinessException("Can not find the account");
 
         if(account.getBalance().compareTo(inputDto.getAmount()) < 0)
-            throw new BankException("account balance is not enough!");
+            throw new BusinessException("account balance is not enough!");
 
         account.setBalance(account.getBalance().add(inputDto.getAmount()));
 

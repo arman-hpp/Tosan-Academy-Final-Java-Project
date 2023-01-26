@@ -3,7 +3,7 @@ package com.tosan.application.controllers;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.services.UserService;
 import com.tosan.core_banking.dtos.*;
-import com.tosan.core_banking.exceptions.BankException;
+import com.tosan.exceptions.BusinessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +29,7 @@ public class RegisterController {
             _userService.register(registerInputDto);
             return "redirect:/login";
         }
-        catch (BankException ex) {
+        catch (BusinessException ex) {
             return "redirect:/register?error=" + ex.getEncodedMessage();
         }
         catch (Exception ex) {

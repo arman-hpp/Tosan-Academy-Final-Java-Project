@@ -1,9 +1,10 @@
 package com.tosan.core_banking.services;
 
 import com.tosan.core_banking.dtos.*;
-import com.tosan.core_banking.exceptions.BankException;
 import com.tosan.model.*;
 import com.tosan.repository.*;
+import com.tosan.exceptions.BusinessException;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -22,15 +23,15 @@ public class UserService {
     public void login(UserLoginInputDto inputDto) {
         var user = _userRepository.findByUsername(inputDto.getUsername()).orElse(null);
         if(user == null)
-            throw new BankException("user not found!");
+            throw new BusinessException("user not found!");
 
         if (!Objects.equals(user.getPassword(), inputDto.getPassword()))
-            throw new BankException("username or password is invalid");
+            throw new BusinessException("username or password is invalid");
     }
 
     public void register(UserRegisterInputDto inputDto) {
         if(_userRepository.findByUsername(inputDto.getUsername()).orElse(null) != null)
-            throw new BankException("the user is exists. choose new username");
+            throw new BusinessException("the user is exists. choose new username");
 
         var user = _modelMapper.map(inputDto, User.class);
         user.setUserType(UserTypes.User);
@@ -40,10 +41,10 @@ public class UserService {
     public void changePassword(UserChangePasswordInputDto inputDto) {
         var user = _userRepository.findByUsername(inputDto.getUsername()).orElse(null);
         if(user == null)
-            throw new BankException("user not found!");
+            throw new BusinessException("user not found!");
 
         if (!Objects.equals(user.getPassword(), inputDto.getOldPassword()))
-            throw new BankException("password is invalid");
+            throw new BusinessException("password is invalid");
 
         user.setPassword(inputDto.getNewPassword());
         _userRepository.save(user);

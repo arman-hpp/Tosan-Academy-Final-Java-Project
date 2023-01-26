@@ -3,7 +3,7 @@ package com.tosan.application.controllers;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.services.CustomerService;
 import com.tosan.core_banking.dtos.*;
-import com.tosan.core_banking.exceptions.BankException;
+import com.tosan.exceptions.BusinessException;
 import com.tosan.utils.ConvertorUtils;
 
 import org.springframework.stereotype.Controller;
@@ -42,7 +42,7 @@ public class CustomerController {
             }
 
             return "customer";
-        } catch (BankException ex) {
+        } catch (BusinessException ex) {
             return "redirect:/customer/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
             return "redirect:/customer/index?error=unhandled+error+occurred";
@@ -66,7 +66,7 @@ public class CustomerController {
             model.addAttribute("customerSearchInputs", new CustomerSearchInputDto());
 
             return "customer";
-        } catch (BankException ex) {
+        } catch (BusinessException ex) {
             return "redirect:/customer/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
             return "redirect:/customer/index?error=unhandled+error+occurred";
@@ -84,7 +84,7 @@ public class CustomerController {
 
             return "redirect:/customer/index";
         }
-        catch (BankException ex) {
+        catch (BusinessException ex) {
             return "redirect:/customer/index?error=" + ex.getEncodedMessage();
         }
         catch (Exception ex) {
@@ -104,7 +104,7 @@ public class CustomerController {
 
             return "redirect:/customer/index";
         }
-        catch (BankException ex) {
+        catch (BusinessException ex) {
             return "redirect:/customer/index?error=" + ex.getEncodedMessage();
         }
         catch (Exception ex) {

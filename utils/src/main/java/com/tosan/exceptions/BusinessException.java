@@ -1,7 +1,7 @@
-package com.tosan.core_banking.exceptions;
+package com.tosan.exceptions;
 
-public final class BankException extends RuntimeException {
-    public BankException(String error) {
+public class BusinessException extends RuntimeException {
+    public BusinessException(String error) {
         super(String.format("Error: %s", error));
     }
 

@@ -1,9 +1,10 @@
 package com.tosan.core_banking.services;
 
-import com.tosan.core_banking.exceptions.BankException;
+import com.tosan.exceptions.BusinessException;
 import com.tosan.model.*;
 import com.tosan.repository.AccountRepository;
 import com.tosan.core_banking.dtos.*;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class AccountService {
     public AccountDto loadAccount(Long accountId) {
         var account = _accountRepository.findById(accountId).orElse(null);
         if(account == null)
-            throw new BankException("Can not find the account");
+            throw new BusinessException("Can not find the account");
 
         return _modelMapper.map(account, AccountDto.class);
     }
@@ -41,7 +42,7 @@ public class AccountService {
     public AccountDto loadBankAccount() {
         var account = _accountRepository.findByAccountType(AccountTypes.BankAccount).orElse(null);
         if(account == null)
-            throw new BankException("Can not find the bank account");
+            throw new BusinessException("Can not find the bank account");
 
         return _modelMapper.map(account, AccountDto.class);
     }
