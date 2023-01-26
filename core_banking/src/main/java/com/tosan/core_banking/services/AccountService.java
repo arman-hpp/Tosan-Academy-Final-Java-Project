@@ -1,5 +1,6 @@
 package com.tosan.core_banking.services;
 
+import com.tosan.core_banking.interfaces.IAccountService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.model.*;
 import com.tosan.repository.AccountRepository;
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @Service
-public class AccountService {
+public class AccountService implements IAccountService {
     private final AccountRepository _accountRepository;
     private final ModelMapper _modelMapper;
 

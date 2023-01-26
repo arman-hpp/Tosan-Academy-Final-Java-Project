@@ -1,13 +1,17 @@
-package com.tosan.loan;
+package com.tosan.loan.services;
 
 import com.tosan.loan.dtos.*;
+import com.tosan.loan.interfaces.ILoanCalculatorService;
+
+import org.springframework.stereotype.Service;
 
 import java.math.*;
 import java.time.*;
 import java.util.*;
 
-// https://github.com/ArtyomPanfutov/loan-amortization-calculator
-public class AnnualPaymentLoanCalculator  {
+// adapted from https://github.com/ArtyomPanfutov/loan-amortization-calculator
+@Service
+public class LoanAmortizationCalculatorService implements ILoanCalculatorService {
     public LoanAmortizationDto calculate(LoanDto loan) {
         var overPaidInterestAmount = BigDecimal.ZERO;
         var loanBalance = loan.getAmount();

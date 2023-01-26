@@ -1,12 +1,13 @@
-package com.tosan.core_banking.services;
+package com.tosan.loan.services;
 
+import com.tosan.loan.interfaces.IInstallmentService;
 import com.tosan.repository.InstallmentRepository;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InstallmentService {
+public class InstallmentService implements IInstallmentService {
     private final InstallmentRepository _installmentRepository;
     private final ModelMapper _modelMapper;
 

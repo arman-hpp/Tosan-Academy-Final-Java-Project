@@ -1,11 +1,13 @@
-package com.tosan.core_banking.services;
+package com.tosan.loan.services;
 
+import com.tosan.loan.interfaces.ILoanService;
 import com.tosan.repository.LoanRepository;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoanService {
+public class LoanService implements ILoanService {
     private final LoanRepository _LoanRepository;
     private final ModelMapper _modelMapper;
 

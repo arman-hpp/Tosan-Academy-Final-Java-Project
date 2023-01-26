@@ -1,6 +1,7 @@
 package com.tosan.core_banking.services;
 
 import com.tosan.core_banking.dtos.TransactionDto;
+import com.tosan.core_banking.interfaces.ITransactionService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.model.Transaction;
 import com.tosan.repository.*;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class TransactionService {
+public class TransactionService implements ITransactionService {
     private final TransactionRepository _transactionRepository;
     private final AccountRepository _accountRepository;
     private final ModelMapper _modelMapper;

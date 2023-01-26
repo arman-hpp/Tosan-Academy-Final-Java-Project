@@ -1,6 +1,7 @@
 package com.tosan.core_banking.services;
 
 import com.tosan.core_banking.dtos.*;
+import com.tosan.core_banking.interfaces.ICustomerService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.model.Customer;
 import com.tosan.repository.CustomerRepository;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class CustomerService {
+public class CustomerService implements ICustomerService {
     private final CustomerRepository _customerRepository;
     private final ModelMapper _modelMapper;
 
