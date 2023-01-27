@@ -3,8 +3,9 @@ package com.tosan.core_banking.services;
 import com.tosan.core_banking.dtos.TransactionDto;
 import com.tosan.core_banking.interfaces.ITransactionService;
 import com.tosan.exceptions.BusinessException;
-import com.tosan.model.Transaction;
+import com.tosan.model.*;
 import com.tosan.repository.*;
+import com.tosan.utils.EnumUtils;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,10 @@ public class TransactionService implements ITransactionService {
         _transactionRepository = transactionRepository;
         _accountRepository = accountRepository;
         _modelMapper = modelMapper;
+    }
+
+    public Map<Integer, String> loadTransactionTypes() {
+        return EnumUtils.GetEnumNames(TransactionTypes.class);
     }
 
     public List<TransactionDto> loadTransactions() {

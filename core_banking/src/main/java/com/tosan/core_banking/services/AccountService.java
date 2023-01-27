@@ -5,6 +5,7 @@ import com.tosan.exceptions.BusinessException;
 import com.tosan.model.*;
 import com.tosan.repository.AccountRepository;
 import com.tosan.core_banking.dtos.*;
+import com.tosan.utils.EnumUtils;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ public class AccountService implements IAccountService {
     public AccountService(AccountRepository accountRepository, ModelMapper modelMapper) {
         _accountRepository = accountRepository;
         _modelMapper = modelMapper;
+    }
+
+    public Map<Integer, String> loadCurrencies() {
+        return EnumUtils.GetEnumNames(Currencies.class);
     }
 
     public List<AccountDto> loadAccounts() {

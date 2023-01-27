@@ -5,11 +5,12 @@ import com.tosan.core_banking.interfaces.IUserService;
 import com.tosan.model.*;
 import com.tosan.repository.*;
 import com.tosan.exceptions.BusinessException;
+import com.tosan.utils.EnumUtils;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class UserService implements IUserService {
@@ -19,6 +20,10 @@ public class UserService implements IUserService {
     public UserService(UserRepository userRepository, ModelMapper modelMapper) {
         this._userRepository = userRepository;
         this._modelMapper = modelMapper;
+    }
+
+    public Map<Integer, String> loadUserTypes() {
+        return EnumUtils.GetEnumNames(UserTypes.class);
     }
 
     public void login(UserLoginInputDto inputDto) {

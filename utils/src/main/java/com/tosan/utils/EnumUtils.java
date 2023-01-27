@@ -9,7 +9,6 @@ public final class EnumUtils {
         try {
             for (Field field : clazz.getFields()) {
                 field.setAccessible(true);
-                System.out.println(field.getName());
                 enumElementsMap.put(
                         ((Enum<?>) field.get(null)).ordinal(),
                         field.getName()
