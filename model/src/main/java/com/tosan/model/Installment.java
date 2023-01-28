@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.*;
 
 @Getter
 @Setter
@@ -15,7 +15,7 @@ public class Installment extends BaseEntity {
     private Integer installmentNo;
 
     @Column(name = "due_date", nullable = false)
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
 
     @Column(name = "principal_amount", nullable = false, precision = 12, scale = 2)
     private BigDecimal principalAmount;
@@ -24,7 +24,10 @@ public class Installment extends BaseEntity {
     private BigDecimal interestAmount;
 
     @Column(name = "total_amount", nullable = false, precision = 12, scale = 2)
-    private BigDecimal totalAmount;
+    private BigDecimal paymentAmount;
+
+    @Column(name = "loan_balance_amount", nullable = false, precision = 12, scale = 2)
+    private BigDecimal loanBalanceAmount;
 
     @Column(name = "paid_date")
     private LocalDateTime paidDate;

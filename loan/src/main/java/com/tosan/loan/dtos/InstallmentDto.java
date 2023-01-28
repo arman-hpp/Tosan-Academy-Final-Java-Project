@@ -12,11 +12,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public final class InstallmentDto extends BaseDto {
-    private Integer monthNumber;
-    private BigDecimal loanBalanceAmount;
-    private BigDecimal debtPaymentAmount;
-    private BigDecimal interestPaymentAmount;
+    private Integer installmentNo;
+    private LocalDate dueDate;
+    private BigDecimal interestAmount;
+    private BigDecimal principalAmount;
     private BigDecimal paymentAmount;
-    private BigDecimal additionalPaymentAmount;
-    private LocalDate paymentDate;
+    private BigDecimal loanBalanceAmount;
 }

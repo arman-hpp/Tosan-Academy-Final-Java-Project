@@ -1,7 +1,5 @@
 package com.tosan.loan.dtos;
 
-import com.tosan.dtos.BaseDto;
-
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -11,8 +9,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public final class LoanAmortizationDto extends BaseDto {
+public final class InstallmentsBookDto {
     private BigDecimal monthlyPaymentAmount;
     private BigDecimal overPaymentAmount;
-    private List<InstallmentDto> monthlyPayments;
+    private List<InstallmentDto> installments;
 }

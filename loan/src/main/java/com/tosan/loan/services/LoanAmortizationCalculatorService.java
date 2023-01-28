@@ -12,7 +12,7 @@ import java.util.*;
 // adapted from https://github.com/ArtyomPanfutov/loan-amortization-calculator
 @Service
 public class LoanAmortizationCalculatorService implements ILoanCalculatorService {
-    public LoanAmortizationDto calculate(LoanDto loan) {
+    public InstallmentsBookDto calculate(LoanDto loan) {
         var overPaidInterestAmount = BigDecimal.ZERO;
         var loanBalance = loan.getAmount();
         var term = loan.getRefundDuration();
@@ -33,13 +33,9 @@ public class LoanAmortizationCalculatorService implements ILoanCalculatorService
 
                 if (lastPaymentNumber >= 0) {
                     var lastPayment = payments.get(lastPaymentNumber);
-                    payments.set(lastPaymentNumber, new InstallmentDto(lastPayment.getMonthNumber(),
-                            lastPayment.getLoanBalanceAmount(),
-                            lastPayment.getLoanBalanceAmount(),
-                            lastPayment.getInterestPaymentAmount(),
-                            lastPayment.getLoanBalanceAmount(),
-                            lastPayment.getAdditionalPaymentAmount(),
-                            paymentDate));
+                    payments.set(lastPaymentNumber, new InstallmentDto(lastPayment.getInstallmentNo(),
+                            paymentDate, lastPayment.getInterestAmount(), lastPayment.getLoanBalanceAmount(),
+                            lastPayment.getLoanBalanceAmount(), lastPayment.getLoanBalanceAmount()));
                 }
 
                 break;
@@ -55,8 +51,8 @@ public class LoanAmortizationCalculatorService implements ILoanCalculatorService
 
             var paymentAmount = interestAmount.add(principalAmount);
 
-            payments.add(new InstallmentDto(i, loanBalance, principalAmount, interestAmount,
-                    paymentAmount, additionalPaymentAmount, paymentDate));
+            payments.add(new InstallmentDto(i, paymentDate, interestAmount, principalAmount,
+                    paymentAmount, loanBalance));
 
             loanBalance = loanBalance.subtract(principalAmount);
 
@@ -65,7 +61,7 @@ public class LoanAmortizationCalculatorService implements ILoanCalculatorService
             }
         }
 
-        return new LoanAmortizationDto(monthlyPaymentAmount, overPaidInterestAmount, Collections.unmodifiableList(payments));
+        return new InstallmentsBookDto(monthlyPaymentAmount, overPaidInterestAmount, Collections.unmodifiableList(payments));
     }
 
     private BigDecimal getMonthlyInterestRate(BigDecimal rate) {
