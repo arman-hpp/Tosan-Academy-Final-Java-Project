@@ -12,7 +12,7 @@ import java.util.*;
 // adapted from https://github.com/ArtyomPanfutov/loan-amortization-calculator
 @Service
 public class LoanAmortizationCalculatorService implements ILoanCalculatorService {
-    public InstallmentsBookDto calculate(LoanDto loan) {
+    public LoanPaymentScheduleDto calculate(LoanDto loan) {
         var overPaidInterestAmount = BigDecimal.ZERO;
         var loanBalance = loan.getAmount();
         var term = loan.getRefundDuration();
@@ -61,7 +61,7 @@ public class LoanAmortizationCalculatorService implements ILoanCalculatorService
             }
         }
 
-        return new InstallmentsBookDto(monthlyPaymentAmount, overPaidInterestAmount, Collections.unmodifiableList(payments));
+        return new LoanPaymentScheduleDto(monthlyPaymentAmount, overPaidInterestAmount, Collections.unmodifiableList(payments));
     }
 
     private BigDecimal getMonthlyInterestRate(BigDecimal rate) {

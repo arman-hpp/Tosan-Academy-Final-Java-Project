@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "Loan_Configs")
-public class LoanOptions extends BaseEntity {
+@Table(name = "Loan_Configurations")
+public class LoanConfiguration extends BaseEntity {
     @Column(name = "interest_rate", nullable = false, precision = 7, scale = 2)
     private BigDecimal interestRate;
 

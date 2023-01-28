@@ -9,7 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public final class InstallmentsBookDto {
+public final class LoanPaymentScheduleDto {
     private BigDecimal monthlyPaymentAmount;
     private BigDecimal overPaymentAmount;
     private List<InstallmentDto> installments;
