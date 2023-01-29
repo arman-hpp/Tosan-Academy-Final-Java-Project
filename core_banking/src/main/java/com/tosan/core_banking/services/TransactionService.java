@@ -82,11 +82,11 @@ public class TransactionService implements ITransactionService {
 
     @Transactional
     public void transfer(TransferDto inputDto) {
-        var srcTransaction = new TransactionDto(null, inputDto.getAmount(), TransactionTypes.Debit,
+        var srcTransaction = new TransactionDto(inputDto.getAmount(), TransactionTypes.Debit,
                 LocalDateTime.now(), inputDto.getSrcDescription(), inputDto.getSrcAccountId(),
                 inputDto.getUserId(), inputDto.getSrcTraceNo());
 
-        var desTransaction = new TransactionDto(null, inputDto.getAmount(), TransactionTypes.Credit,
+        var desTransaction = new TransactionDto(inputDto.getAmount(), TransactionTypes.Credit,
                 LocalDateTime.now(), inputDto.getDesDescription(), inputDto.getDesAccountId(),
                 inputDto.getUserId(), inputDto.getDesTraceNo());
 
@@ -116,5 +116,9 @@ public class TransactionService implements ITransactionService {
 
         _accountRepository.save(account);
         _transactionRepository.save(transaction);
+    }
+
+    public String createTraceNo() {
+        return UUID.randomUUID().toString();
     }
 }

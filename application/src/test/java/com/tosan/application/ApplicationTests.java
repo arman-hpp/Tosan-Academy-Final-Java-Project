@@ -36,7 +36,7 @@ class ApplicationTests {
 
         try {
             transactionService.doTransaction(
-                    new TransactionDto(null, transactionAmount, TransactionTypes.Credit, LocalDateTime.now(),
+                    new TransactionDto(transactionAmount, TransactionTypes.Credit, LocalDateTime.now(),
                             "Test", accountId, 1L, traceNo));
         } catch (Exception ex){
             ex.printStackTrace();
