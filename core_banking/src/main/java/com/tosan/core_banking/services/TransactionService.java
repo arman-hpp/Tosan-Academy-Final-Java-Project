@@ -1,6 +1,7 @@
 package com.tosan.core_banking.services;
 
 import com.tosan.core_banking.dtos.TransactionDto;
+import com.tosan.core_banking.dtos.TransferDto;
 import com.tosan.core_banking.interfaces.ITransactionService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.model.*;
@@ -73,20 +74,38 @@ public class TransactionService implements ITransactionService {
     }
 
     @Transactional
+    public void transfer(TransferDto inputDto) {
+        var srcTransaction = new TransactionDto(null, inputDto.getAmount(), TransactionTypes.Debit,
+                LocalDateTime.now(), inputDto.getSrcDescription(), inputDto.getSrcAccountId(), inputDto.getUserId());
+
+        var desTransaction = new TransactionDto(null, inputDto.getAmount(), TransactionTypes.Credit,
+                LocalDateTime.now(), inputDto.getDesDescription(), inputDto.getDesAccountId(), inputDto.getUserId());
+
+        doTransaction(srcTransaction);
+        doTransaction(desTransaction);
+    }
+
+    @Transactional
     public void doTransaction(TransactionDto inputDto) {
         var account = _accountRepository.findById(inputDto.getAccountId()).orElse(null);
         if(account == null)
-            throw new BusinessException("Can not find the account");
+            throw new BusinessException("can not find the account");
 
-        if(account.getBalance().compareTo(inputDto.getAmount()) < 0)
-            throw new BusinessException("account balance is not enough!");
+        if(inputDto.getTransactionType() == TransactionTypes.Credit) {
+            account.setBalance(account.getBalance().add(inputDto.getAmount()));
+        } else if (inputDto.getTransactionType() == TransactionTypes.Debit) {
+            if(account.getBalance().compareTo(inputDto.getAmount()) < 0)
+                throw new BusinessException("account balance is not enough!");
 
-        account.setBalance(account.getBalance().add(inputDto.getAmount()));
+            account.setBalance(account.getBalance().subtract(inputDto.getAmount()));
+        } else
+            throw new BusinessException("transaction type is invalid");
 
         var transaction = _modelMapper.map(inputDto, Transaction.class);
         transaction.setRegDate(LocalDateTime.now());
+        transaction.setAccount(account);
 
-        _transactionRepository.save(transaction);
         _accountRepository.save(account);
+        _transactionRepository.save(transaction);
     }
 }

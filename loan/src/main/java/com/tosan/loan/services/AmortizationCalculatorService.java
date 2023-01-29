@@ -11,7 +11,7 @@ import java.util.*;
 
 // adapted from https://github.com/ArtyomPanfutov/loan-amortization-calculator
 @Service
-public class LoanAmortizationCalculatorService implements ILoanCalculatorService {
+public class AmortizationCalculatorService implements ILoanCalculatorService {
     public LoanPaymentScheduleDto calculate(LoanDto loan) {
         var overPaidInterestAmount = BigDecimal.ZERO;
         var loanBalance = loan.getAmount();

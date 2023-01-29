@@ -1,27 +1,25 @@
 package com.tosan.loan.services;
 
 import com.tosan.exceptions.BusinessException;
-import com.tosan.loan.dtos.LoanDto;
+import com.tosan.loan.dtos.*;
 import com.tosan.loan.interfaces.ILoanService;
-import com.tosan.model.Account;
-import com.tosan.model.AccountTypes;
-import com.tosan.model.Loan;
-import com.tosan.repository.LoanRepository;
+import com.tosan.model.*;
+import com.tosan.repository.*;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class LoanService implements ILoanService {
     private final LoanRepository _loanRepository;
+    private final LoanConditionsService _loanConditionsService;
     private final ModelMapper _modelMapper;
 
-    public LoanService(LoanRepository loanRepository, ModelMapper modelMapper) {
+    public LoanService(LoanRepository loanRepository, LoanConditionsService loanConditionsService, ModelMapper modelMapper) {
         _loanRepository = loanRepository;
+        _loanConditionsService = loanConditionsService;
         _modelMapper = modelMapper;
     }
 
@@ -36,28 +34,40 @@ public class LoanService implements ILoanService {
     }
 
     public LoanDto loadLoan(Long loanId) {
-        var account = _loanRepository.findById(loanId).orElse(null);
-        if(account == null)
-            throw new BusinessException("Can not find the loan");
+        var loan = _loanRepository.findById(loanId).orElse(null);
+        if(loan == null)
+            throw new BusinessException("can not find the loan");
 
-        return _modelMapper.map(account, LoanDto.class);
+        return _modelMapper.map(loan, LoanDto.class);
     }
 
-    public void addLoan(LoanDto loanDto) {
-        var loan = _modelMapper.map(loanDto, Loan.class);
+    public void addLoan(LoanDto inputDto) {
+        _loanConditionsService.validateLoanConditions(inputDto);
+        var loan = _modelMapper.map(inputDto, Loan.class);
         _loanRepository.save(loan);
     }
 
-    public void depositLoan() {
+    public void editLoan(LoanDto inputDto) {
+        _loanConditionsService.validateLoanConditions(inputDto);
 
+        var loan = _loanRepository.findById(inputDto.getId()).orElse(null);
+        if(loan == null)
+            throw new BusinessException("can not find the loan");
+
+        if(loan.getDepositDate() != null)
+            throw new BusinessException("the loan has been paid and it cannot be edit");
+
+        _modelMapper.map(inputDto, loan);
+        _loanRepository.save(loan);
     }
 
-    public void loadLoanConfigs() {
-
-    }
-
-    public void editLoanConfigs() {
-
+    public void addOrEditLoan(LoanDto inputDto) {
+        if(inputDto.getId()  == null || inputDto.getId() <= 0) {
+            addLoan(inputDto);
+        }
+        else {
+            editLoan(inputDto);
+        }
     }
 
     public void loadLoanInterests() {
