@@ -27,6 +27,9 @@ public class Transaction extends BaseEntity {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Column(name = "trace_no", length = 36, nullable = false, unique = true)
+    private String traceNo;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;

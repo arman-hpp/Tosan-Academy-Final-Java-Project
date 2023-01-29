@@ -1,12 +1,8 @@
 package com.tosan.application;
 
-import com.tosan.core_banking.dtos.TransactionDto;
-import com.tosan.core_banking.dtos.TransferDto;
-import com.tosan.core_banking.services.AccountService;
-import com.tosan.core_banking.services.TransactionService;
+import com.tosan.core_banking.dtos.*;
+import com.tosan.core_banking.services.*;
 import com.tosan.model.TransactionTypes;
-import com.tosan.repository.AccountRepository;
-import com.tosan.repository.TransactionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +10,10 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = Application.class)
 @ContextConfiguration(classes = Application.class)
@@ -25,27 +25,58 @@ class ApplicationTests {
 
     @Test
     void contextLoads() {
-//        try {
-//            transactionService.doTransaction(
-//                    new TransactionDto(null, new BigDecimal(1000L), TransactionTypes.Credit, LocalDateTime.now(), "Test", 1L, 1L));
-//        } catch (Exception ex){
-//            ex.printStackTrace();
-//        }
+    }
+
+    @Test
+    public void testDoTransaction(){
+        var transactionAmount = BigDecimal.valueOf(1000L);
+        var accountId = 1L;
+        var traceNo = UUID.randomUUID().toString();
+        var accountBeforeTransaction = accountService.loadAccount(accountId);
 
         try {
-            transactionService.transfer(
-                    new TransferDto(BigDecimal.valueOf(2000), "From Arman", "To Bank", 1l, 2L, 1L ));
+            transactionService.doTransaction(
+                    new TransactionDto(null, transactionAmount, TransactionTypes.Credit, LocalDateTime.now(),
+                            "Test", accountId, 1L, traceNo));
         } catch (Exception ex){
             ex.printStackTrace();
         }
 
-        var transactions = transactionService.loadTransactions();
-        System.out.println("transactions count:" + transactions.size());
+        var accountAfterTransaction = accountService.loadAccount(accountId);
+        assertEquals(accountBeforeTransaction.getBalance().add(transactionAmount), accountAfterTransaction.getBalance());
 
-        var srcAccount = accountService.loadAccount(1L);
-        System.out.println("account balance: " + srcAccount.getBalance());
+        var transaction = transactionService.loadTransactionByTraceNo(traceNo);
+        assertNotNull(transaction);
+    }
 
-        var desAccount = accountService.loadAccount(2L);
-        System.out.println("account balance: " + desAccount.getBalance());
+    @Test
+    public void testTransfer() {
+        var transactionAmount = BigDecimal.valueOf(1000L);
+        var srcAccountId = 1L;
+        var desAccountId = 2L;
+        var srcTraceNo = UUID.randomUUID().toString();
+        var desTraceNo = UUID.randomUUID().toString();
+        var srcAccountBeforeTransaction = accountService.loadAccount(srcAccountId);
+        var desAccountBeforeTransaction = accountService.loadAccount(desAccountId);
+
+        try {
+            transactionService.transfer(
+                    new TransferDto(BigDecimal.valueOf(2000), "From Arman", "To Bank",
+                            srcAccountId, desAccountId, 1L, srcTraceNo, desTraceNo));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        var srcAccountAfterTransaction = accountService.loadAccount(srcAccountId);
+        assertEquals(srcAccountBeforeTransaction.getBalance().subtract(transactionAmount), srcAccountAfterTransaction.getBalance());
+
+        var desAccountAfterTransaction = accountService.loadAccount(desAccountId);
+        assertEquals(desAccountBeforeTransaction.getBalance().add(transactionAmount), desAccountAfterTransaction.getBalance());
+
+        var srcTransaction = transactionService.loadTransactionByTraceNo(srcTraceNo);
+        assertNotNull(srcTransaction);
+
+        var desTransaction = transactionService.loadTransactionByTraceNo(desTraceNo);
+        assertNotNull(desTransaction);
     }
 }

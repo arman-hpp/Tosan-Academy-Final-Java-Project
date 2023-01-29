@@ -1,7 +1,6 @@
 package com.tosan.core_banking.services;
 
-import com.tosan.core_banking.dtos.TransactionDto;
-import com.tosan.core_banking.dtos.TransferDto;
+import com.tosan.core_banking.dtos.*;
 import com.tosan.core_banking.interfaces.ITransactionService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.model.*;
@@ -43,6 +42,14 @@ public class TransactionService implements ITransactionService {
         return outputDto;
     }
 
+    public TransactionDto loadTransactionByTraceNo(String traceNo) {
+        var transaction = _transactionRepository.findByTraceNo(traceNo).orElse(null);
+        if(transaction == null)
+            throw new BusinessException("Can not find the transaction");
+
+        return _modelMapper.map(transaction, TransactionDto.class);
+    }
+
     public List<TransactionDto> loadLastAccountTransactions(Long accountId) {
         var transactions = _transactionRepository.findTop5ByAccountIdOrderByRegDateDesc(accountId);
         var outputDto = new ArrayList<TransactionDto>();
@@ -76,10 +83,12 @@ public class TransactionService implements ITransactionService {
     @Transactional
     public void transfer(TransferDto inputDto) {
         var srcTransaction = new TransactionDto(null, inputDto.getAmount(), TransactionTypes.Debit,
-                LocalDateTime.now(), inputDto.getSrcDescription(), inputDto.getSrcAccountId(), inputDto.getUserId());
+                LocalDateTime.now(), inputDto.getSrcDescription(), inputDto.getSrcAccountId(),
+                inputDto.getUserId(), inputDto.getSrcTraceNo());
 
         var desTransaction = new TransactionDto(null, inputDto.getAmount(), TransactionTypes.Credit,
-                LocalDateTime.now(), inputDto.getDesDescription(), inputDto.getDesAccountId(), inputDto.getUserId());
+                LocalDateTime.now(), inputDto.getDesDescription(), inputDto.getDesAccountId(),
+                inputDto.getUserId(), inputDto.getDesTraceNo());
 
         doTransaction(srcTransaction);
         doTransaction(desTransaction);

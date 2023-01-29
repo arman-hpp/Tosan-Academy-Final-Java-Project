@@ -20,4 +20,5 @@ public final class TransactionDto extends BaseDto {
     private String description;
     private Long accountId;
     private Long userId;
+    private String traceNo;
 }
