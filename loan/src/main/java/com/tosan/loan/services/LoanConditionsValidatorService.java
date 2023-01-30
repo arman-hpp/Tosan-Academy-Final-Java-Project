@@ -10,11 +10,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoanConditionsValidatorService implements ILoanConditionsValidatorService {
     private final LoanConditionsRepository _loanConditionsRepository;
-    private final ModelMapper _modelMapper;
 
-    public LoanConditionsValidatorService(LoanConditionsRepository loanConditionsRepository, ModelMapper modelMapper) {
+    public LoanConditionsValidatorService(LoanConditionsRepository loanConditionsRepository) {
         _loanConditionsRepository = loanConditionsRepository;
-        _modelMapper = modelMapper;
     }
 
     public void validate(LoanDto loanDto) {

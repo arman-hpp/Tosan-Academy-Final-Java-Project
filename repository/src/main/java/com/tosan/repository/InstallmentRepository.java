@@ -21,6 +21,6 @@ public interface InstallmentRepository extends BaseRepository<Installment, Long>
     }
 
     @Query(value = "SELECT sum(i.interestAmount) FROM Installment i WHERE i.paid = true AND i.paidDate > ?1 AND i.paidDate < ?2")
-    BigDecimal getTotalInterest(LocalDateTime fromDateTime, LocalDateTime toDateTime);
+    BigDecimal sumTotalInterests(LocalDateTime fromDateTime, LocalDateTime toDateTime);
 }
 

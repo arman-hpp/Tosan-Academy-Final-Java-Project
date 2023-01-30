@@ -9,24 +9,28 @@ import com.tosan.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 public class LoanService implements ILoanService {
     private final LoanRepository _loanRepository;
-    private final LoanConditionsValidatorService _loanConditionsValidator;
+    private final LoanConditionsValidatorService _loanConditionsValidatorService;
     private final AccountRepository _accountRepository;
     private final CustomerRepository _customerRepository;
+    private final InstallmentRepository _installmentRepository;
     private final ModelMapper _modelMapper;
 
     public LoanService(LoanRepository loanRepository,
-                       LoanConditionsValidatorService loanConditionsValidator,
+                       LoanConditionsValidatorService loanConditionsValidatorService,
                        AccountRepository accountRepository,
-                       CustomerRepository customerRepository, ModelMapper modelMapper) {
+                       CustomerRepository customerRepository, InstallmentRepository installmentRepository, ModelMapper modelMapper) {
         _loanRepository = loanRepository;
-        _loanConditionsValidator = loanConditionsValidator;
+        _loanConditionsValidatorService = loanConditionsValidatorService;
         _accountRepository = accountRepository;
         _customerRepository = customerRepository;
+        _installmentRepository = installmentRepository;
         _modelMapper = modelMapper;
     }
 
@@ -49,7 +53,7 @@ public class LoanService implements ILoanService {
     }
 
     public void addLoan(LoanDto inputDto) {
-        _loanConditionsValidator.validate(inputDto);
+        _loanConditionsValidatorService.validate(inputDto);
 
         var account = _accountRepository.findById(inputDto.getDepositAccountId()).orElse(null);
         if(account == null)
@@ -67,7 +71,7 @@ public class LoanService implements ILoanService {
     }
 
     public void editLoan(LoanDto inputDto) {
-        _loanConditionsValidator.validate(inputDto);
+        _loanConditionsValidatorService.validate(inputDto);
 
         var account = _accountRepository.findById(inputDto.getDepositAccountId()).orElse(null);
         if(account == null)
@@ -100,7 +104,7 @@ public class LoanService implements ILoanService {
         }
     }
 
-    public void loadLoanInterests() {
-
+    public BigDecimal loadLoanInterests(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
+        return _installmentRepository.sumTotalInterests(fromDateTime, toDateTime);
     }
 }
