@@ -1,14 +1,12 @@
 package com.tosan.core_banking.services;
 
 import com.tosan.core_banking.dtos.*;
-import com.tosan.core_banking.interfaces.ITraceNoGeneratorService;
-import com.tosan.core_banking.interfaces.ITransactionService;
+import com.tosan.core_banking.interfaces.*;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.model.*;
 import com.tosan.repository.*;
-import com.tosan.utils.EnumUtils;
+import com.tosan.utils.*;
 
-import com.tosan.utils.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +45,16 @@ public class TransactionService implements ITransactionService {
         return outputDto;
     }
 
+    public List<TransactionDto> loadTransactions(LocalDateTime fromDate, LocalDateTime toDate) {
+        var transactions = _transactionRepository.findByRegDateBetweenOrderByRegDate(fromDate, toDate);
+        var outputDto = new ArrayList<TransactionDto>();
+        for(var transaction : transactions) {
+            outputDto.add(_modelMapper.map(transaction, TransactionDto.class));
+        }
+
+        return outputDto;
+    }
+
     public TransactionDto loadTransactionByTraceNo(String traceNo) {
         var transaction = _transactionRepository.findByTraceNo(traceNo).orElse(null);
         if(transaction == null)
@@ -75,7 +83,7 @@ public class TransactionService implements ITransactionService {
         return outputDto;
     }
 
-    public List<TransactionDto> loadLastBranchTransactions(Long userId) {
+    public List<TransactionDto> loadUserTransactions(Long userId) {
         var transactions = _transactionRepository.findByUserIdOrderByRegDateDesc(userId);
         var outputDto = new ArrayList<TransactionDto>();
         for(var transaction : transactions) {

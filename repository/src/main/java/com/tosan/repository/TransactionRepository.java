@@ -3,8 +3,8 @@ package com.tosan.repository;
 import com.tosan.model.Transaction;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Repository
 public interface TransactionRepository extends BaseRepository<Transaction, Long> {
@@ -14,5 +14,8 @@ public interface TransactionRepository extends BaseRepository<Transaction, Long>
 
     List<Transaction> findByUserIdOrderByRegDateDesc(Long userId);
 
+    List<Transaction> findByRegDateBetweenOrderByRegDate(LocalDateTime from, LocalDateTime to);
+
     Optional<Transaction> findByTraceNo(String traceNo);
+
 }

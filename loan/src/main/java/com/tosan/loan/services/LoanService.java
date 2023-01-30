@@ -14,12 +14,19 @@ import java.util.*;
 @Service
 public class LoanService implements ILoanService {
     private final LoanRepository _loanRepository;
-    private final LoanConditionsService _loanConditionsService;
+    private final LoanConditionsValidator _loanConditionsValidator;
+    private final AccountRepository _accountRepository;
+    private final CustomerRepository _customerRepository;
     private final ModelMapper _modelMapper;
 
-    public LoanService(LoanRepository loanRepository, LoanConditionsService loanConditionsService, ModelMapper modelMapper) {
+    public LoanService(LoanRepository loanRepository,
+                       LoanConditionsValidator loanConditionsValidator,
+                       AccountRepository accountRepository,
+                       CustomerRepository customerRepository, ModelMapper modelMapper) {
         _loanRepository = loanRepository;
-        _loanConditionsService = loanConditionsService;
+        _loanConditionsValidator = loanConditionsValidator;
+        _accountRepository = accountRepository;
+        _customerRepository = customerRepository;
         _modelMapper = modelMapper;
     }
 
@@ -42,13 +49,33 @@ public class LoanService implements ILoanService {
     }
 
     public void addLoan(LoanDto inputDto) {
-        _loanConditionsService.validateLoanConditions(inputDto);
+        _loanConditionsValidator.validate(inputDto);
+
+        var account = _accountRepository.findById(inputDto.getDepositAccountId()).orElse(null);
+        if(account == null)
+            throw new BusinessException("the deposit account is not exists");
+
+        var customer = _customerRepository.findById(inputDto.getCustomerId()).orElse(null);
+        if(customer == null)
+            throw new BusinessException("the customer is not exists");
+
         var loan = _modelMapper.map(inputDto, Loan.class);
+        loan.setCustomer(customer);
+        loan.setDepositAccount(account);
+
         _loanRepository.save(loan);
     }
 
     public void editLoan(LoanDto inputDto) {
-        _loanConditionsService.validateLoanConditions(inputDto);
+        _loanConditionsValidator.validate(inputDto);
+
+        var account = _accountRepository.findById(inputDto.getDepositAccountId()).orElse(null);
+        if(account == null)
+            throw new BusinessException("the deposit account is not exists");
+
+        var customer = _customerRepository.findById(inputDto.getCustomerId()).orElse(null);
+        if(customer == null)
+            throw new BusinessException("the customer is not exists");
 
         var loan = _loanRepository.findById(inputDto.getId()).orElse(null);
         if(loan == null)
@@ -58,6 +85,9 @@ public class LoanService implements ILoanService {
             throw new BusinessException("the loan has been paid and it cannot be edit");
 
         _modelMapper.map(inputDto, loan);
+        loan.setCustomer(customer);
+        loan.setDepositAccount(account);
+
         _loanRepository.save(loan);
     }
 

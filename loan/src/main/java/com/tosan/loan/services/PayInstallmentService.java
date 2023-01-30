@@ -1,34 +1,62 @@
 package com.tosan.loan.services;
 
+import com.tosan.core_banking.dtos.TransferDto;
 import com.tosan.core_banking.services.TransactionService;
+import com.tosan.exceptions.BusinessException;
+import com.tosan.model.*;
 import com.tosan.repository.AccountRepository;
 import com.tosan.repository.InstallmentRepository;
-import com.tosan.repository.LoanRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 public class PayInstallmentService {
-    private final LoanRepository _loanRepository;
     private final InstallmentRepository _installmentRepository;
-    private final LoanConditionsService _loanConditionsService;
-    private final AmortizationCalculatorService _amortizationCalculatorService;
     private final TransactionService _transactionService;
-    private final ModelMapper _modelMapper;
     private final AccountRepository _accountRepository;
 
-    public PayInstallmentService(LoanRepository loanRepository, InstallmentRepository installmentRepository, LoanConditionsService loanConditionsService, AmortizationCalculatorService amortizationCalculatorService, TransactionService transactionService, ModelMapper modelMapper, AccountRepository accountRepository) {
-        _loanRepository = loanRepository;
+    public PayInstallmentService(InstallmentRepository installmentRepository,
+                                 TransactionService transactionService,
+                                 AccountRepository accountRepository) {
         _installmentRepository = installmentRepository;
-        _loanConditionsService = loanConditionsService;
-        _amortizationCalculatorService = amortizationCalculatorService;
         _transactionService = transactionService;
-        _modelMapper = modelMapper;
         _accountRepository = accountRepository;
     }
 
-    public void payInstallments(Long loanId, Long accountId, Integer payInstallmentCount) {
+    @Transactional
+    public void payInstallments(Long loanId, Long accountId, Long userId, Integer payInstallmentCount) {
         var installments = _installmentRepository
-                .findTopCountByLoanIdAndPaidOrderByInstallmentNo(payInstallmentCount, loanId, false);
+                .findTopCountByLoanIdAndPaidOrderByInstallmentNo(loanId, false, payInstallmentCount);
+
+        var sumInstallmentsAmount = installments.stream()
+                .map(Installment::getPaymentAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        var customerAccount = _accountRepository.findById(accountId).orElse(null);
+        if(customerAccount == null)
+            throw new BusinessException("can not find customer account");
+
+        if(customerAccount.getBalance().compareTo(sumInstallmentsAmount) > 0)
+            throw new BusinessException("the account balance is not enough");
+
+        for (var installment : installments) {
+            installment.setPaid(true);
+            installment.setPaidDate(LocalDateTime.now());
+        }
+
+        _installmentRepository.saveAll(installments);
+
+        var bankAccount = _accountRepository.findByAccountType(AccountTypes.BankAccount).orElse(null);
+        if(bankAccount == null)
+            throw new BusinessException("can not find bank account");
+
+        var transferDto = new TransferDto(sumInstallmentsAmount, "Pay Installments",
+                "Pay Installments", customerAccount.getId(), bankAccount.getId(),
+                userId);
+
+        _transactionService.transfer(transferDto);
     }
 }

@@ -7,22 +7,20 @@ import com.tosan.model.LoanCondition;
 import com.tosan.repository.LoanConfigurationRepository;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-@Service
-public class LoanConditionsService implements ILoanConditionsValidator {
+public class LoanConditionsValidator implements ILoanConditionsValidator {
     private final LoanConfigurationRepository _loanConfigurationRepository;
     private final ModelMapper _modelMapper;
 
-    public LoanConditionsService(LoanConfigurationRepository loanConfigurationRepository, ModelMapper modelMapper) {
+    public LoanConditionsValidator(LoanConfigurationRepository loanConfigurationRepository, ModelMapper modelMapper) {
         _loanConfigurationRepository = loanConfigurationRepository;
         _modelMapper = modelMapper;
     }
 
-    public void validateLoanConditions(LoanDto inputDto) {
+    public void validate(LoanDto inputDto) {
         var loanConfigs = loadLoanConfigs();
 
         if(inputDto.getRefundDuration() < loanConfigs.getMinRefundDuration())

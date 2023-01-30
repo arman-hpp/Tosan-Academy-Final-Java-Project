@@ -4,9 +4,8 @@ import com.tosan.core_banking.dtos.TransferDto;
 import com.tosan.core_banking.services.TransactionService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.LoanDto;
-import com.tosan.loan.interfaces.IDepositLoanService;
-import com.tosan.model.AccountTypes;
-import com.tosan.model.Installment;
+import com.tosan.loan.interfaces.*;
+import com.tosan.model.*;
 import com.tosan.repository.*;
 
 import org.modelmapper.ModelMapper;
@@ -18,22 +17,26 @@ import java.util.ArrayList;
 public class DepositLoanService implements IDepositLoanService {
     private final LoanRepository _loanRepository;
     private final InstallmentRepository _installmentRepository;
-    private final LoanConditionsService _loanConditionsService;
-    private final AmortizationCalculatorService _amortizationCalculatorService;
+    private final LoanConditionsValidator _loanConditionValidator;
+    private final ILoanCalculator _loanCalculator;
     private final TransactionService _transactionService;
-    private final ModelMapper _modelMapper;
     private final AccountRepository _accountRepository;
+    private final ModelMapper _modelMapper;
 
-    public DepositLoanService(LoanRepository loanRepository, InstallmentRepository installmentRepository,
-                              LoanConditionsService loanConditionsService, AmortizationCalculatorService amortizationCalculatorService,
-                              TransactionService transactionService, ModelMapper modelMapper, AccountRepository accountRepository) {
+    public DepositLoanService(LoanRepository loanRepository,
+                              InstallmentRepository installmentRepository,
+                              LoanConditionsValidator loanConditionsValidator,
+                              ILoanCalculator loanCalculatorService,
+                              TransactionService transactionService,
+                              AccountRepository accountRepository,
+                              ModelMapper modelMapper) {
         _loanRepository = loanRepository;
         _installmentRepository = installmentRepository;
-        _loanConditionsService = loanConditionsService;
-        _amortizationCalculatorService = amortizationCalculatorService;
+        _loanConditionValidator = loanConditionsValidator;
+        _loanCalculator = loanCalculatorService;
         _transactionService = transactionService;
-        _modelMapper = modelMapper;
         _accountRepository = accountRepository;
+        _modelMapper = modelMapper;
     }
 
     @Transactional
@@ -54,10 +57,9 @@ public class DepositLoanService implements IDepositLoanService {
             throw new BusinessException("can not find customer account");
 
         var loanDto = _modelMapper.map(loan, LoanDto.class);
-        _loanConditionsService.validateLoanConditions(loanDto);
+        _loanConditionValidator.validate(loanDto);
 
-
-        var loanPaymentInfo = _amortizationCalculatorService.calculate(loanDto);
+        var loanPaymentInfo = _loanCalculator.calculate(loanDto);
         var list = new ArrayList<Installment>();
         for (var installmentsDto : loanPaymentInfo.getInstallments()) {
             var installment = _modelMapper.map(installmentsDto, Installment.class);

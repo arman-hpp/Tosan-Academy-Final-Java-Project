@@ -2,6 +2,6 @@ package com.tosan.loan.interfaces;
 
 import com.tosan.loan.dtos.*;
 
-public interface ILoanCalculatorService {
+public interface ILoanCalculator {
     LoanPaymentInfoDto calculate(LoanDto loan);
 }
