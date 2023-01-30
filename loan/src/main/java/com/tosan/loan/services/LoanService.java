@@ -14,13 +14,13 @@ import java.util.*;
 @Service
 public class LoanService implements ILoanService {
     private final LoanRepository _loanRepository;
-    private final LoanConditionsValidator _loanConditionsValidator;
+    private final LoanConditionsValidatorService _loanConditionsValidator;
     private final AccountRepository _accountRepository;
     private final CustomerRepository _customerRepository;
     private final ModelMapper _modelMapper;
 
     public LoanService(LoanRepository loanRepository,
-                       LoanConditionsValidator loanConditionsValidator,
+                       LoanConditionsValidatorService loanConditionsValidator,
                        AccountRepository accountRepository,
                        CustomerRepository customerRepository, ModelMapper modelMapper) {
         _loanRepository = loanRepository;

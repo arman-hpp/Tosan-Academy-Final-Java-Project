@@ -9,15 +9,17 @@ import com.tosan.model.*;
 import com.tosan.repository.*;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+@Service
 public class DepositLoanService implements IDepositLoanService {
     private final LoanRepository _loanRepository;
     private final InstallmentRepository _installmentRepository;
-    private final LoanConditionsValidator _loanConditionValidator;
+    private final LoanConditionsValidatorService _loanConditionValidatorService;
     private final ILoanCalculator _loanCalculator;
     private final TransactionService _transactionService;
     private final AccountRepository _accountRepository;
@@ -25,14 +27,14 @@ public class DepositLoanService implements IDepositLoanService {
 
     public DepositLoanService(LoanRepository loanRepository,
                               InstallmentRepository installmentRepository,
-                              LoanConditionsValidator loanConditionsValidator,
+                              LoanConditionsValidatorService loanConditionsValidatorService,
                               ILoanCalculator loanCalculatorService,
                               TransactionService transactionService,
                               AccountRepository accountRepository,
                               ModelMapper modelMapper) {
         _loanRepository = loanRepository;
         _installmentRepository = installmentRepository;
-        _loanConditionValidator = loanConditionsValidator;
+        _loanConditionValidatorService = loanConditionsValidatorService;
         _loanCalculator = loanCalculatorService;
         _transactionService = transactionService;
         _accountRepository = accountRepository;
@@ -57,7 +59,7 @@ public class DepositLoanService implements IDepositLoanService {
             throw new BusinessException("can not find customer account");
 
         var loanDto = _modelMapper.map(loan, LoanDto.class);
-        _loanConditionValidator.validate(loanDto);
+        _loanConditionValidatorService.validate(loanDto);
 
         var loanPaymentInfo = _loanCalculator.calculate(loanDto);
         var list = new ArrayList<Installment>();

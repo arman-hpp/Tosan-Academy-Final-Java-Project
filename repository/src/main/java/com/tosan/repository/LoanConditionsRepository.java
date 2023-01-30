@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface LoanConfigurationRepository extends BaseRepository<LoanCondition, Long> {
+public interface LoanConditionsRepository extends BaseRepository<LoanCondition, Long> {
     Optional<LoanCondition> findTop1ByExpireDateIsNullOrderByStartDateDesc();
 }

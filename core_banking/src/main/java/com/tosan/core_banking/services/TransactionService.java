@@ -18,16 +18,16 @@ import java.util.*;
 public class TransactionService implements ITransactionService {
     private final TransactionRepository _transactionRepository;
     private final AccountRepository _accountRepository;
-    private final ITraceNoGeneratorService _traceNoGeneratorService;
+    private final ITraceNoGenerator _traceNoGenerator;
     private final ModelMapper _modelMapper;
 
     public TransactionService(TransactionRepository transactionRepository,
                               AccountRepository accountRepository,
-                              RandomTraceNoGeneratorService traceNoGeneratorService,
+                              RandomTraceNoGenerator traceNoGenerator,
                               ModelMapper modelMapper) {
         _transactionRepository = transactionRepository;
         _accountRepository = accountRepository;
-        _traceNoGeneratorService = traceNoGeneratorService;
+        _traceNoGenerator = traceNoGenerator;
         _modelMapper = modelMapper;
     }
 
@@ -128,7 +128,7 @@ public class TransactionService implements ITransactionService {
         transaction.setAccount(account);
 
         if(StringUtils.IsNullOrEmpty(transaction.getTraceNo())) {
-            transaction.setTraceNo(_traceNoGeneratorService.Generate());
+            transaction.setTraceNo(_traceNoGenerator.generate());
         }
 
         _accountRepository.save(account);

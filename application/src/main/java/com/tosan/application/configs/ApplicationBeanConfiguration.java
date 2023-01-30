@@ -15,12 +15,13 @@ public class ApplicationBeanConfiguration {
     }
 
     @Bean
-    public ITraceNoGeneratorService traceNoGeneratorService() {
-        return new RandomTraceNoGeneratorService();
+    public ITraceNoGenerator traceNoGenerator() {
+        return new RandomTraceNoGenerator();
     }
 
     @Bean
-    public ILoanCalculatorService loanCalculatorService() {
-        return new AmortizationCalculatorService();
+    public ILoanCalculator loanCalculator() {
+        return new AmortizationLoanCalculator();
     }
+
 }
