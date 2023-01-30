@@ -74,12 +74,9 @@ public class DepositLoanService implements IDepositLoanService {
         _installmentRepository.saveAll(list);
         _loanRepository.save(loan);
 
-        var srcTraceNo = _transactionService.createTraceNo();
-        var desTraceNo = _transactionService.createTraceNo();
-
         var transferDto = new TransferDto(loan.getAmount(), "Transfer to customer account",
                 "Transfer loan from bank account", bankAccount.getId(), customerAccount.getId(),
-                userId, srcTraceNo, desTraceNo);
+                userId);
 
         _transactionService.transfer(transferDto);
     }

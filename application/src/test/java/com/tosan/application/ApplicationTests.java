@@ -61,7 +61,7 @@ class ApplicationTests {
 
         try {
             transactionService.transfer(
-                    new TransferDto(BigDecimal.valueOf(2000), "From Arman", "To Bank",
+                    new TransferDto(transactionAmount, "From Arman", "To Bank",
                             srcAccountId, desAccountId, 1L, srcTraceNo, desTraceNo));
         } catch (Exception ex) {
             ex.printStackTrace();

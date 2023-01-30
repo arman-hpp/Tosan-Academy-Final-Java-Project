@@ -1,12 +1,14 @@
 package com.tosan.core_banking.services;
 
 import com.tosan.core_banking.dtos.*;
+import com.tosan.core_banking.interfaces.ITraceNoGeneratorService;
 import com.tosan.core_banking.interfaces.ITransactionService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.model.*;
 import com.tosan.repository.*;
 import com.tosan.utils.EnumUtils;
 
+import com.tosan.utils.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +20,16 @@ import java.util.*;
 public class TransactionService implements ITransactionService {
     private final TransactionRepository _transactionRepository;
     private final AccountRepository _accountRepository;
+    private final ITraceNoGeneratorService _traceNoGeneratorService;
     private final ModelMapper _modelMapper;
 
     public TransactionService(TransactionRepository transactionRepository,
                               AccountRepository accountRepository,
+                              RandomTraceNoGeneratorService traceNoGeneratorService,
                               ModelMapper modelMapper) {
         _transactionRepository = transactionRepository;
         _accountRepository = accountRepository;
+        _traceNoGeneratorService = traceNoGeneratorService;
         _modelMapper = modelMapper;
     }
 
@@ -114,11 +119,11 @@ public class TransactionService implements ITransactionService {
         transaction.setRegDate(LocalDateTime.now());
         transaction.setAccount(account);
 
+        if(StringUtils.IsNullOrEmpty(transaction.getTraceNo())) {
+            transaction.setTraceNo(_traceNoGeneratorService.Generate());
+        }
+
         _accountRepository.save(account);
         _transactionRepository.save(transaction);
-    }
-
-    public String createTraceNo() {
-        return UUID.randomUUID().toString();
     }
 }
