@@ -23,7 +23,7 @@ public class TransactionService implements ITransactionService {
 
     public TransactionService(TransactionRepository transactionRepository,
                               AccountRepository accountRepository,
-                              RandomTraceNoGenerator traceNoGenerator,
+                              ITraceNoGenerator traceNoGenerator,
                               ModelMapper modelMapper) {
         _transactionRepository = transactionRepository;
         _accountRepository = accountRepository;

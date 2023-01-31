@@ -55,4 +55,16 @@ public class UserService implements IUserService {
         user.setPassword(inputDto.getNewPassword());
         _userRepository.save(user);
     }
+
+    public Boolean isAdmin(Long userId) {
+        var user = _userRepository.findById(userId).orElse(null);
+        if(user == null)
+            throw new BusinessException("user not found!");
+
+        if(user.getUserType() == UserTypes.Administrator) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

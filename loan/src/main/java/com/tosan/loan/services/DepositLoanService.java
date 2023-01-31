@@ -1,6 +1,7 @@
 package com.tosan.loan.services;
 
 import com.tosan.core_banking.dtos.TransferDto;
+import com.tosan.core_banking.services.AccountService;
 import com.tosan.core_banking.services.TransactionService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.LoanDto;
@@ -20,24 +21,24 @@ public class DepositLoanService implements IDepositLoanService {
     private final LoanRepository _loanRepository;
     private final InstallmentRepository _installmentRepository;
     private final LoanConditionsValidatorService _loanConditionValidatorService;
-    private final ILoanCalculator _loanCalculator;
     private final TransactionService _transactionService;
-    private final AccountRepository _accountRepository;
+    private final AccountService _accountService;
+    private final ILoanCalculator _loanCalculator;
     private final ModelMapper _modelMapper;
 
     public DepositLoanService(LoanRepository loanRepository,
                               InstallmentRepository installmentRepository,
-                              LoanConditionsValidatorService loanConditionsValidatorService,
-                              ILoanCalculator loanCalculatorService,
+                              LoanConditionsValidatorService loanConditionValidatorService,
                               TransactionService transactionService,
-                              AccountRepository accountRepository,
+                              AccountService accountService,
+                              ILoanCalculator loanCalculator,
                               ModelMapper modelMapper) {
         _loanRepository = loanRepository;
         _installmentRepository = installmentRepository;
-        _loanConditionValidatorService = loanConditionsValidatorService;
-        _loanCalculator = loanCalculatorService;
+        _loanConditionValidatorService = loanConditionValidatorService;
         _transactionService = transactionService;
-        _accountRepository = accountRepository;
+        _accountService = accountService;
+        _loanCalculator = loanCalculator;
         _modelMapper = modelMapper;
     }
 
@@ -50,13 +51,17 @@ public class DepositLoanService implements IDepositLoanService {
         if(loan.getDepositDate() != null)
             throw new BusinessException("the loan has been already paid");
 
-        var bankAccount = _accountRepository.findByAccountType(AccountTypes.BankAccount).orElse(null);
-        if(bankAccount == null)
-            throw new BusinessException("can not find bank account");
 
-        var customerAccount = _accountRepository.findById(loan.getDepositAccount().getId()).orElse(null);
-        if(customerAccount == null)
-            throw new BusinessException("can not find customer account");
+
+//        var bankAccount = _accountRepository.findByAccountType(AccountTypes.BankAccount).orElse(null);
+//        if(bankAccount == null)
+//            throw new BusinessException("can not find bank account");
+//
+//        var customerAccount = _accountRepository.findById(loan.getDepositAccount().getId()).orElse(null);
+//        if(customerAccount == null)
+//            throw new BusinessException("can not find customer account");
+
+
 
         var loanDto = _modelMapper.map(loan, LoanDto.class);
         _loanConditionValidatorService.validate(loanDto);
@@ -78,8 +83,11 @@ public class DepositLoanService implements IDepositLoanService {
         _installmentRepository.saveAll(list);
         _loanRepository.save(loan);
 
+        var bankAccountId = _accountService.loadBankAccount().getId();
+        var customerAccountId = loan.getDepositAccount().getId();
+
         var transferDto = new TransferDto(loan.getAmount(), "Transfer to customer account",
-                "Transfer loan from bank account", bankAccount.getId(), customerAccount.getId(),
+                "Transfer loan from bank account", bankAccountId, customerAccountId,
                 userId);
 
         _transactionService.transfer(transferDto);

@@ -2,7 +2,9 @@ package com.tosan.application;
 
 import com.tosan.core_banking.dtos.*;
 import com.tosan.core_banking.services.*;
+import com.tosan.model.AccountTypes;
 import com.tosan.model.TransactionTypes;
+import com.tosan.repository.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,8 +22,29 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class ApplicationTests {
     @Autowired
     public TransactionService transactionService;
+
     @Autowired
     public AccountService accountService;
+
+    @Autowired
+    public AccountRepository accountRepository;
+
+    @Autowired
+    public CustomerRepository customerRepository;
+
+    @Autowired
+    public LoanRepository loanRepository;
+
+    @Autowired
+    public InstallmentRepository installmentRepository;
+
+    @Autowired
+    public LoanConditionsRepository loanConditionsRepository;
+
+    @Autowired
+    public UserRepository userRepository;
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     @Test
     void contextLoads() {
@@ -79,4 +102,25 @@ class ApplicationTests {
         var desTransaction = transactionService.loadTransactionByTraceNo(desTraceNo);
         assertNotNull(desTransaction);
     }
+
+    @Test
+    public void testRepositories() {
+           var account = accountRepository.findByAccountType(AccountTypes.BankAccount);
+           var transaction1 = transactionRepository.findByTraceNo("Test");
+           var transaction2 = transactionRepository.findByRegDateBetweenOrderByRegDate(LocalDateTime.MIN, LocalDateTime.MAX);
+           var transaction3 = transactionRepository.findByUserIdOrderByRegDateDesc(1L);
+           var transaction4 = transactionRepository.findTop5ByAccountIdOrderByRegDateDesc(1L);
+           var transaction5 = transactionRepository.findTop5ByOrderByRegDateDesc();
+           var loan1 = loanRepository.findByDepositAccountIdOrderByRequestDate(1L);
+           var loan2 = loanRepository.findByCustomerIdOrderByRequestDate(1L);
+           var installments = installmentRepository.findByLoanIdOrderByInstallmentNo(1L);
+           var installments2 = installmentRepository.findTopCountByLoanIdAndPaidOrderByInstallmentNo(5, 1L, true);
+           var installments3 = installmentRepository.findByLoanIdAndPaidTrueOrderByInstallmentNo(1L);
+           var installments4 = installmentRepository.findByLoanIdAndPaidFalseOrderByInstallmentNo(1L);
+           var installments5 = installmentRepository.sumTotalInterests(LocalDateTime.MIN, LocalDateTime.MAX);
+           var loanConditions = loanConditionsRepository.findTop1ByExpireDateIsNullOrderByStartDateDesc();
+           var user = userRepository.findByUsername("arman");
+    }
+
+
 }
