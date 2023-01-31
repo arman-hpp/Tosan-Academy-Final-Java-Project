@@ -115,7 +115,13 @@ public class LoanService implements ILoanService {
         _loanRepository.delete(loan);
     }
 
-    public BigDecimal loadLoanSumInterests(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
-        return _installmentRepository.sumTotalInterests(fromDateTime, toDateTime);
+    public List<LoanInterestStatisticsDto> loadLoanSumInterests(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
+        var loanInterestStatistics = _installmentRepository.sumTotalInterests(fromDateTime, toDateTime);
+        var outputDto = new ArrayList<LoanInterestStatisticsDto>();
+        for(var loanInterestStatistic : loanInterestStatistics) {
+            outputDto.add(_modelMapper.map(loanInterestStatistic, LoanInterestStatisticsDto.class));
+        }
+
+        return outputDto;
     }
 }

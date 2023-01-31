@@ -69,7 +69,7 @@ public class AccountController {
         return "redirect:/account/index?customer_id=" + customerId;
     }
 
-    @PostMapping("/searchCustomer")
+    @PostMapping("/searchAccount")
     public String searchAccountSubmit(@ModelAttribute AccountSearchInputDto accountSearchInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "redirect:/account/index?error=Invalid+input+parameters";

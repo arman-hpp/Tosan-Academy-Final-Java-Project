@@ -2,11 +2,11 @@ package com.tosan.repository;
 
 import com.tosan.model.Installment;
 
+import com.tosan.model.LoanInterestStatistics;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public interface InstallmentRepository extends BaseRepository<Installment, Long>
         return findByLoanIdAndPaidOrderByInstallmentNo(loanId, paid, PageRequest.of(0, count));
     }
 
-    @Query(value = "SELECT sum(i.interestAmount) FROM Installment i WHERE i.paid = true AND i.paidDate > ?1 AND i.paidDate < ?2")
-    BigDecimal sumTotalInterests(LocalDateTime fromDateTime, LocalDateTime toDateTime);
+    @Query(value = "SELECT i.currency, sum(i.interestAmount) FROM Installment i WHERE i.paid = true AND i.paidDate > ?1 AND i.paidDate < ?2 GROUP BY i.currency")
+    List<LoanInterestStatistics> sumTotalInterests(LocalDateTime fromDateTime, LocalDateTime toDateTime);
 }
 
