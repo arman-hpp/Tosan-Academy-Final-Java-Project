@@ -9,19 +9,19 @@ import java.util.*;
 
 // adapted from https://github.com/ArtyomPanfutov/loan-amortization-calculator
 public class AmortizationLoanCalculator implements ILoanCalculator {
-    public LoanPaymentInfoDto calculate(LoanDto loan) {
+    public LoanPaymentInfoDto calculate(LoanDto loanDto) {
         var overPaidInterestAmount = BigDecimal.ZERO;
-        var loanBalance = loan.getAmount();
-        var term = loan.getRefundDuration();
-        var monthlyInterestRate = getMonthlyInterestRate(loan.getInterestRate());
+        var loanBalance = loanDto.getAmount();
+        var term = loanDto.getRefundDuration();
+        var monthlyInterestRate = getMonthlyInterestRate(loanDto.getInterestRate());
         var monthlyPaymentAmount = getMonthlyPaymentAmount(loanBalance, monthlyInterestRate, term);
-        var paymentDate = loan.getFirstPaymentDate();
+        var paymentDate = loanDto.getFirstPaymentDate();
 
         // Calculate amortization schedule
         var payments = new ArrayList<InstallmentDto>();
         for (var i = 0; i < term; i++) {
             var additionalPaymentAmount = BigDecimal.ZERO;
-            var interestAmount = calculateInterestAmount(loan, loanBalance, monthlyInterestRate, paymentDate);
+            var interestAmount = calculateInterestAmount(loanDto, loanBalance, monthlyInterestRate, paymentDate);
 
             // If something gets negative for some reason (because of early payments)
             // we stop calculating and correct the amount in the last payment
@@ -32,7 +32,7 @@ public class AmortizationLoanCalculator implements ILoanCalculator {
                     var lastPayment = payments.get(lastPaymentNumber);
                     payments.set(lastPaymentNumber, new InstallmentDto(lastPayment.getInstallmentNo(),
                             paymentDate, lastPayment.getInterestAmount(), lastPayment.getLoanBalanceAmount(),
-                            lastPayment.getLoanBalanceAmount(), lastPayment.getLoanBalanceAmount()));
+                            lastPayment.getLoanBalanceAmount(), lastPayment.getLoanBalanceAmount(), loanDto.getCurrency()));
                 }
 
                 break;
@@ -40,7 +40,7 @@ public class AmortizationLoanCalculator implements ILoanCalculator {
 
             overPaidInterestAmount = overPaidInterestAmount.add(interestAmount);
 
-            var principalAmount = (i + 1 == loan.getRefundDuration())
+            var principalAmount = (i + 1 == loanDto.getRefundDuration())
                     ? loanBalance
                     : (monthlyPaymentAmount.subtract(interestAmount))
                         .add(additionalPaymentAmount)
@@ -49,12 +49,12 @@ public class AmortizationLoanCalculator implements ILoanCalculator {
             var paymentAmount = interestAmount.add(principalAmount);
 
             payments.add(new InstallmentDto(i, paymentDate, interestAmount, principalAmount,
-                    paymentAmount, loanBalance));
+                    paymentAmount, loanBalance, loanDto.getCurrency()));
 
             loanBalance = loanBalance.subtract(principalAmount);
 
-            if (loan.getFirstPaymentDate() != null && paymentDate != null) {
-                paymentDate = getNextMonthPaymentDate(loan.getFirstPaymentDate(), paymentDate);
+            if (loanDto.getFirstPaymentDate() != null && paymentDate != null) {
+                paymentDate = getNextMonthPaymentDate(loanDto.getFirstPaymentDate(), paymentDate);
             }
         }
 

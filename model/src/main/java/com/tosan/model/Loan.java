@@ -34,6 +34,10 @@ public class Loan extends BaseEntity {
     @Column(name = "first_payment_date")
     private LocalDate firstPaymentDate;
 
+    @Column(name = "currency", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    private Currencies currency;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "deposit_account_id", nullable = false)
     private Account depositAccount;

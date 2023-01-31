@@ -1,6 +1,7 @@
 package com.tosan.loan.dtos;
 
 import com.tosan.dtos.BaseDto;
+import com.tosan.model.Currencies;
 
 import lombok.*;
 
@@ -21,4 +22,5 @@ public final class LoanDto extends BaseDto {
     private LocalDateTime depositDate;
     private LocalDate firstPaymentDate;
     private Long depositAccountId;
+    private Currencies currency;
 }

@@ -26,7 +26,7 @@ public class CustomerController {
         try {
             if (id != null) {
                 var idLong = ConvertorUtils.tryParseLong(id, -1L);
-                if(idLong <= 0) {
+                if (idLong <= 0) {
                     return "redirect:/customer/index?error=Invalid+input+parameters";
                 }
 
@@ -52,7 +52,7 @@ public class CustomerController {
     @GetMapping("/index/{id}")
     public String customerFormById(@PathVariable String id, Model model) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
-        if(idLong <= 0) {
+        if (idLong <= 0) {
             return "redirect:/customer/index?error=Invalid+input+parameters";
         }
 
@@ -75,7 +75,7 @@ public class CustomerController {
 
     @PostMapping("/addCustomer")
     public String addCustomerSubmit(@ModelAttribute CustomerDto customerDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return "redirect:/customer/index?error=Invalid+input+parameters";
         }
 
@@ -83,11 +83,9 @@ public class CustomerController {
             _customerService.addOrEditCustomer(customerDto);
 
             return "redirect:/customer/index";
-        }
-        catch (BusinessException ex) {
+        } catch (BusinessException ex) {
             return "redirect:/customer/index?error=" + ex.getEncodedMessage();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return "redirect:/customer/index?error=unhandled+error+occurred";
         }
     }
@@ -95,7 +93,7 @@ public class CustomerController {
     @PostMapping("/deleteCustomer/{id}")
     public String deleteSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
-        if(idLong <= 0) {
+        if (idLong <= 0) {
             return "redirect:/customer/index?error=Invalid+input+parameters";
         }
 
@@ -103,11 +101,9 @@ public class CustomerController {
             _customerService.removeCustomer(idLong);
 
             return "redirect:/customer/index";
-        }
-        catch (BusinessException ex) {
+        } catch (BusinessException ex) {
             return "redirect:/customer/index?error=" + ex.getEncodedMessage();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return "redirect:/customer/index?error=unhandled+error+occurred";
         }
     }
@@ -115,7 +111,7 @@ public class CustomerController {
     @PostMapping("/editCustomer/{id}")
     public String editSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
-        if(idLong <= 0) {
+        if (idLong <= 0) {
             return "redirect:/customer/index?error=Invalid+input+parameters";
         }
 
@@ -123,16 +119,16 @@ public class CustomerController {
     }
 
     @PostMapping("/searchCustomer")
-    public String searchSubmit(@ModelAttribute CustomerSearchInputDto searchCustomerInputsDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
+    public String searchSubmit(@ModelAttribute CustomerSearchInputDto customerSearchInputDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return "redirect:/customer/index?error=Invalid+input+parameters";
         }
 
-        var id = searchCustomerInputsDto.getId();
-        if(id == null){
+        var customerId = customerSearchInputDto.getCustomerId();
+        if (customerId == null) {
             return "redirect:/customer/index";
         }
 
-        return "redirect:/customer/index?id=" + id;
+        return "redirect:/customer/index?id=" + customerId;
     }
 }

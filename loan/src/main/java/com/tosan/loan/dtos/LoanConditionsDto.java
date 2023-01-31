@@ -1,6 +1,7 @@
 package com.tosan.loan.dtos;
 
 import com.tosan.dtos.BaseDto;
+import com.tosan.model.Currencies;
 
 import lombok.*;
 
@@ -20,4 +21,5 @@ public class LoanConditionsDto extends BaseDto {
     private BigDecimal maxAmount;
     private LocalDateTime startDate;
     private LocalDateTime expireDate;
+    private Currencies currency;
 }

@@ -32,6 +32,10 @@ public class Installment extends BaseEntity {
     @Column(name = "paid_date")
     private LocalDateTime paidDate;
 
+    @Column(name = "currency", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    private Currencies currency;
+
     @Column(name = "paid", nullable = false)
     private Boolean paid;
 
