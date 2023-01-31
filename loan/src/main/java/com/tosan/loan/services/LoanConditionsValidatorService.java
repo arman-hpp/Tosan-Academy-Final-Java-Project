@@ -17,7 +17,7 @@ public class LoanConditionsValidatorService implements ILoanConditionsValidatorS
 
     public void validate(LoanDto loanDto) {
         var loanConditions = _loanConditionsRepository
-                .findTop1ByExpireDateIsNullOrderByStartDateDesc().orElse(null);
+                .findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(loanDto.getCurrency()).orElse(null);
         if(loanConditions == null)
             throw new BusinessException("can not find the active loan configuration");
 

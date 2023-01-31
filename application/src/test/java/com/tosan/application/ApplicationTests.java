@@ -119,7 +119,7 @@ class ApplicationTests {
            var installments3 = installmentRepository.findByLoanIdAndPaidTrueOrderByInstallmentNo(1L);
            var installments4 = installmentRepository.findByLoanIdAndPaidFalseOrderByInstallmentNo(1L);
            var installments5 = installmentRepository.sumTotalInterests(LocalDateTime.MIN, LocalDateTime.MAX);
-           var loanConditions = loanConditionsRepository.findTop1ByExpireDateIsNullOrderByStartDateDesc();
+           var loanConditions = loanConditionsRepository.findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(Currencies.rial);
            var user = userRepository.findByUsername("arman");
     }
 

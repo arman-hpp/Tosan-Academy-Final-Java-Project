@@ -26,6 +26,10 @@ public class LoanCondition extends BaseEntity {
     @Column(name = "max_amount", nullable = false, precision = 12, scale = 2)
     private BigDecimal maxAmount;
 
+    @Column(name = "currency", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    private Currencies currency;
+
     @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
 
