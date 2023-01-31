@@ -4,7 +4,7 @@ import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.*;
 import com.tosan.loan.interfaces.ILoanConditionsValidatorService;
 import com.tosan.repository.LoanConditionsRepository;
-import org.modelmapper.ModelMapper;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +18,8 @@ public class LoanConditionsValidatorService implements ILoanConditionsValidatorS
     public void validate(LoanDto loanDto) {
         var loanConditions = _loanConditionsRepository
                 .findTop1ByExpireDateIsNullOrderByStartDateDesc().orElse(null);
-        if (loanConditions == null)
-            throw new BusinessException("no active loan conditions found");
+        if(loanConditions == null)
+            throw new BusinessException("can not find the active loan configuration");
 
         if (loanDto.getRefundDuration() < loanConditions.getMinRefundDuration())
             throw new BusinessException("the loan refund duration is less than minimum refund duration");

@@ -28,4 +28,11 @@ public class Account extends BaseEntity {
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Transaction> transactions = new HashSet<>();
+
+    public Account() {
+    }
+
+    public Account(Long Id) {
+        setId(Id);
+    }
 }

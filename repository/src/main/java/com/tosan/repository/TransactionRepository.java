@@ -17,5 +17,4 @@ public interface TransactionRepository extends BaseRepository<Transaction, Long>
     List<Transaction> findByRegDateBetweenOrderByRegDate(LocalDateTime from, LocalDateTime to);
 
     Optional<Transaction> findByTraceNo(String traceNo);
-
 }

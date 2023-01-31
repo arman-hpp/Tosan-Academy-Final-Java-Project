@@ -16,7 +16,7 @@ public interface InstallmentRepository extends BaseRepository<Installment, Long>
 
     List<Installment> findByLoanIdAndPaidOrderByInstallmentNo(Long loanId, Boolean paid, Pageable pageable);
 
-    default List<Installment> findTopCountByLoanIdAndPaidOrderByInstallmentNo(Long loanId, Boolean paid, Integer count) {
+    default List<Installment> findTopCountByLoanIdAndPaidOrderByInstallmentNo(Integer count, Long loanId, Boolean paid) {
         return findByLoanIdAndPaidOrderByInstallmentNo(loanId, paid, PageRequest.of(0, count));
     }
 
