@@ -97,11 +97,11 @@ public class TransactionService implements ITransactionService {
     public void transfer(TransferDto inputDto) {
         var srcTransaction = new TransactionDto(inputDto.getAmount(), TransactionTypes.Debit,
                 LocalDateTime.now(), inputDto.getSrcDescription(), inputDto.getSrcAccountId(),
-                inputDto.getUserId(), inputDto.getSrcTraceNo());
+                inputDto.getUserId(), inputDto.getSrcTraceNo(), inputDto.getCurrency());
 
         var desTransaction = new TransactionDto(inputDto.getAmount(), TransactionTypes.Credit,
                 LocalDateTime.now(), inputDto.getDesDescription(), inputDto.getDesAccountId(),
-                inputDto.getUserId(), inputDto.getDesTraceNo());
+                inputDto.getUserId(), inputDto.getDesTraceNo(), inputDto.getCurrency());
 
         doTransaction(srcTransaction);
         doTransaction(desTransaction);
@@ -112,6 +112,9 @@ public class TransactionService implements ITransactionService {
         var account = _accountRepository.findById(inputDto.getAccountId()).orElse(null);
         if(account == null)
             throw new BusinessException("can not find the account");
+
+        if(account.getCurrency() != inputDto.getCurrency())
+            throw new BusinessException("The currency of the account and the transaction do not match");
 
         if(inputDto.getTransactionType() == TransactionTypes.Credit) {
             account.setBalance(account.getBalance().add(inputDto.getAmount()));

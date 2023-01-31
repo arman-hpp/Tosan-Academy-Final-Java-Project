@@ -30,6 +30,10 @@ public class Transaction extends BaseEntity {
     @Column(name = "trace_no", length = 36, nullable = false, unique = true)
     private String traceNo;
 
+    @Column(name = "currency", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    private Currencies currency;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;

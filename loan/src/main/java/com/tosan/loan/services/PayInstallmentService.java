@@ -2,6 +2,7 @@ package com.tosan.loan.services;
 
 import com.tosan.core_banking.dtos.TransferDto;
 import com.tosan.core_banking.services.*;
+import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.interfaces.IPayInstallmentService;
 import com.tosan.model.*;
 import com.tosan.repository.InstallmentRepository;
@@ -28,6 +29,9 @@ public class PayInstallmentService implements IPayInstallmentService {
 
     @Transactional
     public void payInstallments(Long loanId, Long accountId, Long userId, Integer payInstallmentCount) {
+        if(payInstallmentCount <= 0)
+            throw new BusinessException("installment count is not valid");
+
         var installments = _installmentRepository
                 .findTopCountByLoanIdAndPaidOrderByInstallmentNo(payInstallmentCount, loanId, false);
 
@@ -42,11 +46,13 @@ public class PayInstallmentService implements IPayInstallmentService {
 
         _installmentRepository.saveAll(installments);
 
-        var bankAccountId = _accountService.loadBankAccount().getId();
+        var currency = installments.get(0).getCurrency();
+
+        var bankAccountId = _accountService.loadBankAccount(currency).getId();
 
         var transferDto = new TransferDto(sumInstallmentsAmount, "Pay Installments",
                 "Pay Installments", accountId, bankAccountId,
-                userId);
+                userId, currency);
 
         _transactionService.transfer(transferDto);
     }

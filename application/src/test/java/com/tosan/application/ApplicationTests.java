@@ -3,6 +3,7 @@ package com.tosan.application;
 import com.tosan.core_banking.dtos.*;
 import com.tosan.core_banking.services.*;
 import com.tosan.model.AccountTypes;
+import com.tosan.model.Currencies;
 import com.tosan.model.TransactionTypes;
 import com.tosan.repository.*;
 import org.junit.jupiter.api.Test;
@@ -60,7 +61,7 @@ class ApplicationTests {
         try {
             transactionService.doTransaction(
                     new TransactionDto(transactionAmount, TransactionTypes.Credit, LocalDateTime.now(),
-                            "Test", accountId, 1L, traceNo));
+                            "Test", accountId, 1L, traceNo, Currencies.rial));
         } catch (Exception ex){
             ex.printStackTrace();
         }
@@ -85,7 +86,7 @@ class ApplicationTests {
         try {
             transactionService.transfer(
                     new TransferDto(transactionAmount, "From Arman", "To Bank",
-                            srcAccountId, desAccountId, 1L, srcTraceNo, desTraceNo));
+                            srcAccountId, desAccountId, 1L, Currencies.rial, srcTraceNo, desTraceNo));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -105,7 +106,7 @@ class ApplicationTests {
 
     @Test
     public void testRepositories() {
-           var account = accountRepository.findByAccountType(AccountTypes.BankAccount);
+           var account = accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, Currencies.rial);
            var transaction1 = transactionRepository.findByTraceNo("Test");
            var transaction2 = transactionRepository.findByRegDateBetweenOrderByRegDate(LocalDateTime.MIN, LocalDateTime.MAX);
            var transaction3 = transactionRepository.findByUserIdOrderByRegDateDesc(1L);

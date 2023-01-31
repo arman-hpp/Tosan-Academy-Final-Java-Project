@@ -7,5 +7,5 @@ import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends BaseRepository<Account, Long> {
-    Optional<Account> findByAccountType(AccountTypes accountType);
+    Optional<Account> findByAccountTypeAndCurrency(AccountTypes accountType, Currencies currency);
 }

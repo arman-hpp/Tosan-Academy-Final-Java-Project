@@ -2,6 +2,7 @@ package com.tosan.core_banking.dtos;
 
 import com.tosan.dtos.BaseDto;
 
+import com.tosan.model.Currencies;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class TransferDto extends BaseDto {
+public final class TransferDto extends BaseDto {
     @NonNull
     private BigDecimal amount;
     @NonNull
@@ -24,6 +25,8 @@ public class TransferDto extends BaseDto {
     private Long desAccountId;
     @NonNull
     private Long userId;
+    @NonNull
+    private Currencies currency;
     private String srcTraceNo;
     private String desTraceNo;
 }

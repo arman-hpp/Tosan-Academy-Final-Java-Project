@@ -1,7 +1,7 @@
 package com.tosan.core_banking.dtos;
 
 import com.tosan.dtos.BaseDto;
-import com.tosan.model.TransactionTypes;
+import com.tosan.model.*;
 
 import lombok.*;
 
@@ -20,4 +20,5 @@ public final class TransactionDto extends BaseDto {
     private Long accountId;
     private Long userId;
     private String traceNo;
+    private Currencies currency;
 }

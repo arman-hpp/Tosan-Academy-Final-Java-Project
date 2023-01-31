@@ -51,18 +51,6 @@ public class DepositLoanService implements IDepositLoanService {
         if(loan.getDepositDate() != null)
             throw new BusinessException("the loan has been already paid");
 
-
-
-//        var bankAccount = _accountRepository.findByAccountType(AccountTypes.BankAccount).orElse(null);
-//        if(bankAccount == null)
-//            throw new BusinessException("can not find bank account");
-//
-//        var customerAccount = _accountRepository.findById(loan.getDepositAccount().getId()).orElse(null);
-//        if(customerAccount == null)
-//            throw new BusinessException("can not find customer account");
-
-
-
         var loanDto = _modelMapper.map(loan, LoanDto.class);
         _loanConditionValidatorService.validate(loanDto);
 
@@ -83,12 +71,12 @@ public class DepositLoanService implements IDepositLoanService {
         _installmentRepository.saveAll(list);
         _loanRepository.save(loan);
 
-        var bankAccountId = _accountService.loadBankAccount().getId();
+        var bankAccountId = _accountService.loadBankAccount(loan.getCurrency()).getId();
         var customerAccountId = loan.getDepositAccount().getId();
 
         var transferDto = new TransferDto(loan.getAmount(), "Transfer to customer account",
                 "Transfer loan from bank account", bankAccountId, customerAccountId,
-                userId);
+                userId, loan.getCurrency());
 
         _transactionService.transfer(transferDto);
     }

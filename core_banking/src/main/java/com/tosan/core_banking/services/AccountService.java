@@ -45,8 +45,8 @@ public class AccountService implements IAccountService {
         return _modelMapper.map(account, AccountDto.class);
     }
 
-    public AccountDto loadBankAccount() {
-        var account = _accountRepository.findByAccountType(AccountTypes.BankAccount).orElse(null);
+    public AccountDto loadBankAccount(Currencies currency) {
+        var account = _accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, currency).orElse(null);
         if(account == null)
             throw new BusinessException("Can not find the bank account");
 
