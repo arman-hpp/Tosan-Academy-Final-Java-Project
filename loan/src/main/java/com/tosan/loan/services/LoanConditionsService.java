@@ -2,6 +2,7 @@ package com.tosan.loan.services;
 
 import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.*;
+import com.tosan.loan.interfaces.ILoanConditionsService;
 import com.tosan.model.LoanCondition;
 import com.tosan.repository.LoanConditionsRepository;
 
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 @Service
-public class LoanConditionsService {
+public class LoanConditionsService implements ILoanConditionsService {
     private final LoanConditionsRepository _loanConditionsRepository;
     private final ModelMapper _modelMapper;
 

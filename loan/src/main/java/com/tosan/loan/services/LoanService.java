@@ -30,7 +30,7 @@ public class LoanService implements ILoanService {
         _modelMapper = modelMapper;
     }
 
-    public List<LoanDto> loanLoans() {
+    public List<LoanDto> loadLoans() {
         var loans = _loanRepository.findAll();
         var outputDto = new ArrayList<LoanDto>();
         for(var loan : loans) {
@@ -40,7 +40,7 @@ public class LoanService implements ILoanService {
         return outputDto;
     }
 
-    public List<LoanDto> loanLoansByCustomerId(Long customerId) {
+    public List<LoanDto> loadLoansByCustomerId(Long customerId) {
         var loans = _loanRepository.findByCustomerIdOrderByRequestDate(customerId);
         var outputDto = new ArrayList<LoanDto>();
         for(var loan : loans) {
@@ -50,7 +50,7 @@ public class LoanService implements ILoanService {
         return outputDto;
     }
 
-    public List<LoanDto> loanLoansByDepositAccountId(Long accountId) {
+    public List<LoanDto> loadLoansByDepositAccountId(Long accountId) {
         var loans = _loanRepository.findByDepositAccountIdOrderByRequestDate(accountId);
         var outputDto = new ArrayList<LoanDto>();
         for(var loan : loans) {
@@ -104,7 +104,7 @@ public class LoanService implements ILoanService {
         }
     }
 
-    public void removeCustomer(Long loanId) {
+    public void removeLoan(Long loanId) {
         var loan = _loanRepository.findById(loanId).orElse(null);
         if(loan == null)
             throw new BusinessException("can not find the loan");
@@ -115,7 +115,7 @@ public class LoanService implements ILoanService {
         _loanRepository.delete(loan);
     }
 
-    public BigDecimal loadLoanInterests(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
+    public BigDecimal loadLoanSumInterests(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
         return _installmentRepository.sumTotalInterests(fromDateTime, toDateTime);
     }
 }

@@ -23,5 +23,4 @@ public class ApplicationBeanConfiguration {
     public ILoanCalculator loanCalculator() {
         return new AmortizationLoanCalculator();
     }
-
 }
