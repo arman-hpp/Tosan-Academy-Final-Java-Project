@@ -1,6 +1,7 @@
 package com.tosan.repository;
 
 import com.tosan.model.Loan;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

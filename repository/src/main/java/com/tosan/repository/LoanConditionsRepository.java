@@ -1,7 +1,6 @@
 package com.tosan.repository;
 
-import com.tosan.model.Currencies;
-import com.tosan.model.LoanCondition;
+import com.tosan.model.*;
 
 import org.springframework.stereotype.Repository;
 

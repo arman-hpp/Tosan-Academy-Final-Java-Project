@@ -1,6 +1,7 @@
 package com.tosan.repository;
 
 import com.tosan.model.BaseEntity;
+
 import org.springframework.data.repository.*;
 
 @NoRepositoryBean
