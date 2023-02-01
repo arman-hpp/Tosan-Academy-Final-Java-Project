@@ -8,8 +8,12 @@ import com.tosan.model.TransactionTypes;
 import com.tosan.repository.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,8 +22,9 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest(classes = Application.class)
-@ContextConfiguration(classes = Application.class)
+@SpringBootTest
+@ContextConfiguration(classes = { Application.class })
+@ActiveProfiles("test")
 class ApplicationTests {
     @Autowired
     public TransactionService transactionService;
