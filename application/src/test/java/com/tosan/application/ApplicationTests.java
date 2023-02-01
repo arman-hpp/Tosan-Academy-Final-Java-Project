@@ -2,25 +2,19 @@ package com.tosan.application;
 
 import com.tosan.core_banking.dtos.*;
 import com.tosan.core_banking.services.*;
-import com.tosan.model.AccountTypes;
-import com.tosan.model.Currencies;
-import com.tosan.model.TransactionTypes;
+import com.tosan.model.*;
 import com.tosan.repository.*;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.test.context.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ContextConfiguration(classes = { Application.class })
@@ -49,6 +43,7 @@ class ApplicationTests {
 
     @Autowired
     public UserRepository userRepository;
+
     @Autowired
     private TransactionRepository transactionRepository;
 
@@ -63,13 +58,11 @@ class ApplicationTests {
         var traceNo = UUID.randomUUID().toString();
         var accountBeforeTransaction = accountService.loadAccount(accountId);
 
-        try {
+        assertDoesNotThrow(() -> {
             transactionService.doTransaction(
                     new TransactionDto(transactionAmount, TransactionTypes.Credit, LocalDateTime.now(),
                             "Test", accountId, 1L, traceNo, Currencies.rial));
-        } catch (Exception ex){
-            ex.printStackTrace();
-        }
+        });
 
         var accountAfterTransaction = accountService.loadAccount(accountId);
         assertEquals(accountBeforeTransaction.getBalance().add(transactionAmount), accountAfterTransaction.getBalance());
@@ -88,13 +81,11 @@ class ApplicationTests {
         var srcAccountBeforeTransaction = accountService.loadAccount(srcAccountId);
         var desAccountBeforeTransaction = accountService.loadAccount(desAccountId);
 
-        try {
+        assertDoesNotThrow(() -> {
             transactionService.transfer(
                     new TransferDto(transactionAmount, "From Arman", "To Bank",
                             srcAccountId, desAccountId, 1L, Currencies.rial, srcTraceNo, desTraceNo));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        });
 
         var srcAccountAfterTransaction = accountService.loadAccount(srcAccountId);
         assertEquals(srcAccountBeforeTransaction.getBalance().subtract(transactionAmount), srcAccountAfterTransaction.getBalance());
@@ -111,22 +102,22 @@ class ApplicationTests {
 
     @Test
     public void testRepositories() {
-           var account = accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, Currencies.rial);
-           var transaction1 = transactionRepository.findByTraceNo("Test");
-           var transaction2 = transactionRepository.findByRegDateBetweenOrderByRegDate(LocalDateTime.MIN, LocalDateTime.MAX);
-           var transaction3 = transactionRepository.findByUserIdOrderByRegDateDesc(1L);
-           var transaction4 = transactionRepository.findTop5ByAccountIdOrderByRegDateDesc(1L);
-           var transaction5 = transactionRepository.findTop5ByOrderByRegDateDesc();
-           var loan1 = loanRepository.findByDepositAccountIdOrderByRequestDate(1L);
-           var loan2 = loanRepository.findByCustomerIdOrderByRequestDate(1L);
-           var installments = installmentRepository.findByLoanIdOrderByInstallmentNo(1L);
-           var installments2 = installmentRepository.findTopCountByLoanIdAndPaidOrderByInstallmentNo(5, 1L, true);
-           var installments3 = installmentRepository.findByLoanIdAndPaidTrueOrderByInstallmentNo(1L);
-           var installments4 = installmentRepository.findByLoanIdAndPaidFalseOrderByInstallmentNo(1L);
-           var installments5 = installmentRepository.sumTotalInterests(LocalDateTime.MIN, LocalDateTime.MAX);
-           var loanConditions = loanConditionsRepository.findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(Currencies.rial);
-           var user = userRepository.findByUsername("arman");
+        assertDoesNotThrow(() -> {
+            accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, Currencies.rial);
+            transactionRepository.findByTraceNo("Test");
+            transactionRepository.findByRegDateBetweenOrderByRegDate(LocalDateTime.MIN, LocalDateTime.MAX);
+            transactionRepository.findByUserIdOrderByRegDateDesc(1L);
+            transactionRepository.findTop5ByAccountIdOrderByRegDateDesc(1L);
+            transactionRepository.findTop5ByOrderByRegDateDesc();
+            loanRepository.findByDepositAccountIdOrderByRequestDate(1L);
+            loanRepository.findByCustomerIdOrderByRequestDate(1L);
+            installmentRepository.findByLoanIdOrderByInstallmentNo(1L);
+            installmentRepository.findTopCountByLoanIdAndPaidOrderByInstallmentNo(5, 1L, true);
+            installmentRepository.findByLoanIdAndPaidTrueOrderByInstallmentNo(1L);
+            installmentRepository.findByLoanIdAndPaidFalseOrderByInstallmentNo(1L);
+            installmentRepository.sumTotalInterests(LocalDateTime.MIN, LocalDateTime.MAX);
+            loanConditionsRepository.findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(Currencies.rial);
+            userRepository.findByUsername("arman");
+        });
     }
-
-
 }
