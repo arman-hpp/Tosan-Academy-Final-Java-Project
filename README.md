@@ -1,5 +1,6 @@
 # Tosan-Academy-Final-Java-Project
-This repository is the final project of Java course by Ali Gholami at Tosan Academy. In this project the Java version is 17, so it needs JDK 18 to be run.
+This repository is the final project of Java course by Ali Gholami at Tosan Academy.\
+This project is based on Spring Boot 3, which requires Java 17.
 
 #### Prerequisites
 * Maven
