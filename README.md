@@ -1,5 +1,5 @@
 # Tosan-Academy-Final-Java-Project
-This repository is the final project of Java course by Ali Gholami at Tosan Academy.
+This repository is the final project of Java course by Ali Gholami at Tosan Academy. In this project the Java version is 17, so it needs JDK 18 to be run.
 
 #### Prerequisites
 * Maven
@@ -15,7 +15,6 @@ This repository is the final project of Java course by Ali Gholami at Tosan Acad
 * [Spring Boot Maven Plugin](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-maven-plugin)
 * [Lombok](https://mvnrepository.com/artifact/org.projectlombok/lombok)
 * [Model Mapper](https://mvnrepository.com/artifact/org.modelmapper/modelmapper)
-
 * [H2 Database Engine](https://mvnrepository.com/artifact/com.h2database/h2)
 
 #### Installation
@@ -35,6 +34,3 @@ This repository is the final project of Java course by Ali Gholami at Tosan Acad
 #### Start Spring boot Application with JAR file
 * `$mvnw clean package`
 * `$java -jar target/<filename>.jar`
-
-
-JAVA 17 - JDK 18.0.2.1
