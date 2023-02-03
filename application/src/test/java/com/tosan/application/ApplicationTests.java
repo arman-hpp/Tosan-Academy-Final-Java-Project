@@ -1,20 +1,19 @@
 package com.tosan.application;
 
-import com.tosan.core_banking.dtos.*;
-import com.tosan.core_banking.services.*;
-import com.tosan.model.*;
+import com.tosan.core_banking.services.AccountService;
+import com.tosan.core_banking.services.TransactionService;
+import com.tosan.model.AccountTypes;
+import com.tosan.model.Currencies;
 import com.tosan.repository.*;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.*;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
 @ContextConfiguration(classes = { Application.class })
@@ -49,6 +48,30 @@ class ApplicationTests {
 
     @Test
     void contextLoads() {
+    }
+
+    @Test
+    public void testRepositories() {
+        assertDoesNotThrow(() -> {
+            accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, Currencies.rial);
+            transactionRepository.findByTraceNo("Test");
+            transactionRepository.findByRegDateBetweenOrderByRegDate(LocalDateTime.MIN, LocalDateTime.MAX);
+            transactionRepository.findByUserIdOrderByRegDateDesc(1L);
+            transactionRepository.findTop5ByAccountIdOrderByRegDateDesc(1L);
+            transactionRepository.findTop5ByOrderByRegDateDesc();
+            loanRepository.findByDepositAccountIdOrderByRequestDate(1L);
+            loanRepository.findByCustomerIdOrderByRequestDate(1L);
+            installmentRepository.findByLoanIdOrderByInstallmentNo(1L);
+            installmentRepository.findTopCountByLoanIdAndPaidOrderByInstallmentNo(5, 1L, true);
+            installmentRepository.findByLoanIdAndPaidTrueOrderByInstallmentNo(1L);
+            installmentRepository.findByLoanIdAndPaidFalseOrderByInstallmentNo(1L);
+            installmentRepository.sumTotalInterests(LocalDateTime.MIN, LocalDateTime.MAX);
+            loanConditionsRepository.findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(Currencies.rial);
+            userRepository.findByUsername("arman");
+            accountRepository.findAccountsWithCustomer(1L, 1L);
+            accountRepository.findAccountWithCustomer(1L);
+            accountRepository.findAllAccountsWithCustomer();
+        });
     }
 //
 //    @Test
@@ -100,24 +123,4 @@ class ApplicationTests {
 //        assertNotNull(desTransaction);
 //    }
 //
-//    @Test
-//    public void testRepositories() {
-//        assertDoesNotThrow(() -> {
-//            accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, Currencies.rial);
-//            transactionRepository.findByTraceNo("Test");
-//            transactionRepository.findByRegDateBetweenOrderByRegDate(LocalDateTime.MIN, LocalDateTime.MAX);
-//            transactionRepository.findByUserIdOrderByRegDateDesc(1L);
-//            transactionRepository.findTop5ByAccountIdOrderByRegDateDesc(1L);
-//            transactionRepository.findTop5ByOrderByRegDateDesc();
-//            loanRepository.findByDepositAccountIdOrderByRequestDate(1L);
-//            loanRepository.findByCustomerIdOrderByRequestDate(1L);
-//            installmentRepository.findByLoanIdOrderByInstallmentNo(1L);
-//            installmentRepository.findTopCountByLoanIdAndPaidOrderByInstallmentNo(5, 1L, true);
-//            installmentRepository.findByLoanIdAndPaidTrueOrderByInstallmentNo(1L);
-//            installmentRepository.findByLoanIdAndPaidFalseOrderByInstallmentNo(1L);
-//            installmentRepository.sumTotalInterests(LocalDateTime.MIN, LocalDateTime.MAX);
-//            loanConditionsRepository.findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(Currencies.rial);
-//            userRepository.findByUsername("arman");
-//        });
-//    }
 }

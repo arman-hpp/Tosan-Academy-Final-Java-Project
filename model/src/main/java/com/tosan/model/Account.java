@@ -22,7 +22,7 @@ public class Account extends BaseEntity {
     @Enumerated(EnumType.ORDINAL)
     private AccountTypes accountType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 

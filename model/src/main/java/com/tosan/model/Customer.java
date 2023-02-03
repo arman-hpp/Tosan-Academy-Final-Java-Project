@@ -32,8 +32,7 @@ public class Customer extends BaseEntity {
         setId(Id);
     }
 
-    @Override
-    public String toString() {
+    public String getFullName() {
         return getFirstName() + " " + getLastName();
     }
 }

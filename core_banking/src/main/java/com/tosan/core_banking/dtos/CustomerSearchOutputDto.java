@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public final class CustomerSearchInputDto extends BaseDto {
+public final class CustomerSearchOutputDto extends BaseDto {
     private Long customerId;
+    private String customerName;
 }

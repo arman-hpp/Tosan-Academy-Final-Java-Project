@@ -32,7 +32,7 @@ public class TransactionService implements ITransactionService {
     }
 
     public Map<Integer, String> loadTransactionTypes() {
-        return EnumUtils.GetEnumNames(TransactionTypes.class);
+        return EnumUtils.getEnumNames(TransactionTypes.class);
     }
 
     public List<TransactionDto> loadTransactions() {
@@ -130,7 +130,7 @@ public class TransactionService implements ITransactionService {
         transaction.setRegDate(LocalDateTime.now());
         transaction.setAccount(account);
 
-        if(StringUtils.IsNullOrEmpty(transaction.getTraceNo())) {
+        if(StringUtils.isNullOrEmpty(transaction.getTraceNo())) {
             transaction.setTraceNo(_traceNoGenerator.generate());
         }
 

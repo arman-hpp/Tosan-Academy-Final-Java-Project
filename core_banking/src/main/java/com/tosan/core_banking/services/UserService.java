@@ -23,7 +23,7 @@ public class UserService implements IUserService {
     }
 
     public Map<Integer, String> loadUserTypes() {
-        return EnumUtils.GetEnumNames(UserTypes.class);
+        return EnumUtils.getEnumNames(UserTypes.class);
     }
 
     public void login(UserLoginInputDto inputDto) {
@@ -61,10 +61,6 @@ public class UserService implements IUserService {
         if(user == null)
             throw new BusinessException("user not found!");
 
-        if(user.getUserType() == UserTypes.Administrator) {
-            return true;
-        } else {
-            return false;
-        }
+        return user.getUserType() == UserTypes.Administrator;
     }
 }

@@ -15,6 +15,7 @@ public final class AccountDto extends BaseDto {
     private Long id;
     private BigDecimal balance;
     private Currencies currency;
-    private AccountTypes accountType;
+    private String accountType;
     private Long customerId;
+    private String customerName;
 }

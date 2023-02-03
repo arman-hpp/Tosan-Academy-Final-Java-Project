@@ -1,17 +1,17 @@
 package com.tosan.core_banking.services;
 
+import com.tosan.core_banking.dtos.AccountDto;
 import com.tosan.core_banking.interfaces.IAccountService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.model.*;
 import com.tosan.repository.AccountRepository;
-import com.tosan.core_banking.dtos.*;
-import com.tosan.utils.EnumUtils;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AccountService implements IAccountService {
@@ -23,15 +23,15 @@ public class AccountService implements IAccountService {
         _modelMapper = modelMapper;
     }
 
-    public Map<Integer, String> loadCurrencies() {
-        return EnumUtils.GetEnumNames(Currencies.class);
-    }
-
     public List<AccountDto> loadAccounts() {
-        var accounts = _accountRepository.findAll();
+        var accounts = _accountRepository.findAllAccountsWithCustomer();
         var outputDto = new ArrayList<AccountDto>();
         for(var account : accounts) {
-            outputDto.add(_modelMapper.map(account, AccountDto.class));
+            var accountDto = _modelMapper.map(account, AccountDto.class);
+            var customer = account.getCustomer();
+            accountDto.setCustomerId(customer.getId());
+            accountDto.setCustomerName(customer.getFullName());
+            outputDto.add(accountDto);
         }
 
         return outputDto;
@@ -42,14 +42,24 @@ public class AccountService implements IAccountService {
 
         if(accountId != null) {
             if(customerId != null) {
-                var accounts = _accountRepository.findByIdAndCustomerId(accountId, customerId);
+                var accounts = _accountRepository.findAccountsWithCustomer(accountId, customerId);
                 for(var account : accounts) {
-                    outputDto.add(_modelMapper.map(account, AccountDto.class));
+                    var accountDto = _modelMapper.map(account, AccountDto.class);
+                    var customer = account.getCustomer();
+                    accountDto.setCustomerId(customer.getId());
+                    accountDto.setCustomerName(customer.getFullName());
+                    outputDto.add(accountDto);
                 }
             }
             else {
-                var account = _accountRepository.findById(accountId);
-                outputDto.add(_modelMapper.map(account, AccountDto.class));
+                var account = _accountRepository.findAccountWithCustomer(accountId).orElse(null);
+                if(account != null) {
+                    var accountDto = _modelMapper.map(account, AccountDto.class);
+                    var customer = account.getCustomer();
+                    accountDto.setCustomerId(customer.getId());
+                    accountDto.setCustomerName(customer.getFullName());
+                    outputDto.add(_modelMapper.map(account, AccountDto.class));
+                }
             }
 
             return outputDto;
@@ -58,7 +68,11 @@ public class AccountService implements IAccountService {
             if(customerId != null) {
                 var accounts = _accountRepository.findByCustomerId(customerId);
                 for(var account : accounts) {
-                    outputDto.add(_modelMapper.map(account, AccountDto.class));
+                    var accountDto = _modelMapper.map(account, AccountDto.class);
+                    var customer = account.getCustomer();
+                    accountDto.setCustomerId(customer.getId());
+                    accountDto.setCustomerName(customer.getFullName());
+                    outputDto.add(accountDto);
                 }
 
                 return outputDto;
@@ -89,6 +103,8 @@ public class AccountService implements IAccountService {
         var account = _modelMapper.map(inputDto, Account.class);
         account.setBalance(BigDecimal.valueOf(0L));
         account.setAccountType(AccountTypes.CustomerAccount);
+        account.setCustomer(new Customer(inputDto.getCustomerId()));
+
         _accountRepository.save(account);
     }
 }

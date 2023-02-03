@@ -129,6 +129,6 @@ public class CustomerController {
             return "redirect:/customer/index";
         }
 
-        return "redirect:/customer/index?id=" + customerId;
+        return "redirect:/customer/index?search=true&id=" + customerId;
     }
 }
