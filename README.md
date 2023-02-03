@@ -3,24 +3,26 @@
 ### About
 This repository is the final project of Java course by Ali Gholami at Tosan Academy.\
 The project is based on Spring Boot 3, which requires Java 17.\
-This project is a multi-module project. It built from a parent pom that manages a group of submodules. When we run the multi-module project, all the modules are deployed together. We can deploy an individual module, also. the project has 6 modules named `utils`,`model`,`repository`,`loan`,`core_banking`,`application`.
+\
+The project is a multi-module project. It has been built from a parent pom that manages a group of submodules. This project has 6 modules named `utils`,`model`,`repository`,`loan`,`core_banking`,`application`.
+When a multi-module project is run, all the modules are deployed together; furthermore an individual module can be deployed.
+
 
 #### Utils module
 The Utils module contains helpers which are being used throughout the entire application.
 
 #### Model module
-The Model module contains Entities to be used in the project.
+The Model module contains Entities which have been used in the project.
 
 #### Repository module
-The Repository module contains repositories to be used in the project. It depends on the Model module.
+The Repository module contains repositories which have been used in the project. It depends on the Model module.
 
 #### Service module (core_banking and loan)
-The Service module implements the service. It depends on Repository module, Model module and Utils. According to the documentation, this module is broken into two modules named core_banking and loan.
+The Service module implements the services. It depends on Repository module, Model module and Utils module. According to the documentation of the project, this module has been broken into two modules named `core_banking` and `loan`.
 
 #### Application module
-The application module is the main module of the project. It contains the application class in which the main method is defined that is necessary to run the Spring Boot Application. It also contains application configuration properties, Controller, views, and resources.
+The application module is the main module of the project. It contains the application class in which the main method is defined that is necessary to run the Spring Boot Application. It also contains application configuration properties, controllers, views, and resources.
 The Application module includes Service Implementation modules (core_banking and loan) as dependency that contains Model module, Repository module, and Utils module.
-
 
 
 ### Prerequisites
@@ -32,7 +34,7 @@ The Application module includes Service Implementation modules (core_banking and
 * [Spring Boot Starter](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter)
 * [Spring Boot Starter Data JPA](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa)
 * [Spring Boot Starter Test](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test)
-* [Spring Boot Starter Web](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web) 
+* [Spring Boot Starter Web](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web)
 * [Spring Boot Starter Thymeleaf](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf)
 * [Spring Boot Maven Plugin](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-maven-plugin)
 * [Lombok](https://mvnrepository.com/artifact/org.projectlombok/lombok)
