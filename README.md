@@ -1,9 +1,8 @@
 # Tosan-Academy-Final-Java-Project
 
 ### About
-This repository is the final project of Java course by Ali Gholami at Tosan Academy.\
-This project is based on Spring Boot 3, which requires Java 17.
-this project is a multi-module project. it built from a parent pom that manages a group of submodules. When we run the multi-module project, all the modules are deployed together. We can deploy an individual module, also. the project has 6 modules named `utils`,`model`,`repository`,`loan`,`core_banking`,`application`.
+This repository is the final project of Java course by Ali Gholami at Tosan Academy. The project is based on Spring Boot 3, which requires Java 17.
+This project is a multi-module project. It built from a parent pom that manages a group of submodules. When we run the multi-module project, all the modules are deployed together. We can deploy an individual module, also. the project has 6 modules named `utils`,`model`,`repository`,`loan`,`core_banking`,`application`.
 
 #### Utils module
 The Utils module contains helpers which are being used throughout the entire application.
