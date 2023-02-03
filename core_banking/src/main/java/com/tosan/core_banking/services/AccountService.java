@@ -37,6 +37,38 @@ public class AccountService implements IAccountService {
         return outputDto;
     }
 
+    public List<AccountDto> searchAccounts(Long accountId, Long customerId) {
+        var outputDto = new ArrayList<AccountDto>();
+
+        if(accountId != null) {
+            if(customerId != null) {
+                var accounts = _accountRepository.findByIdAndCustomerId(accountId, customerId);
+                for(var account : accounts) {
+                    outputDto.add(_modelMapper.map(account, AccountDto.class));
+                }
+            }
+            else {
+                var account = _accountRepository.findById(accountId);
+                outputDto.add(_modelMapper.map(account, AccountDto.class));
+            }
+
+            return outputDto;
+        }
+        else {
+            if(customerId != null) {
+                var accounts = _accountRepository.findByCustomerId(customerId);
+                for(var account : accounts) {
+                    outputDto.add(_modelMapper.map(account, AccountDto.class));
+                }
+
+                return outputDto;
+            }
+            else {
+                return loadAccounts();
+            }
+        }
+    }
+
     public AccountDto loadAccount(Long accountId) {
         var account = _accountRepository.findById(accountId).orElse(null);
         if(account == null)

@@ -24,34 +24,57 @@ public class AccountController {
     }
 
     @GetMapping("/index")
-    public String accountForm(@RequestParam(required = false) String accountId,
-                               @RequestParam(required = false, name = "customer_id") String customerid,
+    public String accountForm(@RequestParam(name = "account_id") String accountId,
+                               @RequestParam(name = "customer_id") String customerId,
                                Model model) {
         try {
-            if(customerid != null) {
-                var customerIdLong = ConvertorUtils.tryParseLong(customerid, -1L);
+            Long customerIdLong = null;
+            if(customerId != null) {
+                customerIdLong = ConvertorUtils.tryParseLong(customerId, -1L);
                 if(customerIdLong <= 0) {
                     return "redirect:/account/index?error=Invalid+input+parameters";
                 }
-
-                var foundCustomer = _customerService.loadCustomer(customerIdLong);
-                model.addAttribute("customerOutputs", foundCustomer);
             }
-            else if(accountId != null) {
-                var idLong = ConvertorUtils.tryParseLong(accountId, -1L);
-                if(idLong <= 0) {
+
+            Long accountIdLong = null;
+            if(accountId != null) {
+                accountIdLong = ConvertorUtils.tryParseLong(accountId, -1L);
+                if (accountIdLong <= 0) {
                     return "redirect:/account/index?error=Invalid+input+parameters";
                 }
-
-                var foundAccount = _accountService.loadAccount(idLong);
-                model.addAttribute("accountOutputs", foundAccount);
             }
+
+            var accounts = _accountService.searchAccounts(accountIdLong, customerIdLong);
+            model.addAttribute("accountOutputs", accounts);
 
             return "account";
         } catch (BusinessException ex) {
-            return "redirect:/customer/index?error=" + ex.getEncodedMessage();
+            return "redirect:/account/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/customer/index?error=unhandled+error+occurred";
+            return "redirect:/account/index?error=unhandled+error+occurred";
+        }
+    }
+
+    @GetMapping("/index")
+    public String accountFormByCustomerId(@RequestParam(name = "customer_id") String customerId, Model model) {
+        try {
+            var customerIdLong = ConvertorUtils.tryParseLong(customerId, -1L);
+            if (customerIdLong <= 0) {
+                return "redirect:/account/index?error=Invalid+input+parameters";
+            }
+
+            var foundCustomer = _customerService.loadCustomer(customerIdLong);
+            model.addAttribute("customerOutputs", foundCustomer);
+
+            var accounts = _accountService.loadAccounts();
+            model.addAttribute("accountOutputs", accounts);
+
+            return "account";
+
+        } catch (BusinessException ex) {
+            return "redirect:/account/index?error=" + ex.getEncodedMessage();
+        } catch (Exception ex) {
+            return "redirect:/account/index?error=unhandled+error+occurred";
         }
     }
 
@@ -69,6 +92,23 @@ public class AccountController {
         return "redirect:/account/index?customer_id=" + customerId;
     }
 
+    @PostMapping("/addAccount")
+    public String addAccountSubmit(@ModelAttribute AccountDto accountDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "redirect:/account/index?error=Invalid+input+parameters";
+        }
+
+        try {
+            _accountService.addAccount(accountDto);
+
+            return "redirect:/account/index";
+        } catch (BusinessException ex) {
+            return "redirect:/account/index?error=" + ex.getEncodedMessage();
+        } catch (Exception ex) {
+            return "redirect:/account/index?error=unhandled+error+occurred";
+        }
+    }
+
     @PostMapping("/searchAccount")
     public String searchAccountSubmit(@ModelAttribute AccountSearchInputDto accountSearchInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -78,14 +118,8 @@ public class AccountController {
         var accountId = accountSearchInputDto.getAccountId();
         var customerId = accountSearchInputDto.getCustomerId();
 
-        if (accountId == null && customerId == null) {
-            return "redirect:/account/index";
-        }
+        var queryParams = "?account_id=" + accountId + "&customer_id=" + customerId;
 
-        if (customerId != null) {
-            var searchLink =  "redirect:/account/index?customer_id=" + customerId;
-        }
-
-        return "account";
+        return "redirect:/account/index".concat(queryParams);
     }
 }
