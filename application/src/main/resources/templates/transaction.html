@@ -30,7 +30,7 @@
                         <input type="hidden" th:field="*{accountId}">
                         <label for="fullName" class="form-label">Account Customer Name</label>
                         <input type="text" class="form-control" id="fullName" placeholder="" th:field="*{accountCustomerName}"
-                               autocapitalize="sentences" maxlength="40" minlength="1" readonly />
+                               autocapitalize="none" maxlength="40" minlength="1" readonly />
                     </div>
                 </div>
             </div>
@@ -40,14 +40,14 @@
                     <div class="mb-3">
                         <label for="balance" class="form-label">Account Balance</label>
                         <input type="text" class="form-control" id="balance" placeholder="" th:field="*{accountBalance}"
-                               autocapitalize="sentences" maxlength="40" minlength="1" readonly />
+                               autocapitalize="none" maxlength="40" minlength="1" readonly />
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="mb-3">
                         <label for="currency" class="form-label">Account Currency</label>
                         <input type="text" class="form-control" id="currency" placeholder="" th:field="*{accountCurrency}"
-                               autocapitalize="sentences" maxlength="80" minlength="1" readonly />
+                               autocapitalize="none" maxlength="80" minlength="1" readonly />
                     </div>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                     <div class="mb-3">
                         <label for="amount" class="form-label">Amount</label>
                         <input type="number" class="form-control" id="amount" placeholder="" th:field="*{amount}"
-                               autocapitalize="sentences" maxlength="80" minlength="1" required />
+                               autocapitalize="none" maxlength="80" minlength="1" required />
                         <input type="hidden" th:field="*{currency}">
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
                         <input type="text" class="form-control" id="description" placeholder="" th:field="*{description}"
-                               autocapitalize="sentences" maxlength="100" minlength="1" />
+                               autocapitalize="none" maxlength="100" minlength="1" required />
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">Id</th>
                     <th scope="col">Account No</th>
                     <th scope="col">Owner</th>
                     <th scope="col">Amount</th>

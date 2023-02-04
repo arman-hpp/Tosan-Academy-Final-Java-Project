@@ -15,7 +15,7 @@
                 <div class="col-4">
                     <label for="search-input" class="form-label">Customer Id</label>
                     <div class="input-group mb-3">
-                        <input type="search" class="form-control" id="search-input" placeholder=""
+                        <input type="search" class="form-control" id="search-input" placeholder="" autocapitalize="none"
                                aria-label="Search By Customer Id" aria-describedby="search-submit" th:field="*{customerId}" required>
                         <button class="btn btn-outline-secondary" type="submit" id="search-submit">Find</button>
                     </div>
@@ -30,7 +30,7 @@
                         <input type="hidden" th:field="*{customerId}">
                         <label for="fullName" class="form-label">Customer Name</label>
                         <input type="text" class="form-control" id="fullName" placeholder="" th:field="*{customerName}"
-                               autocapitalize="sentences" maxlength="40" minlength="1" readonly />
+                               autocapitalize="none" maxlength="40" minlength="1" readonly />
                     </div>
                 </div>
             </div>
@@ -59,7 +59,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">Id</th>
                     <th scope="col">Owner</th>
                     <th scope="col">Balance</th>
                     <th scope="col">Currency</th>

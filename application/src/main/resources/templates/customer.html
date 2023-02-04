@@ -34,7 +34,7 @@
             <div class="mb-3">
               <label for="address" class="form-label">Address</label>
               <input type="text" class="form-control" id="address" placeholder="" th:field="*{address}"
-                     maxlength="100"/>
+                     maxlength="100" autocapitalize="none" />
             </div>
           </div>
         </div>
@@ -63,7 +63,7 @@
         <table class="table table-striped">
           <thead>
           <tr>
-            <th scope="col">#</th>
+            <th scope="col">Id</th>
             <th scope="col">FirstName</th>
             <th scope="col">LastName</th>
             <th scope="col">Address</th>
