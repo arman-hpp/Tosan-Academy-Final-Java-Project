@@ -16,14 +16,14 @@
           <div class="col-4">
             <div class="mb-3">
               <label for="firstname" class="form-label">First Name</label>
-              <input type="text" class="form-control" id="firstname" placeholder="First Name" th:field="*{firstName}"
+              <input type="text" class="form-control" id="firstname" placeholder="" th:field="*{firstName}"
                      autocapitalize="sentences" maxlength="40" minlength="1" required />
             </div>
           </div>
           <div class="col-4">
             <div class="mb-3">
               <label for="lastname" class="form-label">Last Name</label>
-              <input type="text" class="form-control" id="lastname" placeholder="Last Name" th:field="*{lastName}"
+              <input type="text" class="form-control" id="lastname" placeholder="" th:field="*{lastName}"
                      autocapitalize="sentences" maxlength="80" minlength="1" required />
             </div>
           </div>
@@ -33,7 +33,7 @@
           <div class="col-8">
             <div class="mb-3">
               <label for="address" class="form-label">Address</label>
-              <input type="text" class="form-control" id="address" placeholder="Address" th:field="*{address}"
+              <input type="text" class="form-control" id="address" placeholder="" th:field="*{address}"
                      maxlength="100"/>
             </div>
           </div>
@@ -48,11 +48,11 @@
 
       <form action="#" th:action="@{/customer/searchCustomer}" th:object="${customerSearchInputs}" method="post">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-          <div class="col-auto">
+          <div class="col-4">
+            <label for="search-input" class="form-label">Search by CustomerId</label>
             <div class="input-group mb-3">
-              <label for="search-input" class="visually-hidden">CustomerId</label>
-              <input type="search" class="form-control" id="search-input" placeholder="Search by Customer No"
-                     aria-label="Search By Customer Id" aria-describedby="search-submit" th:field="*{customerId}">
+              <input type="search" class="form-control" id="search-input" placeholder=""
+                     aria-label="Search by Customer Id" aria-describedby="search-submit" th:field="*{customerId}" required>
               <button class="btn btn-outline-secondary" type="submit" id="search-submit">Search</button>
             </div>
           </div>
