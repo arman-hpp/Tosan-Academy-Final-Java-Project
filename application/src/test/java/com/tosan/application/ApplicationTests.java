@@ -53,12 +53,13 @@ class ApplicationTests {
     @Test
     public void testRepositories() {
         assertDoesNotThrow(() -> {
-            accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, Currencies.rial);
+            accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, Currencies.Rial);
             transactionRepository.findByTraceNo("Test");
             transactionRepository.findByRegDateBetweenOrderByRegDate(LocalDateTime.MIN, LocalDateTime.MAX);
-            transactionRepository.findByUserIdOrderByRegDateDesc(1L);
+            transactionRepository.findByUserIdOrderByIdDesc(1L);
             transactionRepository.findTop5ByAccountIdOrderByRegDateDesc(1L);
             transactionRepository.findTop5ByOrderByRegDateDesc();
+            transactionRepository.findUserTransactionsWithDetails(1L);
             loanRepository.findByDepositAccountIdOrderByRequestDate(1L);
             loanRepository.findByCustomerIdOrderByRequestDate(1L);
             installmentRepository.findByLoanIdOrderByInstallmentNo(1L);
@@ -66,11 +67,11 @@ class ApplicationTests {
             installmentRepository.findByLoanIdAndPaidTrueOrderByInstallmentNo(1L);
             installmentRepository.findByLoanIdAndPaidFalseOrderByInstallmentNo(1L);
             installmentRepository.sumTotalInterests(LocalDateTime.MIN, LocalDateTime.MAX);
-            loanConditionsRepository.findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(Currencies.rial);
+            loanConditionsRepository.findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(Currencies.Rial);
             userRepository.findByUsername("arman");
-            accountRepository.findAccountsWithCustomer(1L, 1L);
-            accountRepository.findAccountWithCustomer(1L);
-            accountRepository.findAllAccountsWithCustomer();
+            accountRepository.findAccountsWithDetails(1L, 1L);
+            accountRepository.findAccountWithDetails(1L);
+            accountRepository.findAllAccountsWithDetails();
         });
     }
 //

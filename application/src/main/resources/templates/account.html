@@ -13,12 +13,11 @@
         <form action="#" th:action="@{/account/searchCustomer}" th:object="${customerSearchInputs}" method="post">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
                 <div class="col-4">
-                    <label for="fullName" class="form-label">Customer Id</label>
+                    <label for="search-input" class="form-label">Customer Id</label>
                     <div class="input-group mb-3">
-
                         <input type="search" class="form-control" id="search-input" placeholder=""
                                aria-label="Search By Customer Id" aria-describedby="search-submit" th:field="*{customerId}">
-                        <button class="btn btn-outline-secondary" type="submit" id="search-submit">Search</button>
+                        <button class="btn btn-outline-secondary" type="submit" id="search-submit">Find</button>
                     </div>
                 </div>
             </div>
@@ -41,7 +40,7 @@
                     <div class="mb-3">
                         <label for="currencies" class="form-label">Currency</label>
                         <select id="currencies" th:field="*{currency}"  class="form-select" aria-label="select currency">
-                            <option th:each="currency : ${T(com.tosan.model.Currencies).values()}" th:value="${currency}" th:text="${currency.displayValue}">
+                            <option th:each="currency : ${T(com.tosan.model.Currencies).values()}" th:value="${currency}" th:text="${currency}">
                             </option>
                         </select>
                     </div>

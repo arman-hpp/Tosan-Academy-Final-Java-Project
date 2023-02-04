@@ -84,10 +84,18 @@ public class TransactionService implements ITransactionService {
     }
 
     public List<TransactionDto> loadUserTransactions(Long userId) {
-        var transactions = _transactionRepository.findByUserIdOrderByRegDateDesc(userId);
+        var transactions = _transactionRepository.findUserTransactionsWithDetails(userId);
         var outputDto = new ArrayList<TransactionDto>();
         for(var transaction : transactions) {
-            outputDto.add(_modelMapper.map(transaction, TransactionDto.class));
+            var transactionDto = _modelMapper.map(transaction, TransactionDto.class);
+            var account = transaction.getAccount();
+            var customer = account.getCustomer();
+            transactionDto.setAccountCurrency(account.getCurrency());
+            transactionDto.setAccountBalance(account.getBalance());
+            transactionDto.setAccountCustomerName(customer.getFullName());
+            transactionDto.setAccountId(account.getId());
+            transactionDto.setCurrency(account.getCurrency());
+            outputDto.add(transactionDto);
         }
 
         return outputDto;
@@ -96,11 +104,11 @@ public class TransactionService implements ITransactionService {
     @Transactional
     public void transfer(TransferDto inputDto) {
         var srcTransaction = new TransactionDto(inputDto.getAmount(), TransactionTypes.Debit,
-                LocalDateTime.now(), inputDto.getSrcDescription(), inputDto.getSrcAccountId(),
+                 inputDto.getSrcDescription(), inputDto.getSrcAccountId(),
                 inputDto.getUserId(), inputDto.getSrcTraceNo(), inputDto.getCurrency());
 
         var desTransaction = new TransactionDto(inputDto.getAmount(), TransactionTypes.Credit,
-                LocalDateTime.now(), inputDto.getDesDescription(), inputDto.getDesAccountId(),
+                 inputDto.getDesDescription(), inputDto.getDesAccountId(),
                 inputDto.getUserId(), inputDto.getDesTraceNo(), inputDto.getCurrency());
 
         doTransaction(srcTransaction);

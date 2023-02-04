@@ -24,7 +24,7 @@ public class AccountService implements IAccountService {
     }
 
     public List<AccountDto> loadAccounts() {
-        var accounts = _accountRepository.findAllAccountsWithCustomer();
+        var accounts = _accountRepository.findAllAccountsWithDetails();
         var outputDto = new ArrayList<AccountDto>();
         for(var account : accounts) {
             var accountDto = _modelMapper.map(account, AccountDto.class);
@@ -37,12 +37,34 @@ public class AccountService implements IAccountService {
         return outputDto;
     }
 
+    public AccountDto loadAccount(Long accountId) {
+        var account = _accountRepository.findAccountWithDetails(accountId).orElse(null);
+        if(account == null)
+            throw new BusinessException("Can not find the account");
+
+        var accountDto = _modelMapper.map(account, AccountDto.class);
+
+        var customer = account.getCustomer();
+        accountDto.setCustomerId(customer.getId());
+        accountDto.setCustomerName(customer.getFullName());
+
+        return accountDto;
+    }
+
+    public AccountDto loadBankAccount(Currencies currency) {
+        var account = _accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, currency).orElse(null);
+        if(account == null)
+            throw new BusinessException("Can not find the bank account");
+
+        return _modelMapper.map(account, AccountDto.class);
+    }
+
     public List<AccountDto> searchAccounts(Long accountId, Long customerId) {
         var outputDto = new ArrayList<AccountDto>();
 
         if(accountId != null) {
             if(customerId != null) {
-                var accounts = _accountRepository.findAccountsWithCustomer(accountId, customerId);
+                var accounts = _accountRepository.findAccountsWithDetails(accountId, customerId);
                 for(var account : accounts) {
                     var accountDto = _modelMapper.map(account, AccountDto.class);
                     var customer = account.getCustomer();
@@ -52,7 +74,7 @@ public class AccountService implements IAccountService {
                 }
             }
             else {
-                var account = _accountRepository.findAccountWithCustomer(accountId).orElse(null);
+                var account = _accountRepository.findAccountWithDetails(accountId).orElse(null);
                 if(account != null) {
                     var accountDto = _modelMapper.map(account, AccountDto.class);
                     var customer = account.getCustomer();
@@ -81,22 +103,6 @@ public class AccountService implements IAccountService {
                 return loadAccounts();
             }
         }
-    }
-
-    public AccountDto loadAccount(Long accountId) {
-        var account = _accountRepository.findById(accountId).orElse(null);
-        if(account == null)
-            throw new BusinessException("Can not find the account");
-
-        return _modelMapper.map(account, AccountDto.class);
-    }
-
-    public AccountDto loadBankAccount(Currencies currency) {
-        var account = _accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, currency).orElse(null);
-        if(account == null)
-            throw new BusinessException("Can not find the bank account");
-
-        return _modelMapper.map(account, AccountDto.class);
     }
 
     public void addAccount(AccountDto inputDto) {

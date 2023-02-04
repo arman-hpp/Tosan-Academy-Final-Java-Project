@@ -1,8 +1,8 @@
 package com.tosan.model;
 
 public enum Currencies {
-    rial("Rial", "R"),
-    dollar("Dollar", "$");
+    Rial("Rial", "R"),
+    Dollar("Dollar", "$");
 
     private final String displayValue;
     private final String symbol;

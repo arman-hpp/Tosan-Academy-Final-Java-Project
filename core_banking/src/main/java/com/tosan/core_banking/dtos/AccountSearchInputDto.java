@@ -1,4 +1,4 @@
-package com.tosan.loan.dtos;
+package com.tosan.core_banking.dtos;
 
 import com.tosan.dtos.BaseDto;
 
@@ -9,7 +9,5 @@ import lombok.*;
 @Getter
 @Setter
 public final class AccountSearchInputDto extends BaseDto {
-    private Long customerId;
-
     private Long accountId;
 }
