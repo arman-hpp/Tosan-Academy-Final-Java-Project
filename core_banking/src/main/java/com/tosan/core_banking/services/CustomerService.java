@@ -22,7 +22,7 @@ public class CustomerService implements ICustomerService {
     }
 
     public List<CustomerDto> loadCustomers() {
-        var customers = _customerRepository.findAll();
+        var customers = _customerRepository.findAllByOrderByIdDesc();
         var outputDto = new ArrayList<CustomerDto>();
         for(var customer : customers) {
             outputDto.add(_modelMapper.map(customer, CustomerDto.class));

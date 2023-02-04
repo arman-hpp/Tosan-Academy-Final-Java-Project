@@ -67,7 +67,6 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!--/*@thymesVar id="customer" type="com.tosan.core_banking.dtos.CustomerDto"*/-->
                 <tr th:each="account,iterStat : ${accountOutputs}" th:class="${iterStat.odd}? 'odd'">
                     <td class="align-middle" th:text="${account.id}"></td>
                     <td class="align-middle" th:text="${account.customerName}"></td>

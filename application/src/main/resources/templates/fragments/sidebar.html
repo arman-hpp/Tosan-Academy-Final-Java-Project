@@ -113,7 +113,7 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link" th:classappend="${title} == 'Customers' ? 'active' : 'link-dark'">
+                <a th:href="@{/customer/index}" class="nav-link" th:classappend="${title} == 'Customers' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
                         <use xlink:href="#people-circle" />
                     </svg>
@@ -121,7 +121,7 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link" th:classappend="${title} == 'Accounts' ? 'active' : 'link-dark'">
+                <a th:href="@{/account/index}" class="nav-link" th:classappend="${title} == 'Accounts' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
                         <use xlink:href="#collection" />
                     </svg>
@@ -129,7 +129,7 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link" th:classappend="${title} == 'Transactions' ? 'active' : 'link-dark'">
+                <a th:href="@{/transaction/index}" class="nav-link" th:classappend="${title} == 'Transactions' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
                         <use xlink:href="#grid" />
                     </svg>
@@ -137,7 +137,7 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link" th:classappend="${title} == 'Loans' ? 'active' : 'link-dark'">
+                <a th:href="@{/loan/index}" class="nav-link" th:classappend="${title} == 'Loans' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
                         <use xlink:href="#calendar" />
                     </svg>
@@ -145,7 +145,7 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link" th:classappend="${title} == 'Installments' ? 'active' : 'link-dark'">
+                <a th:href="@{/installment/index}" class="nav-link" th:classappend="${title} == 'Installments' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
                         <use xlink:href="#table" />
                     </svg>
@@ -153,11 +153,11 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link" th:classappend="${title} == 'Loan Options' ? 'active' : 'link-dark'">
+                <a th:href="@{/loan_condtions/index}" class="nav-link" th:classappend="${title} == 'Loan Options' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
                         <use xlink:href="#gear-fill" />
                     </svg>
-                    Loan Options
+                    Loan Conditions
                 </a>
             </li>
 
