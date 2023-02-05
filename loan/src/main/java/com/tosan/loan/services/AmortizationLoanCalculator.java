@@ -102,11 +102,11 @@ public class AmortizationLoanCalculator implements ILoanCalculator {
                 .setScale(2, RoundingMode.HALF_UP);
     }
 
-    private BigDecimal calculateInterestAmount(LoanDto loan, BigDecimal currentLoanBalance, BigDecimal monthlyInterestRate, LocalDate paymentDate) {
+    private BigDecimal calculateInterestAmount(LoanDto loanDto, BigDecimal currentLoanBalance, BigDecimal monthlyInterestRate, LocalDate paymentDate) {
         return paymentDate == null
                 ? getInterestAmountByBalanceAndMonthlyInterestRate(currentLoanBalance, monthlyInterestRate)
                 : getInterestAmountByBalanceRateAndDays(
-                currentLoanBalance, loan.getInterestRate(),
+                currentLoanBalance, loanDto.getInterestRate(),
                 paymentDate.minusMonths(1).lengthOfMonth(),
                 paymentDate.minusMonths(1).lengthOfYear()
         );

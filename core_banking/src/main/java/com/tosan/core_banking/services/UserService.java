@@ -29,7 +29,7 @@ public class UserService implements IUserService {
     public UserDto loadUser(Long userId) {
         var user = _userRepository.findById(userId).orElse(null);
         if(user == null)
-            throw new BusinessException("Can not find the user");
+            throw new BusinessException("can not find the user");
 
         return _modelMapper.map(user, UserDto.class);
     }
@@ -47,7 +47,7 @@ public class UserService implements IUserService {
     public void removeUser(Long userId) {
         var user = _userRepository.findById(userId).orElse(null);
         if(user == null)
-            throw new BusinessException("Can not find the user");
+            throw new BusinessException("can not find the user");
 
         _userRepository.delete(user);
     }
@@ -60,7 +60,7 @@ public class UserService implements IUserService {
     public void editUser(UserDto userDto) {
         var customer = _userRepository.findById(userDto.getId()).orElse(null);
         if(customer == null)
-            throw new BusinessException("Can not find the customer");
+            throw new BusinessException("can not find the customer");
 
         _modelMapper.map(userDto, customer);
         _userRepository.save(customer);
@@ -75,33 +75,33 @@ public class UserService implements IUserService {
         }
     }
 
-    public void login(UserLoginInputDto inputDto) {
-        var user = _userRepository.findByUsername(inputDto.getUsername()).orElse(null);
+    public void login(UserLoginInputDto userLoginInputDto) {
+        var user = _userRepository.findByUsername(userLoginInputDto.getUsername()).orElse(null);
         if(user == null)
             throw new BusinessException("user not found!");
 
-        if (!Objects.equals(user.getPassword(), inputDto.getPassword()))
+        if (!Objects.equals(user.getPassword(), userLoginInputDto.getPassword()))
             throw new BusinessException("username or password is invalid");
     }
 
-    public void register(UserRegisterInputDto inputDto) {
-        if(_userRepository.findByUsername(inputDto.getUsername()).orElse(null) != null)
+    public void register(UserRegisterInputDto userRegisterInputDto) {
+        if(_userRepository.findByUsername(userRegisterInputDto.getUsername()).orElse(null) != null)
             throw new BusinessException("the user is exists. choose new username");
 
-        var user = _modelMapper.map(inputDto, User.class);
+        var user = _modelMapper.map(userRegisterInputDto, User.class);
         user.setUserType(UserTypes.User);
         _userRepository.save(user);
     }
 
-    public void changePassword(UserChangePasswordInputDto inputDto) {
-        var user = _userRepository.findByUsername(inputDto.getUsername()).orElse(null);
+    public void changePassword(UserChangePasswordInputDto userChangePasswordInputDto) {
+        var user = _userRepository.findByUsername(userChangePasswordInputDto.getUsername()).orElse(null);
         if(user == null)
             throw new BusinessException("user not found!");
 
-        if (!Objects.equals(user.getPassword(), inputDto.getOldPassword()))
+        if (!Objects.equals(user.getPassword(), userChangePasswordInputDto.getOldPassword()))
             throw new BusinessException("password is invalid");
 
-        user.setPassword(inputDto.getNewPassword());
+        user.setPassword(userChangePasswordInputDto.getNewPassword());
         _userRepository.save(user);
     }
 

@@ -23,12 +23,12 @@ public class CustomerService implements ICustomerService {
 
     public List<CustomerDto> loadCustomers() {
         var customers = _customerRepository.findAllByOrderByIdDesc();
-        var outputDto = new ArrayList<CustomerDto>();
+        var results = new ArrayList<CustomerDto>();
         for(var customer : customers) {
-            outputDto.add(_modelMapper.map(customer, CustomerDto.class));
+            results.add(_modelMapper.map(customer, CustomerDto.class));
         }
 
-        return outputDto;
+        return results;
     }
 
     public CustomerDto loadCustomer(Long customerId) {
@@ -39,26 +39,26 @@ public class CustomerService implements ICustomerService {
         return _modelMapper.map(customer, CustomerDto.class);
     }
 
-    public void addCustomer(CustomerDto inputDto) {
-        var customer = _modelMapper.map(inputDto, Customer.class);
+    public void addCustomer(CustomerDto customerDto) {
+        var customer = _modelMapper.map(customerDto, Customer.class);
         _customerRepository.save(customer);
     }
 
-    public void editCustomer(CustomerDto inputDto) {
-        var customer = _customerRepository.findById(inputDto.getId()).orElse(null);
+    public void editCustomer(CustomerDto customerDto) {
+        var customer = _customerRepository.findById(customerDto.getId()).orElse(null);
         if(customer == null)
             throw new BusinessException("Can not find the customer");
 
-        _modelMapper.map(inputDto, customer);
+        _modelMapper.map(customerDto, customer);
         _customerRepository.save(customer);
     }
 
-    public void addOrEditCustomer(CustomerDto inputDto) {
-        if(inputDto.getId()  == null || inputDto.getId() <= 0) {
-            addCustomer(inputDto);
+    public void addOrEditCustomer(CustomerDto customerDto) {
+        if(customerDto.getId()  == null || customerDto.getId() <= 0) {
+            addCustomer(customerDto);
         }
         else {
-            editCustomer(inputDto);
+            editCustomer(customerDto);
         }
     }
 

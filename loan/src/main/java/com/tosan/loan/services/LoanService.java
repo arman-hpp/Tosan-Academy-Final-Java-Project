@@ -31,7 +31,7 @@ public class LoanService implements ILoanService {
     }
 
     public List<LoanDto> loadLoans() {
-        var loans = _loanRepository.findAll();
+        var loans = _loanRepository.findAllByOrderByIdDesc();
         var outputDto = new ArrayList<LoanDto>();
         for(var loan : loans) {
             outputDto.add(_modelMapper.map(loan, LoanDto.class));
@@ -42,22 +42,22 @@ public class LoanService implements ILoanService {
 
     public List<LoanDto> loadLoansByCustomerId(Long customerId) {
         var loans = _loanRepository.findByCustomerIdOrderByRequestDate(customerId);
-        var outputDto = new ArrayList<LoanDto>();
+        var results = new ArrayList<LoanDto>();
         for(var loan : loans) {
-            outputDto.add(_modelMapper.map(loan, LoanDto.class));
+            results.add(_modelMapper.map(loan, LoanDto.class));
         }
 
-        return outputDto;
+        return results;
     }
 
-    public List<LoanDto> loadLoansByDepositAccountId(Long accountId) {
-        var loans = _loanRepository.findByDepositAccountIdOrderByRequestDate(accountId);
-        var outputDto = new ArrayList<LoanDto>();
+    public List<LoanDto> loadLoansByAccountId(Long accountId) {
+        var loans = _loanRepository.findByAccountIdOrderByRequestDate(accountId);
+        var results = new ArrayList<LoanDto>();
         for(var loan : loans) {
-            outputDto.add(_modelMapper.map(loan, LoanDto.class));
+            results.add(_modelMapper.map(loan, LoanDto.class));
         }
 
-        return outputDto;
+        return results;
     }
 
     public LoanDto loadLoan(Long loanId) {
@@ -68,39 +68,39 @@ public class LoanService implements ILoanService {
         return _modelMapper.map(loan, LoanDto.class);
     }
 
-    public void addLoan(LoanDto inputDto) {
-        _loanConditionsValidatorService.validate(inputDto);
+    public void addLoan(LoanDto loanDto) {
+        _loanConditionsValidatorService.validate(loanDto);
 
-        var loan = _modelMapper.map(inputDto, Loan.class);
-        loan.setCustomer(new Customer(inputDto.getCustomerId()));
-        loan.setDepositAccount(new Account(inputDto.getDepositAccountId()));
+        var loan = _modelMapper.map(loanDto, Loan.class);
+        loan.setCustomer(new Customer(loanDto.getCustomerId()));
+        loan.setAccount(new Account(loanDto.getAccountId()));
 
         _loanRepository.save(loan);
     }
 
-    public void editLoan(LoanDto inputDto) {
-        _loanConditionsValidatorService.validate(inputDto);
+    public void editLoan(LoanDto loanDto) {
+        _loanConditionsValidatorService.validate(loanDto);
 
-        var loan = _loanRepository.findById(inputDto.getId()).orElse(null);
+        var loan = _loanRepository.findById(loanDto.getId()).orElse(null);
         if(loan == null)
             throw new BusinessException("can not find the loan");
 
-        if(loan.getDepositDate() != null)
+        if(loan.getPaid())
             throw new BusinessException("the loan has been paid and it cannot be edit");
 
-        _modelMapper.map(inputDto, loan);
-        loan.setCustomer(new Customer(inputDto.getCustomerId()));
-        loan.setDepositAccount(new Account(inputDto.getDepositAccountId()));
+        _modelMapper.map(loanDto, loan);
+        loan.setCustomer(new Customer(loanDto.getCustomerId()));
+        loan.setAccount(new Account(loanDto.getAccountId()));
 
         _loanRepository.save(loan);
     }
 
-    public void addOrEditLoan(LoanDto inputDto) {
-        if(inputDto.getId()  == null || inputDto.getId() <= 0) {
-            addLoan(inputDto);
+    public void addOrEditLoan(LoanDto loanDto) {
+        if(loanDto.getId()  == null || loanDto.getId() <= 0) {
+            addLoan(loanDto);
         }
         else {
-            editLoan(inputDto);
+            editLoan(loanDto);
         }
     }
 
@@ -109,7 +109,7 @@ public class LoanService implements ILoanService {
         if(loan == null)
             throw new BusinessException("can not find the loan");
 
-        if(loan.getDepositDate() != null)
+        if(loan.getPaid())
             throw new BusinessException("can not remove the loan, because it deposited already");
 
         _loanRepository.delete(loan);
@@ -117,11 +117,11 @@ public class LoanService implements ILoanService {
 
     public List<LoanInterestStatisticsDto> loadLoanSumInterests(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
         var loanInterestStatistics = _installmentRepository.sumTotalInterests(fromDateTime, toDateTime);
-        var outputDto = new ArrayList<LoanInterestStatisticsDto>();
+        var results = new ArrayList<LoanInterestStatisticsDto>();
         for(var loanInterestStatistic : loanInterestStatistics) {
-            outputDto.add(_modelMapper.map(loanInterestStatistic, LoanInterestStatisticsDto.class));
+            results.add(_modelMapper.map(loanInterestStatistic, LoanInterestStatisticsDto.class));
         }
 
-        return outputDto;
+        return results;
     }
 }

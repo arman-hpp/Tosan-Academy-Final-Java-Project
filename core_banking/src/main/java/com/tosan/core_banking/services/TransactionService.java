@@ -37,22 +37,22 @@ public class TransactionService implements ITransactionService {
 
     public List<TransactionDto> loadTransactions() {
         var transactions = _transactionRepository.findAll();
-        var outputDto = new ArrayList<TransactionDto>();
+        var result = new ArrayList<TransactionDto>();
         for(var transaction : transactions) {
-            outputDto.add(_modelMapper.map(transaction, TransactionDto.class));
+            result.add(_modelMapper.map(transaction, TransactionDto.class));
         }
 
-        return outputDto;
+        return result;
     }
 
     public List<TransactionDto> loadTransactions(LocalDateTime fromDate, LocalDateTime toDate) {
         var transactions = _transactionRepository.findByRegDateBetweenOrderByRegDate(fromDate, toDate);
-        var outputDto = new ArrayList<TransactionDto>();
+        var result = new ArrayList<TransactionDto>();
         for(var transaction : transactions) {
-            outputDto.add(_modelMapper.map(transaction, TransactionDto.class));
+            result.add(_modelMapper.map(transaction, TransactionDto.class));
         }
 
-        return outputDto;
+        return result;
     }
 
     public TransactionDto loadTransactionByTraceNo(String traceNo) {
@@ -65,27 +65,27 @@ public class TransactionService implements ITransactionService {
 
     public List<TransactionDto> loadLastAccountTransactions(Long accountId) {
         var transactions = _transactionRepository.findTop5ByAccountIdOrderByRegDateDesc(accountId);
-        var outputDto = new ArrayList<TransactionDto>();
+        var results = new ArrayList<TransactionDto>();
         for(var transaction : transactions) {
-            outputDto.add(_modelMapper.map(transaction, TransactionDto.class));
+            results.add(_modelMapper.map(transaction, TransactionDto.class));
         }
 
-        return outputDto;
+        return results;
     }
 
     public List<TransactionDto> loadLastBranchTransactions() {
         var transactions = _transactionRepository.findTop5ByOrderByRegDateDesc();
-        var outputDto = new ArrayList<TransactionDto>();
+        var results = new ArrayList<TransactionDto>();
         for(var transaction : transactions) {
-            outputDto.add(_modelMapper.map(transaction, TransactionDto.class));
+            results.add(_modelMapper.map(transaction, TransactionDto.class));
         }
 
-        return outputDto;
+        return results;
     }
 
     public List<TransactionDto> loadUserTransactions(Long userId) {
         var transactions = _transactionRepository.findUserTransactionsWithDetails(userId);
-        var outputDto = new ArrayList<TransactionDto>();
+        var results = new ArrayList<TransactionDto>();
         for(var transaction : transactions) {
             var transactionDto = _modelMapper.map(transaction, TransactionDto.class);
             var account = transaction.getAccount();
@@ -95,46 +95,46 @@ public class TransactionService implements ITransactionService {
             transactionDto.setAccountCustomerName(customer.getFullName());
             transactionDto.setAccountId(account.getId());
             transactionDto.setCurrency(account.getCurrency());
-            outputDto.add(transactionDto);
+            results.add(transactionDto);
         }
 
-        return outputDto;
+        return results;
     }
 
     @Transactional
-    public void transfer(TransferDto inputDto) {
-        var srcTransaction = new TransactionDto(inputDto.getAmount(), TransactionTypes.Debit,
-                 inputDto.getSrcDescription(), inputDto.getSrcAccountId(),
-                inputDto.getUserId(), inputDto.getSrcTraceNo(), inputDto.getCurrency());
+    public void transfer(TransferDto transferDto) {
+        var srcTransaction = new TransactionDto(transferDto.getAmount(), TransactionTypes.Debit,
+                transferDto.getSrcDescription(), transferDto.getSrcAccountId(),
+                transferDto.getUserId(), transferDto.getSrcTraceNo(), transferDto.getCurrency());
 
-        var desTransaction = new TransactionDto(inputDto.getAmount(), TransactionTypes.Credit,
-                 inputDto.getDesDescription(), inputDto.getDesAccountId(),
-                inputDto.getUserId(), inputDto.getDesTraceNo(), inputDto.getCurrency());
+        var desTransaction = new TransactionDto(transferDto.getAmount(), TransactionTypes.Credit,
+                transferDto.getDesDescription(), transferDto.getDesAccountId(),
+                transferDto.getUserId(), transferDto.getDesTraceNo(), transferDto.getCurrency());
 
         doTransaction(srcTransaction);
         doTransaction(desTransaction);
     }
 
     @Transactional
-    public void doTransaction(TransactionDto inputDto) {
-        var account = _accountRepository.findById(inputDto.getAccountId()).orElse(null);
+    public void doTransaction(TransactionDto transactionDto) {
+        var account = _accountRepository.findById(transactionDto.getAccountId()).orElse(null);
         if(account == null)
             throw new BusinessException("can not find the account");
 
-        if(account.getCurrency() != inputDto.getCurrency())
+        if(account.getCurrency() != transactionDto.getCurrency())
             throw new BusinessException("The currency of the account and the transaction do not match");
 
-        if(inputDto.getTransactionType() == TransactionTypes.Credit) {
-            account.setBalance(account.getBalance().add(inputDto.getAmount()));
-        } else if (inputDto.getTransactionType() == TransactionTypes.Debit) {
-            if(account.getBalance().compareTo(inputDto.getAmount()) < 0)
+        if(transactionDto.getTransactionType() == TransactionTypes.Credit) {
+            account.setBalance(account.getBalance().add(transactionDto.getAmount()));
+        } else if (transactionDto.getTransactionType() == TransactionTypes.Debit) {
+            if(account.getBalance().compareTo(transactionDto.getAmount()) < 0)
                 throw new BusinessException("account balance is not enough!");
 
-            account.setBalance(account.getBalance().subtract(inputDto.getAmount()));
+            account.setBalance(account.getBalance().subtract(transactionDto.getAmount()));
         } else
             throw new BusinessException("transaction type is invalid");
 
-        var transaction = _modelMapper.map(inputDto, Transaction.class);
+        var transaction = _modelMapper.map(transactionDto, Transaction.class);
         transaction.setRegDate(LocalDateTime.now());
         transaction.setAccount(account);
 

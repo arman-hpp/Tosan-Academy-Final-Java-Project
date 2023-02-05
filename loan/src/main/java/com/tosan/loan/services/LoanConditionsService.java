@@ -44,15 +44,15 @@ public class LoanConditionsService implements ILoanConditionsService {
     }
 
     @Transactional
-    public void editLoanConditions(LoanConditionsDto inputDto) {
+    public void editLoanConditions(LoanConditionsDto loanConditionsDto) {
         var currentLoanConfigs = _loanConditionsRepository
-                .findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(inputDto.getCurrency()).orElse(null);
+                .findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(loanConditionsDto.getCurrency()).orElse(null);
         if(currentLoanConfigs == null)
             throw new BusinessException("can not find the active loan configuration");
 
         currentLoanConfigs.setExpireDate(LocalDateTime.now());
 
-        var newLoanConfigs = _modelMapper.map(inputDto, LoanCondition.class);
+        var newLoanConfigs = _modelMapper.map(loanConditionsDto, LoanCondition.class);
         newLoanConfigs.setStartDate(LocalDateTime.now());
         newLoanConfigs.setExpireDate(null);
 

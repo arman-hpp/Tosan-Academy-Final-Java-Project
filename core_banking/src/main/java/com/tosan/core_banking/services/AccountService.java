@@ -27,16 +27,16 @@ public class AccountService implements IAccountService {
 
     public List<AccountDto> loadAccounts() {
         var accounts = _accountRepository.findAllAccountsWithDetails();
-        var outputDto = new ArrayList<AccountDto>();
+        var results = new ArrayList<AccountDto>();
         for(var account : accounts) {
             var accountDto = _modelMapper.map(account, AccountDto.class);
             var customer = account.getCustomer();
             accountDto.setCustomerId(customer.getId());
             accountDto.setCustomerName(customer.getFullName());
-            outputDto.add(accountDto);
+            results.add(accountDto);
         }
 
-        return outputDto;
+        return results;
     }
 
     public AccountDto loadAccount(Long accountId) {
@@ -56,20 +56,20 @@ public class AccountService implements IAccountService {
     public AccountDto loadBankAccount(Currencies currency) {
         var account = _accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, currency).orElse(null);
         if(account == null)
-            throw new BusinessException("Can not find the bank account");
+            throw new BusinessException("can not find the bank account");
 
         return _modelMapper.map(account, AccountDto.class);
     }
 
-    public void addAccount(AccountDto inputDto) {
-        if(inputDto.getCustomerId() == null) {
+    public void addAccount(AccountDto accountDto) {
+        if(accountDto.getCustomerId() == null) {
             throw new BusinessException("please select a customer to open the account");
         }
 
-        var account = _modelMapper.map(inputDto, Account.class);
+        var account = _modelMapper.map(accountDto, Account.class);
         account.setBalance(BigDecimal.valueOf(0L));
         account.setAccountType(AccountTypes.CustomerAccount);
-        account.setCustomer(new Customer(inputDto.getCustomerId()));
+        account.setCustomer(new Customer(accountDto.getCustomerId()));
 
         _accountRepository.save(account);
     }

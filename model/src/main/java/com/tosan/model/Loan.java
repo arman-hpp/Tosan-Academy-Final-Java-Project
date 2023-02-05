@@ -38,9 +38,12 @@ public class Loan extends BaseEntity {
     @Enumerated(EnumType.ORDINAL)
     private Currencies currency;
 
+    @Column(name = "paid", nullable = false)
+    private Boolean paid;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "deposit_account_id", nullable = false)
-    private Account depositAccount;
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account Account;
 
     @OneToMany(mappedBy = "loan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Installment> installments = new HashSet<>();

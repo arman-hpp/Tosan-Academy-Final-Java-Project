@@ -72,7 +72,7 @@ public class DepositLoanService implements IDepositLoanService {
         _loanRepository.save(loan);
 
         var bankAccountId = _accountService.loadBankAccount(loan.getCurrency()).getId();
-        var customerAccountId = loan.getDepositAccount().getId();
+        var customerAccountId = loan.getAccount().getId();
 
         var transferDto = new TransferDto(loan.getAmount(), "Transfer to customer account",
                 "Transfer loan from bank account", bankAccountId, customerAccountId,

@@ -21,31 +21,31 @@ public class InstallmentService implements IInstallmentService {
 
     public List<InstallmentDto> loadInstallments(Long loanId) {
         var installments = _installmentRepository.findByLoanIdOrderByInstallmentNo(loanId);
-        var outputDto = new ArrayList<InstallmentDto>();
+        var results = new ArrayList<InstallmentDto>();
         for(var installment : installments) {
-            outputDto.add(_modelMapper.map(installment, InstallmentDto.class));
+            results.add(_modelMapper.map(installment, InstallmentDto.class));
         }
 
-        return outputDto;
+        return results;
     }
 
     public List<InstallmentDto> loadPaidInstallments(Long loanId) {
         var installments = _installmentRepository.findByLoanIdAndPaidTrueOrderByInstallmentNo(loanId);
-        var outputDto = new ArrayList<InstallmentDto>();
+        var results = new ArrayList<InstallmentDto>();
         for(var installment : installments) {
-            outputDto.add(_modelMapper.map(installment, InstallmentDto.class));
+            results.add(_modelMapper.map(installment, InstallmentDto.class));
         }
 
-        return outputDto;
+        return results;
     }
 
     public List<InstallmentDto> loadNotPaidInstallments(Long loanId) {
         var installments = _installmentRepository.findByLoanIdAndPaidFalseOrderByInstallmentNo(loanId);
-        var outputDto = new ArrayList<InstallmentDto>();
+        var results = new ArrayList<InstallmentDto>();
         for(var installment : installments) {
-            outputDto.add(_modelMapper.map(installment, InstallmentDto.class));
+            results.add(_modelMapper.map(installment, InstallmentDto.class));
         }
 
-        return outputDto;
+        return results;
     }
 }

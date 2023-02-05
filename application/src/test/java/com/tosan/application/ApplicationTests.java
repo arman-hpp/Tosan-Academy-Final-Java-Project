@@ -60,7 +60,7 @@ class ApplicationTests {
             transactionRepository.findTop5ByAccountIdOrderByRegDateDesc(1L);
             transactionRepository.findTop5ByOrderByRegDateDesc();
             transactionRepository.findUserTransactionsWithDetails(1L);
-            loanRepository.findByDepositAccountIdOrderByRequestDate(1L);
+            loanRepository.findByAccountIdOrderByRequestDate(1L);
             loanRepository.findByCustomerIdOrderByRequestDate(1L);
             installmentRepository.findByLoanIdOrderByInstallmentNo(1L);
             installmentRepository.findTopCountByLoanIdAndPaidOrderByInstallmentNo(5, 1L, true);
