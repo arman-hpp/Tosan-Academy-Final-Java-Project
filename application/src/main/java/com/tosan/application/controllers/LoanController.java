@@ -59,7 +59,7 @@ public class LoanController {
                 model.addAttribute("loanInputs", loanDto);
             }
 
-            return "transaction";
+            return "loan";
         } catch (BusinessException ex) {
             return "redirect:/loan/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
