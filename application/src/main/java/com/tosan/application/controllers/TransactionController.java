@@ -22,6 +22,7 @@ public class TransactionController {
         _transactionService = transactionService;
         _accountService = accountService;
     }
+
     @GetMapping("/index")
     public String loadForm(
             @RequestParam(name = "account_id", required = false) String accountId,
@@ -66,7 +67,7 @@ public class TransactionController {
     @PostMapping("/searchAccount")
     public String searchAccountSubmit(@ModelAttribute AccountSearchInputDto accountSearchInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/account/index?error=Invalid+input+parameters";
+            return "redirect:/transaction/index?error=Invalid+input+parameters";
         }
 
         var accountId = accountSearchInputDto.getAccountId();
