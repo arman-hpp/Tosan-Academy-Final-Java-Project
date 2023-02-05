@@ -160,6 +160,14 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
                     Loan Conditions
                 </a>
             </li>
+            <li>
+                <a th:href="@{/user/index}" class="nav-link" th:classappend="${title} == 'Users' ? 'active' : 'link-dark'">
+                    <svg class="bi me-2" width="16" height="16">
+                        <use xlink:href="#gear-fill" />
+                    </svg>
+                    Users
+                </a>
+            </li>
 
         </ul>
 

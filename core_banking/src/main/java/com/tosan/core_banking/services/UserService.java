@@ -35,7 +35,7 @@ public class UserService implements IUserService {
     }
 
     public List<UserDto> loadUsers() {
-        var users = _userRepository.findAll();
+        var users = _userRepository.findAllByOrderByIdDesc();
         var results = new ArrayList<UserDto>();
         for(var user : users) {
             results.add(_modelMapper.map(user, UserDto.class));
