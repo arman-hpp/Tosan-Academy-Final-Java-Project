@@ -22,7 +22,7 @@ public class CustomerController {
     }
 
     @GetMapping("/index")
-    public String customerForm(@RequestParam(required = false) String id, Model model) {
+    public String loadForm(@RequestParam(required = false) String id, Model model) {
         try {
             if (id != null) {
                 var idLong = ConvertorUtils.tryParseLong(id, -1L);
@@ -50,7 +50,7 @@ public class CustomerController {
     }
 
     @GetMapping("/index/{id}")
-    public String customerFormById(@PathVariable String id, Model model) {
+    public String loadFormById(@PathVariable String id, Model model) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
             return "redirect:/customer/index?error=Invalid+input+parameters";
@@ -74,7 +74,7 @@ public class CustomerController {
     }
 
     @PostMapping("/addCustomer")
-    public String addCustomerSubmit(@ModelAttribute CustomerDto customerDto, BindingResult bindingResult) {
+    public String addSubmit(@ModelAttribute CustomerDto customerDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "redirect:/customer/index?error=Invalid+input+parameters";
         }

@@ -23,7 +23,7 @@ public class TransactionController {
         _accountService = accountService;
     }
     @GetMapping("/index")
-    public String transactionForm(
+    public String loadForm(
             @RequestParam(name = "account_id", required = false) String accountId,
             Model model) {
         try {
@@ -78,7 +78,7 @@ public class TransactionController {
     }
 
     @PostMapping("/addTransaction")
-    public String addTransactionSubmit(@ModelAttribute TransactionDto transactionDto, BindingResult bindingResult) {
+    public String addSubmit(@ModelAttribute TransactionDto transactionDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "redirect:/transaction/index?error=Invalid+input+parameters";
         }

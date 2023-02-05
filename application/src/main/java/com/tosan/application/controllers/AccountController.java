@@ -24,7 +24,7 @@ public class AccountController {
     }
 
     @GetMapping("/index")
-    public String accountForm(
+    public String loadForm(
             @RequestParam(name = "customer_id", required = false) String customerId,
             Model model) {
         try {
@@ -75,7 +75,7 @@ public class AccountController {
     }
 
     @PostMapping("/addAccount")
-    public String addAccountSubmit(@ModelAttribute AccountDto accountDto, BindingResult bindingResult) {
+    public String addSubmit(@ModelAttribute AccountDto accountDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "redirect:/account/index?error=Invalid+input+parameters";
         }
