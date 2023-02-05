@@ -36,12 +36,12 @@ public class UserService implements IUserService {
 
     public List<UserDto> loadUsers() {
         var users = _userRepository.findAllByOrderByIdDesc();
-        var results = new ArrayList<UserDto>();
+        var userDtoList = new ArrayList<UserDto>();
         for(var user : users) {
-            results.add(_modelMapper.map(user, UserDto.class));
+            userDtoList.add(_modelMapper.map(user, UserDto.class));
         }
 
-        return results;
+        return userDtoList;
     }
 
     public void removeUser(Long userId) {

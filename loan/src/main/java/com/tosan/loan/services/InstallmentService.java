@@ -21,31 +21,31 @@ public class InstallmentService implements IInstallmentService {
 
     public List<InstallmentDto> loadInstallments(Long loanId) {
         var installments = _installmentRepository.findByLoanIdOrderByInstallmentNo(loanId);
-        var results = new ArrayList<InstallmentDto>();
+        var installmentDtoList = new ArrayList<InstallmentDto>();
         for(var installment : installments) {
-            results.add(_modelMapper.map(installment, InstallmentDto.class));
+            installmentDtoList.add(_modelMapper.map(installment, InstallmentDto.class));
         }
 
-        return results;
+        return installmentDtoList;
     }
 
     public List<InstallmentDto> loadPaidInstallments(Long loanId) {
         var installments = _installmentRepository.findByLoanIdAndPaidTrueOrderByInstallmentNo(loanId);
-        var results = new ArrayList<InstallmentDto>();
+        var installmentDtoList = new ArrayList<InstallmentDto>();
         for(var installment : installments) {
-            results.add(_modelMapper.map(installment, InstallmentDto.class));
+            installmentDtoList.add(_modelMapper.map(installment, InstallmentDto.class));
         }
 
-        return results;
+        return installmentDtoList;
     }
 
     public List<InstallmentDto> loadNotPaidInstallments(Long loanId) {
         var installments = _installmentRepository.findByLoanIdAndPaidFalseOrderByInstallmentNo(loanId);
-        var results = new ArrayList<InstallmentDto>();
+        var installmentDtoList = new ArrayList<InstallmentDto>();
         for(var installment : installments) {
-            results.add(_modelMapper.map(installment, InstallmentDto.class));
+            installmentDtoList.add(_modelMapper.map(installment, InstallmentDto.class));
         }
 
-        return results;
+        return installmentDtoList;
     }
 }

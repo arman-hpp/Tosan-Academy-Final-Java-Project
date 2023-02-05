@@ -23,18 +23,18 @@ public class CustomerService implements ICustomerService {
 
     public List<CustomerDto> loadCustomers() {
         var customers = _customerRepository.findAllByOrderByIdDesc();
-        var results = new ArrayList<CustomerDto>();
+        var customerDtoList = new ArrayList<CustomerDto>();
         for(var customer : customers) {
-            results.add(_modelMapper.map(customer, CustomerDto.class));
+            customerDtoList.add(_modelMapper.map(customer, CustomerDto.class));
         }
 
-        return results;
+        return customerDtoList;
     }
 
     public CustomerDto loadCustomer(Long customerId) {
         var customer = _customerRepository.findById(customerId).orElse(null);
         if(customer == null)
-            throw new BusinessException("Can not find the customer");
+            throw new BusinessException("can not find the customer");
 
         return _modelMapper.map(customer, CustomerDto.class);
     }
@@ -47,7 +47,7 @@ public class CustomerService implements ICustomerService {
     public void editCustomer(CustomerDto customerDto) {
         var customer = _customerRepository.findById(customerDto.getId()).orElse(null);
         if(customer == null)
-            throw new BusinessException("Can not find the customer");
+            throw new BusinessException("can not find the customer");
 
         _modelMapper.map(customerDto, customer);
         _customerRepository.save(customer);
@@ -65,7 +65,7 @@ public class CustomerService implements ICustomerService {
     public void removeCustomer(Long customerId) {
         var customer = _customerRepository.findById(customerId).orElse(null);
         if(customer == null)
-            throw new BusinessException("Can not find the customer");
+            throw new BusinessException("can not find the customer");
 
         _customerRepository.delete(customer);
     }

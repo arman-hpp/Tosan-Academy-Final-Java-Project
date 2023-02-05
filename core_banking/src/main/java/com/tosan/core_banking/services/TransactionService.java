@@ -31,28 +31,24 @@ public class TransactionService implements ITransactionService {
         _modelMapper = modelMapper;
     }
 
-    public Map<Integer, String> loadTransactionTypes() {
-        return EnumUtils.getEnumNames(TransactionTypes.class);
-    }
-
     public List<TransactionDto> loadTransactions() {
         var transactions = _transactionRepository.findAll();
-        var result = new ArrayList<TransactionDto>();
+        var transactionDtoList = new ArrayList<TransactionDto>();
         for(var transaction : transactions) {
-            result.add(_modelMapper.map(transaction, TransactionDto.class));
+            transactionDtoList.add(_modelMapper.map(transaction, TransactionDto.class));
         }
 
-        return result;
+        return transactionDtoList;
     }
 
     public List<TransactionDto> loadTransactions(LocalDateTime fromDate, LocalDateTime toDate) {
         var transactions = _transactionRepository.findByRegDateBetweenOrderByRegDate(fromDate, toDate);
-        var result = new ArrayList<TransactionDto>();
+        var transactionDtoList = new ArrayList<TransactionDto>();
         for(var transaction : transactions) {
-            result.add(_modelMapper.map(transaction, TransactionDto.class));
+            transactionDtoList.add(_modelMapper.map(transaction, TransactionDto.class));
         }
 
-        return result;
+        return transactionDtoList;
     }
 
     public TransactionDto loadTransactionByTraceNo(String traceNo) {
@@ -65,27 +61,27 @@ public class TransactionService implements ITransactionService {
 
     public List<TransactionDto> loadLastAccountTransactions(Long accountId) {
         var transactions = _transactionRepository.findTop5ByAccountIdOrderByRegDateDesc(accountId);
-        var results = new ArrayList<TransactionDto>();
+        var transactionDtoList = new ArrayList<TransactionDto>();
         for(var transaction : transactions) {
-            results.add(_modelMapper.map(transaction, TransactionDto.class));
+            transactionDtoList.add(_modelMapper.map(transaction, TransactionDto.class));
         }
 
-        return results;
+        return transactionDtoList;
     }
 
     public List<TransactionDto> loadLastBranchTransactions() {
         var transactions = _transactionRepository.findTop5ByOrderByRegDateDesc();
-        var results = new ArrayList<TransactionDto>();
+        var transactionDtoList = new ArrayList<TransactionDto>();
         for(var transaction : transactions) {
-            results.add(_modelMapper.map(transaction, TransactionDto.class));
+            transactionDtoList.add(_modelMapper.map(transaction, TransactionDto.class));
         }
 
-        return results;
+        return transactionDtoList;
     }
 
     public List<TransactionDto> loadUserTransactions(Long userId) {
         var transactions = _transactionRepository.findUserTransactionsWithDetails(userId);
-        var results = new ArrayList<TransactionDto>();
+        var transactionDtoList = new ArrayList<TransactionDto>();
         for(var transaction : transactions) {
             var transactionDto = _modelMapper.map(transaction, TransactionDto.class);
             var account = transaction.getAccount();
@@ -95,10 +91,10 @@ public class TransactionService implements ITransactionService {
             transactionDto.setAccountCustomerName(customer.getFullName());
             transactionDto.setAccountId(account.getId());
             transactionDto.setCurrency(account.getCurrency());
-            results.add(transactionDto);
+            transactionDtoList.add(transactionDto);
         }
 
-        return results;
+        return transactionDtoList;
     }
 
     @Transactional

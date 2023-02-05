@@ -26,12 +26,12 @@ public class LoanConditionsService implements ILoanConditionsService {
 
     public List<LoanConditionsDto> loadLoanConditions() {
         var loanConditions = _loanConditionsRepository.findAll();
-        var outputDto = new ArrayList<LoanConditionsDto>();
+        var loanConditionsDtoList = new ArrayList<LoanConditionsDto>();
         for(var loanCondition : loanConditions) {
-            outputDto.add(_modelMapper.map(loanCondition, LoanConditionsDto.class));
+            loanConditionsDtoList.add(_modelMapper.map(loanCondition, LoanConditionsDto.class));
         }
 
-        return outputDto;
+        return loanConditionsDtoList;
     }
 
     public LoanConditionsDto loadLoanCondition(Currencies currency) {

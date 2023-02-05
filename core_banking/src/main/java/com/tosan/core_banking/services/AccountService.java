@@ -27,22 +27,22 @@ public class AccountService implements IAccountService {
 
     public List<AccountDto> loadAccounts() {
         var accounts = _accountRepository.findAllAccountsWithDetails();
-        var results = new ArrayList<AccountDto>();
+        var accountDtoList = new ArrayList<AccountDto>();
         for(var account : accounts) {
             var accountDto = _modelMapper.map(account, AccountDto.class);
             var customer = account.getCustomer();
             accountDto.setCustomerId(customer.getId());
             accountDto.setCustomerName(customer.getFullName());
-            results.add(accountDto);
+            accountDtoList.add(accountDto);
         }
 
-        return results;
+        return accountDtoList;
     }
 
     public AccountDto loadAccount(Long accountId) {
         var account = _accountRepository.findAccountWithDetails(accountId).orElse(null);
         if(account == null)
-            throw new BusinessException("Can not find the account");
+            throw new BusinessException("can not find the account");
 
         var accountDto = _modelMapper.map(account, AccountDto.class);
 

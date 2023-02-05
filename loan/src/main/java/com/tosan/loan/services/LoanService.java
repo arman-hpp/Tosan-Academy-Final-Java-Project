@@ -1,17 +1,20 @@
 package com.tosan.loan.services;
 
 import com.tosan.exceptions.BusinessException;
-import com.tosan.loan.dtos.*;
+import com.tosan.loan.dtos.LoanDto;
+import com.tosan.loan.dtos.LoanInterestStatisticsDto;
 import com.tosan.loan.interfaces.ILoanService;
-import com.tosan.model.*;
-import com.tosan.repository.*;
-
+import com.tosan.model.Account;
+import com.tosan.model.Customer;
+import com.tosan.model.Loan;
+import com.tosan.repository.InstallmentRepository;
+import com.tosan.repository.LoanRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class LoanService implements ILoanService {
@@ -32,32 +35,32 @@ public class LoanService implements ILoanService {
 
     public List<LoanDto> loadLoans() {
         var loans = _loanRepository.findAllByOrderByIdDesc();
-        var outputDto = new ArrayList<LoanDto>();
+        var loanDtoList = new ArrayList<LoanDto>();
         for(var loan : loans) {
-            outputDto.add(_modelMapper.map(loan, LoanDto.class));
+            loanDtoList.add(_modelMapper.map(loan, LoanDto.class));
         }
 
-        return outputDto;
+        return loanDtoList;
     }
 
     public List<LoanDto> loadLoansByCustomerId(Long customerId) {
         var loans = _loanRepository.findByCustomerIdOrderByRequestDate(customerId);
-        var results = new ArrayList<LoanDto>();
+        var loanDtoList = new ArrayList<LoanDto>();
         for(var loan : loans) {
-            results.add(_modelMapper.map(loan, LoanDto.class));
+            loanDtoList.add(_modelMapper.map(loan, LoanDto.class));
         }
 
-        return results;
+        return loanDtoList;
     }
 
     public List<LoanDto> loadLoansByAccountId(Long accountId) {
         var loans = _loanRepository.findByAccountIdOrderByRequestDate(accountId);
-        var results = new ArrayList<LoanDto>();
+        var loanDtoList = new ArrayList<LoanDto>();
         for(var loan : loans) {
-            results.add(_modelMapper.map(loan, LoanDto.class));
+            loanDtoList.add(_modelMapper.map(loan, LoanDto.class));
         }
 
-        return results;
+        return loanDtoList;
     }
 
     public LoanDto loadLoan(Long loanId) {
@@ -117,11 +120,11 @@ public class LoanService implements ILoanService {
 
     public List<LoanInterestStatisticsDto> loadLoanSumInterests(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
         var loanInterestStatistics = _installmentRepository.sumTotalInterests(fromDateTime, toDateTime);
-        var results = new ArrayList<LoanInterestStatisticsDto>();
+        var loanInterestStatisticsDtoList = new ArrayList<LoanInterestStatisticsDto>();
         for(var loanInterestStatistic : loanInterestStatistics) {
-            results.add(_modelMapper.map(loanInterestStatistic, LoanInterestStatisticsDto.class));
+            loanInterestStatisticsDtoList.add(_modelMapper.map(loanInterestStatistic, LoanInterestStatisticsDto.class));
         }
 
-        return results;
+        return loanInterestStatisticsDtoList;
     }
 }
