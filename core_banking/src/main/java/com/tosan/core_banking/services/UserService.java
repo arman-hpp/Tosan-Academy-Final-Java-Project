@@ -1,16 +1,20 @@
 package com.tosan.core_banking.services;
 
-import com.tosan.core_banking.dtos.*;
+import com.tosan.core_banking.dtos.UserChangePasswordInputDto;
+import com.tosan.core_banking.dtos.UserDto;
+import com.tosan.core_banking.dtos.UserLoginInputDto;
+import com.tosan.core_banking.dtos.UserRegisterInputDto;
 import com.tosan.core_banking.interfaces.IUserService;
-import com.tosan.model.*;
-import com.tosan.repository.*;
 import com.tosan.exceptions.BusinessException;
-import com.tosan.utils.EnumUtils;
-
+import com.tosan.model.User;
+import com.tosan.model.UserTypes;
+import com.tosan.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserService implements IUserService {
@@ -22,8 +26,53 @@ public class UserService implements IUserService {
         this._modelMapper = modelMapper;
     }
 
-    public Map<Integer, String> loadUserTypes() {
-        return EnumUtils.getEnumNames(UserTypes.class);
+    public UserDto loadUser(Long userId) {
+        var user = _userRepository.findById(userId).orElse(null);
+        if(user == null)
+            throw new BusinessException("Can not find the user");
+
+        return _modelMapper.map(user, UserDto.class);
+    }
+
+    public List<UserDto> loadUsers() {
+        var users = _userRepository.findAll();
+        var results = new ArrayList<UserDto>();
+        for(var user : users) {
+            results.add(_modelMapper.map(user, UserDto.class));
+        }
+
+        return results;
+    }
+
+    public void removeUser(Long userId) {
+        var user = _userRepository.findById(userId).orElse(null);
+        if(user == null)
+            throw new BusinessException("Can not find the user");
+
+        _userRepository.delete(user);
+    }
+
+    public void addUser(UserDto userDto) {
+        var user = _modelMapper.map(userDto, User.class);
+        _userRepository.save(user);
+    }
+
+    public void editUser(UserDto userDto) {
+        var customer = _userRepository.findById(userDto.getId()).orElse(null);
+        if(customer == null)
+            throw new BusinessException("Can not find the customer");
+
+        _modelMapper.map(userDto, customer);
+        _userRepository.save(customer);
+    }
+
+    public void addOrEditUser(UserDto userDto) {
+        if(userDto.getId()  == null || userDto.getId() <= 0) {
+            addUser(userDto);
+        }
+        else {
+            editUser(userDto);
+        }
     }
 
     public void login(UserLoginInputDto inputDto) {
