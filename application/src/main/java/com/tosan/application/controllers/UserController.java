@@ -81,6 +81,8 @@ public class UserController {
             return "redirect:/user/index?error=Invalid+input+parameters";
         }
 
+        // TODO: if current User Id = idLong then error
+
         try {
             _userService.removeUser(idLong);
 
@@ -98,6 +100,8 @@ public class UserController {
         if (idLong <= 0) {
             return "redirect:/user/index?error=Invalid+input+parameters";
         }
+
+        // TODO: if current User Id = idLong then error
 
         return "redirect:/user/index/" + idLong;
     }
