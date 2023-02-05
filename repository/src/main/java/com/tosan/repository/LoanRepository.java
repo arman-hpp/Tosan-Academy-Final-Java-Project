@@ -9,5 +9,5 @@ import java.util.List;
 public interface LoanRepository extends BaseRepository<Loan, Long> {
     List<Loan> findAllByOrderByIdDesc();
     List<Loan> findByCustomerIdOrderByRequestDate(Long customerId);
-    List<Loan> findByAccountIdOrderByRequestDate(Long depositAccountId);
+    List<Loan> findByAccountIdOrderByRequestDate(Long accountId);
 }

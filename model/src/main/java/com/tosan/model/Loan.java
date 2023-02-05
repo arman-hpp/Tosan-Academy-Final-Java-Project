@@ -43,7 +43,7 @@ public class Loan extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
-    private Account Account;
+    private Account account;
 
     @OneToMany(mappedBy = "loan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Installment> installments = new HashSet<>();
