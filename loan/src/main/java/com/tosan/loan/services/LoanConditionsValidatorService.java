@@ -19,7 +19,7 @@ public class LoanConditionsValidatorService implements ILoanConditionsValidatorS
         var loanConditions = _loanConditionsRepository
                 .findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(loanDto.getCurrency()).orElse(null);
         if(loanConditions == null)
-            throw new BusinessException("can not find the active loan configuration");
+            throw new BusinessException("can not find the active loan conditions");
 
         if (loanDto.getRefundDuration() < loanConditions.getMinRefundDuration())
             throw new BusinessException("the loan refund duration is less than minimum refund duration");

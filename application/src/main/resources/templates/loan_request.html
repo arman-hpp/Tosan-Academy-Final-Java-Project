@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Transactions</title>
+    <title>Loan Requests</title>
 </head>
 <body>
     <div th:fragment="content">
@@ -10,7 +10,7 @@
             <strong><span th:text="${param.error}"></span></strong>
         </div>
 
-        <form action="#" th:action="@{/transaction/searchAccount}" th:object="${accountSearchInputs}" method="post">
+        <form action="#" th:action="@{/loan_request/searchAccount}" th:object="${accountSearchInputs}" method="post">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
                 <div class="col-4">
                     <label for="search-input" class="form-label">Account Id</label>
@@ -23,11 +23,12 @@
             </div>
         </form>
 
-        <form action="#" th:action="@{/transaction/addTransaction}" th:object="${transactionInputs}"  method="post">
+        <form action="#" th:action="@{/loan_request/addLoanRequest}" th:object="${loanInputs}"  method="post">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
                 <div class="col-4">
                     <div class="mb-3">
                         <input type="hidden" th:field="*{accountId}">
+                        <input type="hidden" th:field="*{customerId}">
                         <label for="fullName" class="form-label">Account Customer Name</label>
                         <input type="text" class="form-control" id="fullName" placeholder="" th:field="*{accountCustomerName}"
                                autocapitalize="none" maxlength="40" minlength="1" readonly />
@@ -63,21 +64,9 @@
                 </div>
                 <div class="col-4">
                     <div class="mb-3">
-                        <label for="transactionTypes" class="form-label">Transaction Type</label>
-                        <select id="transactionTypes" th:field="*{transactionType}"  class="form-select" aria-label="select transaction type">
-                            <option th:each="transactionType : ${T(com.tosan.model.TransactionTypes).values()}" th:value="${transactionType}" th:text="${transactionType}">
-                            </option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-8 g-4 mb-2">
-                <div class="col-8">
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <input type="text" class="form-control" id="description" placeholder="" th:field="*{description}"
-                               autocapitalize="none" maxlength="100" minlength="1" required />
+                        <label for="duration" class="form-label">Refund Duration</label>
+                        <input type="number" class="form-control" id="duration" placeholder="" th:field="*{refundDuration}"
+                               autocapitalize="none" maxlength="80" minlength="1" required />
                     </div>
                 </div>
             </div>
@@ -97,22 +86,34 @@
                     <th scope="col">Account Id</th>
                     <th scope="col">Owner</th>
                     <th scope="col">Amount</th>
-                    <th scope="col">Transaction Type</th>
+                    <th scope="col">Duration</th>
                     <th scope="col">Currency</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="transaction,iterStat : ${transactionOutputs}" th:class="${iterStat.odd}? 'odd'">
-                    <td class="align-middle" th:text="${transaction.id}"></td>
-                    <td class="align-middle" th:text="${transaction.accountId}"></td>
-                    <td class="align-middle" th:text="${transaction.accountCustomerName}"></td>
-                    <td class="align-middle" th:text="${transaction.amount}"></td>
-                    <td class="align-middle" th:text="${transaction.transactionType}"></td>
-                    <td class="align-middle" th:text="${transaction.currency}"></td>
+                <tr th:each="loan,iterStat : ${loanOutputs}" th:class="${iterStat.odd}? 'odd'">
+                    <td class="align-middle" th:text="${loan.id}"></td>
+                    <td class="align-middle" th:text="${loan.accountCustomerName}"></td>
+                    <td class="align-middle" th:text="${loan.amount}"></td>
+                    <td class="align-middle" th:text="${loan.refundDuration}"></td>
+                    <td class="align-middle" th:text="${loan.currency}"></td>
+                    <td>
+                        <form method="POST" th:action="@{/loan_request/editLoan/{id}(id=${loan.id})}">
+                            <button class="btn btn-primary btn-sm" type="submit">Edit</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" th:action="@{/loan_request/deleteLoan/{id}(id=${loan.id})}">
+                            <button class="btn btn-secondary btn-sm" type="submit">Delete</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
+
     </div>
 </body>
 </html>

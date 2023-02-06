@@ -41,7 +41,7 @@ public class Loan extends BaseEntity {
     @Column(name = "paid", nullable = false)
     private Boolean paid;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 

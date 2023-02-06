@@ -13,8 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/loan")
-@Layout(title = "Loans", value = "layouts/default")
+@RequestMapping("/loan_request")
+@Layout(title = "Loan Requests", value = "layouts/default")
 public class LoanController {
     private final LoanService _loanService;
     private final AccountService _accountService;
@@ -33,7 +33,7 @@ public class LoanController {
             if (accountId != null) {
                 accountIdLong = ConvertorUtils.tryParseLong(accountId, -1L);
                 if (accountIdLong <= 0) {
-                    return "redirect:/loan/index?error=Invalid+input+parameters";
+                    return "redirect:/loan_request/index?error=Invalid+input+parameters";
                 }
             }
 
@@ -59,11 +59,11 @@ public class LoanController {
                 model.addAttribute("loanInputs", loanDto);
             }
 
-            return "loan";
+            return "loan_request";
         } catch (BusinessException ex) {
-            return "redirect:/loan/index?error=" + ex.getEncodedMessage();
+            return "redirect:/loan_request/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/loan/index?error=unhandled+error+occurred";
+            return "redirect:/loan_request/index?error=unhandled+error+occurred";
         }
     }
 
@@ -71,7 +71,7 @@ public class LoanController {
     public String loadFormById(@PathVariable String id, Model model) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/loan/index?error=Invalid+input+parameters";
+            return "redirect:/loan_request/index?error=Invalid+input+parameters";
         }
 
         try {
@@ -84,70 +84,70 @@ public class LoanController {
             model.addAttribute("accountSearchInputs",
                     new AccountSearchInputDto(foundLoan.getAccountId()));
 
-            return "loan";
+            return "loan_request";
         } catch (BusinessException ex) {
-            return "redirect:/loan/index?error=" + ex.getEncodedMessage();
+            return "redirect:/loan_request/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/loan/index?error=unhandled+error+occurred";
+            return "redirect:/loan_request/index?error=unhandled+error+occurred";
         }
     }
 
     @PostMapping("/searchAccount")
     public String searchAccountSubmit(@ModelAttribute AccountSearchInputDto accountSearchInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/loan/index?error=Invalid+input+parameters";
+            return "redirect:/loan_request/index?error=Invalid+input+parameters";
         }
 
         var accountId = accountSearchInputDto.getAccountId();
         if (accountId == null) {
-            return "redirect:/loan/index";
+            return "redirect:/loan_request/index";
         }
 
-        return "redirect:/loan/index?account_id=" + accountId;
+        return "redirect:/loan_request/index?account_id=" + accountId;
     }
 
-    @PostMapping("/addLoan")
+    @PostMapping("/addLoanRequest")
     public String addSubmit(@ModelAttribute LoanDto loanDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/loan/index?error=Invalid+input+parameters";
+            return "redirect:/loan_request/index?error=Invalid+input+parameters";
         }
 
         try {
             _loanService.addOrEditLoan(loanDto);
 
-            return "redirect:/loan/index";
+            return "redirect:/loan_request/index";
         } catch (BusinessException ex) {
-            return "redirect:/loan/index?error=" + ex.getEncodedMessage();
+            return "redirect:/loan_request/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/loan/index?error=unhandled+error+occurred";
+            return "redirect:/loan_request/index?error=unhandled+error+occurred";
         }
     }
 
-    @PostMapping("/deleteLoan/{id}")
+    @PostMapping("/deleteLoanRequest/{id}")
     public String deleteSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/loan/index?error=Invalid+input+parameters";
+            return "redirect:/loan_request/index?error=Invalid+input+parameters";
         }
 
         try {
             _loanService.removeLoan(idLong);
 
-            return "redirect:/loan/index";
+            return "redirect:/loan_request/index";
         } catch (BusinessException ex) {
             return "redirect:/loan/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/loan/index?error=unhandled+error+occurred";
+            return "redirect:/loan_request/index?error=unhandled+error+occurred";
         }
     }
 
-    @PostMapping("/editLoan/{id}")
+    @PostMapping("/editLoanRequest/{id}")
     public String editSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/loan/index?error=Invalid+input+parameters";
+            return "redirect:/loan_request/index?error=Invalid+input+parameters";
         }
 
-        return "redirect:/loan/index/" + idLong;
+        return "redirect:/loan_request/index/" + idLong;
     }
 }

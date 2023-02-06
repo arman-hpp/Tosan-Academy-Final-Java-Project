@@ -28,12 +28,12 @@ public final class LoanDto extends BaseDto {
     private BigDecimal accountBalance;
     private Currencies accountCurrency;
 
-    public LoanDto(BigDecimal amount, BigDecimal interestRate, Integer refundDuration,
-                   Long customerId, Currencies currency) {
+    public LoanDto(BigDecimal amount, Integer refundDuration,
+                   Long customerId, Long accountId, Currencies currency) {
         setAmount(amount);
-        setInterestRate(interestRate);
         setRefundDuration(refundDuration);
         setCustomerId(customerId);
         setCurrency(currency);
+        setAccountId(accountId);
     }
 }
