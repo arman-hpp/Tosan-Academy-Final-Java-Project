@@ -20,10 +20,10 @@ public class LoanCondition extends BaseEntity {
     @Column(name = "max_refund_duration", nullable = false)
     private Integer maxRefundDuration;
 
-    @Column(name = "min_amount", nullable = false, precision = 12, scale = 2)
+    @Column(name = "min_amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal minAmount;
 
-    @Column(name = "max_amount", nullable = false, precision = 12, scale = 2)
+    @Column(name = "max_amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal maxAmount;
 
     @Column(name = "currency", nullable = false)

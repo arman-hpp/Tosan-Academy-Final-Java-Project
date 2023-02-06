@@ -41,11 +41,11 @@ public class TransactionController {
             model.addAttribute("transactionOutputs", transactions);
 
             if (accountIdLong == null) {
-                model.addAttribute("accountSearchInputs", new AccountSearchInputDto());
-                model.addAttribute("transactionInputs", new TransactionDto());
+                model.addAttribute("accountSearchInputDto", new AccountSearchInputDto());
+                model.addAttribute("transactionDto", new TransactionDto());
 
             } else {
-                model.addAttribute("accountSearchInputs", new AccountSearchInputDto(accountIdLong));
+                model.addAttribute("accountSearchInputDto", new AccountSearchInputDto(accountIdLong));
                 var foundAccount = _accountService.loadAccount(accountIdLong);
                 var transactionDto = new TransactionDto();
                 transactionDto.setAccountCustomerName(foundAccount.getCustomerName());
@@ -53,7 +53,7 @@ public class TransactionController {
                 transactionDto.setAccountCurrency(foundAccount.getCurrency());
                 transactionDto.setAccountId(foundAccount.getId());
                 transactionDto.setCurrency(foundAccount.getCurrency());
-                model.addAttribute("transactionInputs", transactionDto);
+                model.addAttribute("transactionDto", transactionDto);
             }
 
             return "transaction";

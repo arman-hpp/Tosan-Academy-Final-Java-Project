@@ -4,13 +4,18 @@ import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.AccountSearchInputDto;
 import com.tosan.core_banking.services.AccountService;
 import com.tosan.exceptions.BusinessException;
-import com.tosan.loan.dtos.LoanDto;
+import com.tosan.loan.dtos.*;
 import com.tosan.loan.services.LoanService;
+import com.tosan.model.Loan;
 import com.tosan.utils.ConvertorUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/loan_request")
@@ -41,11 +46,11 @@ public class LoanController {
             model.addAttribute("loanOutputs", loans);
 
             if (accountIdLong == null) {
-                model.addAttribute("accountSearchInputs", new AccountSearchInputDto());
-                model.addAttribute("loanInputs", new LoanDto());
+                model.addAttribute("accountSearchInputDto", new AccountSearchInputDto());
+                model.addAttribute("loanDto", new LoanDto());
 
             } else {
-                model.addAttribute("accountSearchInputs", new AccountSearchInputDto(accountIdLong));
+                model.addAttribute("accountSearchInputDto", new AccountSearchInputDto(accountIdLong));
 
                 var foundAccount = _accountService.loadAccount(accountIdLong);
                 var loanDto = new LoanDto();
@@ -56,7 +61,7 @@ public class LoanController {
                 loanDto.setCurrency(foundAccount.getCurrency());
                 loanDto.setCustomerId(foundAccount.getCustomerId());
 
-                model.addAttribute("loanInputs", loanDto);
+                model.addAttribute("loanDto", loanDto);
             }
 
             return "loan_request";
@@ -76,12 +81,12 @@ public class LoanController {
 
         try {
             var foundLoan = _loanService.loadLoan(idLong);
-            model.addAttribute("loanInputs", foundLoan);
+            model.addAttribute("loanDto", foundLoan);
 
             var loans = _loanService.loadLoans();
             model.addAttribute("loanOutputs", loans);
 
-            model.addAttribute("accountSearchInputs",
+            model.addAttribute("accountSearchInputDto",
                     new AccountSearchInputDto(foundLoan.getAccountId()));
 
             return "loan_request";
@@ -107,7 +112,7 @@ public class LoanController {
     }
 
     @PostMapping("/addLoanRequest")
-    public String addSubmit(@ModelAttribute LoanDto loanDto, BindingResult bindingResult) {
+    public String addSubmit(@ModelAttribute LoanDto loanDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "redirect:/loan_request/index?error=Invalid+input+parameters";
         }
@@ -117,7 +122,10 @@ public class LoanController {
 
             return "redirect:/loan_request/index";
         } catch (BusinessException ex) {
-            return "redirect:/loan_request/index?error=" + ex.getEncodedMessage();
+            var error = new ObjectError("globalError", ex.getMessage());
+            bindingResult.addError(error);
+            model.addAttribute("accountSearchInputDto", new AccountSearchInputDto(loanDto.getAccountId()));
+            return "loan_request";
         } catch (Exception ex) {
             return "redirect:/loan_request/index?error=unhandled+error+occurred";
         }
@@ -135,7 +143,7 @@ public class LoanController {
 
             return "redirect:/loan_request/index";
         } catch (BusinessException ex) {
-            return "redirect:/loan/index?error=" + ex.getEncodedMessage();
+            return "redirect:/loan_request/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
             return "redirect:/loan_request/index?error=unhandled+error+occurred";
         }

@@ -21,7 +21,7 @@ public class ThymeleafLayoutInterceptor implements HandlerInterceptor {
             return;
         }
 
-        if(originalViewName.contains("error")) {
+        if(originalViewName.equals("error")) {
             return;
         }
 

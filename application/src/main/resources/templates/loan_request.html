@@ -10,7 +10,7 @@
             <strong><span th:text="${param.error}"></span></strong>
         </div>
 
-        <form action="#" th:action="@{/loan_request/searchAccount}" th:object="${accountSearchInputs}" method="post">
+        <form action="#" th:action="@{/loan_request/searchAccount}" th:object="${accountSearchInputDto}" method="post">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
                 <div class="col-4">
                     <label for="search-input" class="form-label">Account Id</label>
@@ -23,7 +23,7 @@
             </div>
         </form>
 
-        <form action="#" th:action="@{/loan_request/addLoanRequest}" th:object="${loanInputs}"  method="post">
+        <form action="#" th:action="@{/loan_request/addLoanRequest}" th:object="${loanDto}"  method="post">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
                 <div class="col-4">
                     <div class="mb-3">
@@ -71,9 +71,17 @@
                 </div>
             </div>
 
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-5">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-3">
                 <div class="col-2">
                     <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </div>
+
+            <div th:if="${#fields.hasErrors('global')}" class="row row-cols-1 row-cols-sm-2 row-cols-md-8 g-4 mb-3">
+                <div class="col-8">
+                    <div class="alert alert-danger" role="alert">
+                        <strong><span th:text="${#fields.errors('global')}"></span></strong>
+                    </div>
                 </div>
             </div>
         </form>
@@ -95,6 +103,7 @@
                 <tbody>
                 <tr th:each="loan,iterStat : ${loanOutputs}" th:class="${iterStat.odd}? 'odd'">
                     <td class="align-middle" th:text="${loan.id}"></td>
+                    <td class="align-middle" th:text="${loan.accountId}"></td>
                     <td class="align-middle" th:text="${loan.accountCustomerName}"></td>
                     <td class="align-middle" th:text="${loan.amount}"></td>
                     <td class="align-middle" th:text="${loan.refundDuration}"></td>

@@ -10,7 +10,7 @@
         <strong><span th:text="${param.error}"></span></strong>
       </div>
 
-      <form action="#" th:action="@{/customer/addCustomer}" th:object="${customerInputs}" method="post">
+      <form action="#" th:action="@{/customer/addCustomer}" th:object="${customerDto}" method="post">
         <input type="hidden" th:field="*{id}">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
           <div class="col-4">
@@ -46,7 +46,7 @@
         </div>
       </form>
 
-      <form action="#" th:action="@{/customer/searchCustomer}" th:object="${customerSearchInputs}" method="post">
+      <form action="#" th:action="@{/customer/searchCustomer}" th:object="${customerSearchInputDto}" method="post">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
           <div class="col-4">
             <label for="search-input" class="form-label">Search by CustomerId</label>

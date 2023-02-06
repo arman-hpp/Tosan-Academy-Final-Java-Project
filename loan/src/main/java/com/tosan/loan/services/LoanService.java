@@ -8,6 +8,7 @@ import com.tosan.model.Account;
 import com.tosan.model.Customer;
 import com.tosan.model.Loan;
 import com.tosan.repository.InstallmentRepository;
+import com.tosan.repository.LoanConditionsRepository;
 import com.tosan.repository.LoanRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -21,23 +22,34 @@ public class LoanService implements ILoanService {
     private final LoanRepository _loanRepository;
     private final InstallmentRepository _installmentRepository;
     private final LoanConditionsValidatorService _loanConditionsValidatorService;
+    private final LoanConditionsRepository _loanConditionsRepository;
     private final ModelMapper _modelMapper;
 
     public LoanService(LoanRepository loanRepository,
                        InstallmentRepository installmentRepository,
                        LoanConditionsValidatorService loanConditionsValidatorService,
+                       LoanConditionsRepository loanConditionsRepository,
                        ModelMapper modelMapper) {
         _loanRepository = loanRepository;
         _installmentRepository = installmentRepository;
         _loanConditionsValidatorService = loanConditionsValidatorService;
+        _loanConditionsRepository = loanConditionsRepository;
         _modelMapper = modelMapper;
     }
 
     public List<LoanDto> loadLoans() {
-        var loans = _loanRepository.findAllByOrderByIdDesc();
+        var loans = _loanRepository.findLoanWithDetails();
         var loanDtoList = new ArrayList<LoanDto>();
         for(var loan : loans) {
-            loanDtoList.add(_modelMapper.map(loan, LoanDto.class));
+            var loanDto = _modelMapper.map(loan, LoanDto.class);
+            var account = loan.getAccount();
+            var customer = loan.getCustomer();
+
+            loanDto.setAccountCustomerName(customer.getFullName());
+            loanDto.setAccountCurrency(account.getCurrency());
+            loanDto.setAccountId(account.getId());
+            loanDto.setCustomerId(customer.getId());
+            loanDtoList.add(loanDto);
         }
 
         return loanDtoList;
@@ -72,17 +84,30 @@ public class LoanService implements ILoanService {
     }
 
     public void addLoan(LoanDto loanDto) {
-        _loanConditionsValidatorService.validate(loanDto);
+        var loanConditions = _loanConditionsRepository
+                .findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(loanDto.getCurrency()).orElse(null);
+        if(loanConditions == null)
+            throw new BusinessException("can not find the active loan conditions");
+
+        _loanConditionsValidatorService.validate(loanConditions, loanDto);
 
         var loan = _modelMapper.map(loanDto, Loan.class);
         loan.setCustomer(new Customer(loanDto.getCustomerId()));
         loan.setAccount(new Account(loanDto.getAccountId()));
+        loan.setInterestRate(loanConditions.getInterestRate());
+        loan.setPaid(false);
+        loan.setRequestDate(LocalDateTime.now());
 
         _loanRepository.save(loan);
     }
 
     public void editLoan(LoanDto loanDto) {
-        _loanConditionsValidatorService.validate(loanDto);
+        var loanConditions = _loanConditionsRepository
+                .findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(loanDto.getCurrency()).orElse(null);
+        if(loanConditions == null)
+            throw new BusinessException("can not find the active loan conditions");
+
+        _loanConditionsValidatorService.validate(loanConditions, loanDto);
 
         var loan = _loanRepository.findById(loanDto.getId()).orElse(null);
         if(loan == null)

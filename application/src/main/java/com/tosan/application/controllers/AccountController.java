@@ -40,16 +40,16 @@ public class AccountController {
             model.addAttribute("accountOutputs", accounts);
 
             if (customerIdLong == null) {
-                model.addAttribute("customerSearchInputs", new CustomerSearchInputDto());
-                model.addAttribute("accountInputs", new AccountDto());
+                model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto());
+                model.addAttribute("accountDto", new AccountDto());
             } else {
-                model.addAttribute("customerSearchInputs", new CustomerSearchInputDto(customerIdLong));
+                model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto(customerIdLong));
 
                 var foundCustomer = _customerService.loadCustomer(customerIdLong);
                 var accountDto = new AccountDto();
                 accountDto.setCustomerId(customerIdLong);
                 accountDto.setCustomerName(foundCustomer.getFullName());
-                model.addAttribute("accountInputs", accountDto);
+                model.addAttribute("accountDto", accountDto);
             }
 
             return "account";

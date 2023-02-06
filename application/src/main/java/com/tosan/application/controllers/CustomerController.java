@@ -31,14 +31,14 @@ public class CustomerController {
                 }
 
                 var foundCustomer = _customerService.loadCustomer(idLong);
-                model.addAttribute("customerInputs", new CustomerDto());
+                model.addAttribute("customerDto", new CustomerDto());
                 model.addAttribute("customerOutputs", foundCustomer);
-                model.addAttribute("customerSearchInputs", new CustomerSearchInputDto(idLong));
+                model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto(idLong));
             } else {
                 var customers = _customerService.loadCustomers();
-                model.addAttribute("customerInputs", new CustomerDto());
+                model.addAttribute("customerDto", new CustomerDto());
                 model.addAttribute("customerOutputs", customers);
-                model.addAttribute("customerSearchInputs", new CustomerSearchInputDto());
+                model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto());
             }
 
             return "customer";
@@ -58,12 +58,12 @@ public class CustomerController {
 
         try {
             var foundCustomer = _customerService.loadCustomer(idLong);
-            model.addAttribute("customerInputs", foundCustomer);
+            model.addAttribute("customerDto", foundCustomer);
 
             var customers = _customerService.loadCustomers();
             model.addAttribute("customerOutputs", customers);
 
-            model.addAttribute("customerSearchInputs", new CustomerSearchInputDto());
+            model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto());
 
             return "customer";
         } catch (BusinessException ex) {

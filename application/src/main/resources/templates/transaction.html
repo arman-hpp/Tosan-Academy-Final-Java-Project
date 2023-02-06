@@ -10,7 +10,7 @@
             <strong><span th:text="${param.error}"></span></strong>
         </div>
 
-        <form action="#" th:action="@{/transaction/searchAccount}" th:object="${accountSearchInputs}" method="post">
+        <form action="#" th:action="@{/transaction/searchAccount}" th:object="${accountSearchInputDto}" method="post">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
                 <div class="col-4">
                     <label for="search-input" class="form-label">Account Id</label>
@@ -23,7 +23,7 @@
             </div>
         </form>
 
-        <form action="#" th:action="@{/transaction/addTransaction}" th:object="${transactionInputs}"  method="post">
+        <form action="#" th:action="@{/transaction/addTransaction}" th:object="${transactionDto}"  method="post">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
                 <div class="col-4">
                     <div class="mb-3">
