@@ -48,7 +48,7 @@ public class AmortizationLoanCalculator implements ILoanCalculator {
 
             var paymentAmount = interestAmount.add(principalAmount);
 
-            payments.add(new InstallmentDto(i, paymentDate, interestAmount, principalAmount,
+            payments.add(new InstallmentDto(i+1, paymentDate, interestAmount, principalAmount,
                     paymentAmount, loanBalance, loanDto.getCurrency()));
 
             loanBalance = loanBalance.subtract(principalAmount);

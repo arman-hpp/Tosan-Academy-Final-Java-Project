@@ -29,12 +29,12 @@ public class Installment extends BaseEntity {
     @Column(name = "loan_balance_amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal loanBalanceAmount;
 
-    @Column(name = "paid_date")
-    private LocalDateTime paidDate;
-
     @Column(name = "currency", nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private Currencies currency;
+
+    @Column(name = "paid_date")
+    private LocalDateTime paidDate;
 
     @Column(name = "paid", nullable = false)
     private Boolean paid;

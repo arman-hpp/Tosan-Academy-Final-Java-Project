@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Loan Requests</title>
+</head>
+<body>
+  <div th:fragment="content">
+    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+      <strong><span th:text="${param.error}"></span></strong>
+    </div>
+
+    <form action="#" th:action="@{/loan_installment/searchLoan}" th:object="${loanSearchInputDto}" method="post">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+        <div class="col-4">
+          <label for="search-input" class="form-label">Loan Id</label>
+          <div class="input-group mb-3">
+            <input type="search" class="form-control" id="search-input" placeholder=""
+                   aria-label="Search By Loan Id" aria-describedby="search-submit" th:field="*{loanId}" required>
+            <button class="btn btn-outline-secondary" type="submit" id="search-submit">Find</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <form action="#" th:action="@{/loan_installment/addTransaction}" th:object="${payInstallmentInputDto}" method="post">
+      <input type="hidden" th:field="*{loanId}">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+        <div class="col-4">
+          <div class="mb-3">
+            <label for="amount" class="form-label">Installment Count</label>
+            <input type="number" class="form-control" id="amount" placeholder="" th:field="*{installmentCount}"
+                   autocapitalize="none" min="1" max="999999999999999" required />
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="mb-3">
+            <label for="duration" class="form-label">Account Id</label>
+            <input type="number" class="form-control" id="duration" placeholder="" th:field="*{accountId}"
+                   autocapitalize="none" min="1" max="999" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-3">
+        <div class="col-2">
+          <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+      </div>
+
+      <div th:if="${#fields.hasErrors('global')}" class="row row-cols-1 row-cols-sm-2 row-cols-md-8 g-4 mb-3">
+        <div class="col-8">
+          <div class="alert alert-danger" role="alert">
+            <strong><span th:each="err : ${#fields.errors('global')}" th:text="${err}"></span></strong>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Installment No</th>
+          <th scope="col">Due Date</th>
+          <th scope="col">Interest Amount</th>
+          <th scope="col">Principal Amount</th>
+          <th scope="col">Payment Amount</th>
+          <th scope="col">Loan Balance</th>
+          <th scope="col">Paid Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="installmentDtoItem,iterStat : ${installmentDtoList}" th:class="${iterStat.odd}? 'odd'">
+          <td class="align-middle" th:text="${installmentDtoItem.installmentNo}"></td>
+          <td class="align-middle" th:text="${installmentDtoItem.dueDate}"></td>
+          <td class="align-middle" th:text="${installmentDtoItem.interestAmount}"></td>
+          <td class="align-middle" th:text="${installmentDtoItem.principalAmount}"></td>
+          <td class="align-middle" th:text="${installmentDtoItem.paymentAmount}"></td>
+          <td class="align-middle" th:text="${installmentDtoItem.loanBalanceAmount}"></td>
+          <td class="align-middle" th:text="${installmentDtoItem.paidDate}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+
+  </div>
+</body>
+</html>
