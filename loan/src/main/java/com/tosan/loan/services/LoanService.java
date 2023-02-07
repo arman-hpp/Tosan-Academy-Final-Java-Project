@@ -45,10 +45,12 @@ public class LoanService implements ILoanService {
             var account = loan.getAccount();
             var customer = loan.getCustomer();
 
-            loanDto.setAccountCustomerName(customer.getFullName());
-            loanDto.setAccountCurrency(account.getCurrency());
             loanDto.setAccountId(account.getId());
+            loanDto.setAccountCurrency(account.getCurrency());
+            loanDto.setAccountBalance(account.getBalance());
             loanDto.setCustomerId(customer.getId());
+            loanDto.setAccountCustomerName(customer.getFullName());
+
             loanDtoList.add(loanDto);
         }
 
@@ -76,11 +78,21 @@ public class LoanService implements ILoanService {
     }
 
     public LoanDto loadLoan(Long loanId) {
-        var loan = _loanRepository.findById(loanId).orElse(null);
+        var loan = _loanRepository.findLoanByIdWithDetails(loanId).orElse(null);
         if(loan == null)
             throw new BusinessException("can not find the loan");
 
-        return _modelMapper.map(loan, LoanDto.class);
+        var loanDto = _modelMapper.map(loan, LoanDto.class);
+        var account = loan.getAccount();
+        var customer = loan.getCustomer();
+        loanDto.setAccountId(account.getId());
+        loanDto.setAccountBalance(account.getBalance());
+        loanDto.setAccountCurrency(account.getCurrency());
+        loanDto.setCustomerId(customer.getId());
+        loanDto.setAccountCustomerName(customer.getFullName());
+
+
+        return loanDto;
     }
 
     public void addLoan(LoanDto loanDto) {
@@ -94,9 +106,9 @@ public class LoanService implements ILoanService {
         var loan = _modelMapper.map(loanDto, Loan.class);
         loan.setCustomer(new Customer(loanDto.getCustomerId()));
         loan.setAccount(new Account(loanDto.getAccountId()));
+        loan.setRequestDate(LocalDateTime.now());
         loan.setInterestRate(loanConditions.getInterestRate());
         loan.setPaid(false);
-        loan.setRequestDate(LocalDateTime.now());
 
         _loanRepository.save(loan);
     }
@@ -116,7 +128,8 @@ public class LoanService implements ILoanService {
         if(loan.getPaid())
             throw new BusinessException("the loan has been paid and it cannot be edit");
 
-        _modelMapper.map(loanDto, loan);
+        loan.setRefundDuration(loanDto.getRefundDuration());
+        loan.setAmount(loanDto.getAmount());
         loan.setCustomer(new Customer(loanDto.getCustomerId()));
         loan.setAccount(new Account(loanDto.getAccountId()));
 

@@ -39,7 +39,7 @@ public class Installment extends BaseEntity {
     @Column(name = "paid", nullable = false)
     private Boolean paid;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "loan_id", nullable = false)
     private Loan loan;
 }

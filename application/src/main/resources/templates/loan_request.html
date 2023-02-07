@@ -27,6 +27,7 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
                 <div class="col-4">
                     <div class="mb-3">
+                        <input type="hidden" th:field="*{id}">
                         <input type="hidden" th:field="*{accountId}">
                         <input type="hidden" th:field="*{customerId}">
                         <label for="fullName" class="form-label">Account Customer Name</label>
@@ -80,7 +81,7 @@
             <div th:if="${#fields.hasErrors('global')}" class="row row-cols-1 row-cols-sm-2 row-cols-md-8 g-4 mb-3">
                 <div class="col-8">
                     <div class="alert alert-danger" role="alert">
-                        <strong><span th:text="${#fields.errors('global')}"></span></strong>
+                        <strong><span th:each="err : ${#fields.errors('global')}" th:text="${err}"></span></strong>
                     </div>
                 </div>
             </div>
@@ -109,12 +110,12 @@
                     <td class="align-middle" th:text="${loan.refundDuration}"></td>
                     <td class="align-middle" th:text="${loan.currency}"></td>
                     <td>
-                        <form method="POST" th:action="@{/loan_request/editLoan/{id}(id=${loan.id})}">
+                        <form method="POST" th:action="@{/loan_request/editLoanRequest/{id}(id=${loan.id})}">
                             <button class="btn btn-primary btn-sm" type="submit">Edit</button>
                         </form>
                     </td>
                     <td>
-                        <form method="POST" th:action="@{/loan_request/deleteLoan/{id}(id=${loan.id})}">
+                        <form method="POST" th:action="@{/loan_request/deleteLoanRequest/{id}(id=${loan.id})}">
                             <button class="btn btn-secondary btn-sm" type="submit">Delete</button>
                         </form>
                     </td>

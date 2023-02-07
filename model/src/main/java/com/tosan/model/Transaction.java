@@ -34,7 +34,7 @@ public class Transaction extends BaseEntity {
     @Enumerated(EnumType.ORDINAL)
     private Currencies currency;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 }

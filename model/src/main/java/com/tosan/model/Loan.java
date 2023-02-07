@@ -21,10 +21,6 @@ public class Loan extends BaseEntity {
     @Column(name = "refund_duration", nullable = false)
     private Integer refundDuration;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
-
     @Column(name = "request_date", nullable = false)
     private LocalDateTime requestDate;
 
@@ -42,9 +38,13 @@ public class Loan extends BaseEntity {
     private Boolean paid;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-    @OneToMany(mappedBy = "loan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "loan", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Installment> installments = new HashSet<>();
 }

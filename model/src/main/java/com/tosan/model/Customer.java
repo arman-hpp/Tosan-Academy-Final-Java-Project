@@ -19,10 +19,10 @@ public class Customer extends BaseEntity {
     @Column(name = "address",length = 100, nullable = false)
     private String address;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Account> accounts = new HashSet<>();
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Loan> loans = new HashSet<>();
 
     public Customer() {
