@@ -74,17 +74,15 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="account,iterStat : ${accountOutputs}" th:class="${iterStat.odd}? 'odd'">
-                    <td class="align-middle" th:text="${account.id}"></td>
-                    <td class="align-middle" th:text="${account.customerName}"></td>
-                    <td class="align-middle" th:text="${account.balance}"></td>
-                    <td class="align-middle" th:text="${account.currency}"></td>
+                <tr th:each="accountDtoItem,iterStat : ${accountDtoList}" th:class="${iterStat.odd}? 'odd'">
+                    <td class="align-middle" th:text="${accountDtoItem.id}"></td>
+                    <td class="align-middle" th:text="${accountDtoItem.customerName}"></td>
+                    <td class="align-middle" th:text="${accountDtoItem.balance}"></td>
+                    <td class="align-middle" th:text="${accountDtoItem.currency}"></td>
                 </tr>
                 </tbody>
             </table>
         </div>
-
-
     </div>
 </body>
 </html>

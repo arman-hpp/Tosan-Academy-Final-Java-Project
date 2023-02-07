@@ -32,12 +32,12 @@ public class CustomerController {
 
                 var foundCustomer = _customerService.loadCustomer(idLong);
                 model.addAttribute("customerDto", new CustomerDto());
-                model.addAttribute("customerOutputs", foundCustomer);
+                model.addAttribute("customerDtoList", foundCustomer);
                 model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto(idLong));
             } else {
-                var customers = _customerService.loadCustomers();
+                var customerDtoList = _customerService.loadCustomers();
                 model.addAttribute("customerDto", new CustomerDto());
-                model.addAttribute("customerOutputs", customers);
+                model.addAttribute("customerDtoList", customerDtoList);
                 model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto());
             }
 
@@ -61,7 +61,7 @@ public class CustomerController {
             model.addAttribute("customerDto", foundCustomer);
 
             var customers = _customerService.loadCustomers();
-            model.addAttribute("customerOutputs", customers);
+            model.addAttribute("customerDtoList", customers);
 
             model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto());
 

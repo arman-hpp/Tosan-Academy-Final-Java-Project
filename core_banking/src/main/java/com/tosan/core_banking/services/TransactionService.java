@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class TransactionService implements ITransactionService {
+public class TransactionService {
     private final TransactionRepository _transactionRepository;
     private final AccountRepository _accountRepository;
     private final ITraceNoGenerator _traceNoGenerator;

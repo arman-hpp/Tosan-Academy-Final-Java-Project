@@ -4,7 +4,6 @@ import com.tosan.core_banking.dtos.UserChangePasswordInputDto;
 import com.tosan.core_banking.dtos.UserDto;
 import com.tosan.core_banking.dtos.UserLoginInputDto;
 import com.tosan.core_banking.dtos.UserRegisterInputDto;
-import com.tosan.core_banking.interfaces.IUserService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.model.User;
 import com.tosan.model.UserTypes;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class UserService implements IUserService {
+public class UserService {
     private final UserRepository _userRepository;
     private final ModelMapper _modelMapper;
 

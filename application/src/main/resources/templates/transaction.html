@@ -110,13 +110,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="transaction,iterStat : ${transactionOutputs}" th:class="${iterStat.odd}? 'odd'">
-                    <td class="align-middle" th:text="${transaction.id}"></td>
-                    <td class="align-middle" th:text="${transaction.accountId}"></td>
-                    <td class="align-middle" th:text="${transaction.accountCustomerName}"></td>
-                    <td class="align-middle" th:text="${transaction.amount}"></td>
-                    <td class="align-middle" th:text="${transaction.transactionType}"></td>
-                    <td class="align-middle" th:text="${transaction.currency}"></td>
+                <tr th:each="transactionDtoItem,iterStat : ${transactionDtoList}" th:class="${iterStat.odd}? 'odd'">
+                    <td class="align-middle" th:text="${transactionDtoItem.id}"></td>
+                    <td class="align-middle" th:text="${transactionDtoItem.accountId}"></td>
+                    <td class="align-middle" th:text="${transactionDtoItem.accountCustomerName}"></td>
+                    <td class="align-middle" th:text="${transactionDtoItem.amount}"></td>
+                    <td class="align-middle" th:text="${transactionDtoItem.transactionType}"></td>
+                    <td class="align-middle" th:text="${transactionDtoItem.currency}"></td>
                 </tr>
                 </tbody>
             </table>

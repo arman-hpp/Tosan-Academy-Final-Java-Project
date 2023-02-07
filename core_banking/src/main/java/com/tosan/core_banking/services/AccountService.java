@@ -1,7 +1,6 @@
 package com.tosan.core_banking.services;
 
 import com.tosan.core_banking.dtos.AccountDto;
-import com.tosan.core_banking.interfaces.IAccountService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.model.Account;
 import com.tosan.model.AccountTypes;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AccountService implements IAccountService {
+public class AccountService {
     private final AccountRepository _accountRepository;
     private final ModelMapper _modelMapper;
 

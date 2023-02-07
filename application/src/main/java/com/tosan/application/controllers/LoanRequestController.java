@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/loan_request")
 @Layout(title = "Loan Requests", value = "layouts/default")
-public class LoanController {
+public class LoanRequestController {
     private final LoanService _loanService;
     private final AccountService _accountService;
 
-    public LoanController(LoanService loanService, AccountService accountService) {
+    public LoanRequestController(LoanService loanService, AccountService accountService) {
         _loanService = loanService;
         _accountService = accountService;
     }
@@ -37,8 +37,8 @@ public class LoanController {
                 }
             }
 
-            var loans = _loanService.loadLoans();
-            model.addAttribute("loanOutputs", loans);
+            var loanDtoList = _loanService.loadLoans();
+            model.addAttribute("loanDtoList", loanDtoList);
 
             if (accountIdLong == null) {
                 model.addAttribute("accountSearchInputDto", new AccountSearchInputDto());
@@ -77,8 +77,8 @@ public class LoanController {
 
             model.addAttribute("loanDto", foundLoan);
 
-            var loans = _loanService.loadLoans();
-            model.addAttribute("loanOutputs", loans);
+            var loanDtoList = _loanService.loadLoans();
+            model.addAttribute("loanDtoList", loanDtoList);
 
             model.addAttribute("accountSearchInputDto",
                     new AccountSearchInputDto(foundLoan.getAccountId()));
@@ -114,8 +114,8 @@ public class LoanController {
 
             return "redirect:/loan_request/index";
         } catch (Exception ex) {
-            var loans = _loanService.loadLoans();
-            model.addAttribute("loanOutputs", loans);
+            var loanDtoList = _loanService.loadLoans();
+            model.addAttribute("loanDtoList", loanDtoList);
             model.addAttribute("accountSearchInputDto", new AccountSearchInputDto(loanDto.getAccountId()));
             BindingResultHelper.addGlobalError(bindingResult, ex);
 

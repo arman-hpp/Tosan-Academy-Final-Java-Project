@@ -4563,3 +4563,9 @@ org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (
 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
 	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:108)
 	at java.base/java.lang.Thread.run(Thread.java:833)
+2023-02-07 18:33:33 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "AMOUNT NUMERIC(12, 2)": "10000000000.00 (13)"; SQL statement:
+insert into loans (id, account_id, amount, currency, customer_id, deposit_date, first_payment_date, interest_rate, paid, refund_duration, request_date) values (default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) [22001-214]
+2023-02-07 20:10:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "BALANCE NUMERIC(12, 2)": "10000000000 (64)"; SQL statement:
+INSERT INTO ACCOUNTS (ACCOUNT_TYPE, BALANCE, CURRENCY, CUSTOMER_ID) VALUES (1, 10000000000, 0, null) [22001-214]

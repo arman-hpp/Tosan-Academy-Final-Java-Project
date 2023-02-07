@@ -11,7 +11,7 @@ import java.util.*;
 @Entity
 @Table(name = "Accounts")
 public class Account extends BaseEntity {
-    @Column(name = "balance", nullable = false, precision = 12, scale = 2)
+    @Column(name = "balance", nullable = false, precision = 15, scale = 2)
     private BigDecimal balance;
 
     @Column(name = "currency", nullable = false)

@@ -3,7 +3,6 @@ package com.tosan.loan.services;
 import com.tosan.core_banking.dtos.TransferDto;
 import com.tosan.core_banking.services.*;
 import com.tosan.exceptions.BusinessException;
-import com.tosan.loan.interfaces.IPayInstallmentService;
 import com.tosan.model.*;
 import com.tosan.repository.InstallmentRepository;
 
@@ -14,7 +13,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
-public class PayInstallmentService implements IPayInstallmentService {
+public class PayInstallmentService {
     private final InstallmentRepository _installmentRepository;
     private final TransactionService _transactionService;
     private final AccountService _accountService;

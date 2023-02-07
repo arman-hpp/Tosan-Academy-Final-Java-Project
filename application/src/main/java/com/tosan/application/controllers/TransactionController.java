@@ -37,8 +37,8 @@ public class TransactionController {
             }
 
             // TODO: get userId
-            var transactions = _transactionService.loadUserTransactions(1L);
-            model.addAttribute("transactionOutputs", transactions);
+            var transactionDtoList = _transactionService.loadUserTransactions(1L);
+            model.addAttribute("transactionDtoList", transactionDtoList);
 
             if (accountIdLong == null) {
                 model.addAttribute("accountSearchInputDto", new AccountSearchInputDto());

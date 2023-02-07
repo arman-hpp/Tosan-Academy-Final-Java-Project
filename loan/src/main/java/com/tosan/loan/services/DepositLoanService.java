@@ -13,14 +13,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Service
-public class DepositLoanService implements IDepositLoanService {
+public class DepositLoanService {
     private final LoanRepository _loanRepository;
     private final InstallmentRepository _installmentRepository;
-    private final LoanConditionsValidatorService _loanConditionValidatorService;
+    private final ILoanValidator _loanValidator;
+    private final LoanConditionsService _loanConditionsService;
     private final TransactionService _transactionService;
     private final AccountService _accountService;
     private final ILoanCalculator _loanCalculator;
@@ -28,14 +30,16 @@ public class DepositLoanService implements IDepositLoanService {
 
     public DepositLoanService(LoanRepository loanRepository,
                               InstallmentRepository installmentRepository,
-                              LoanConditionsValidatorService loanConditionValidatorService,
+                              ILoanValidator loanValidator,
+                              LoanConditionsService loanConditionsService,
                               TransactionService transactionService,
                               AccountService accountService,
                               ILoanCalculator loanCalculator,
                               ModelMapper modelMapper) {
         _loanRepository = loanRepository;
         _installmentRepository = installmentRepository;
-        _loanConditionValidatorService = loanConditionValidatorService;
+        _loanValidator = loanValidator;
+        _loanConditionsService = loanConditionsService;
         _transactionService = transactionService;
         _accountService = accountService;
         _loanCalculator = loanCalculator;
@@ -51,8 +55,18 @@ public class DepositLoanService implements IDepositLoanService {
         if(loan.getDepositDate() != null)
             throw new BusinessException("the loan has been already paid");
 
+        var bankAccount= _accountService.loadBankAccount(loan.getCurrency());
+        if(bankAccount.getBalance().compareTo(loan.getAmount()) < 0)
+            throw new BusinessException("bank account balance is not enough!");
+
+        loan.setPaid(true);
+        loan.setFirstPaymentDate(LocalDate.now().plusMonths(1));
+        loan.setDepositDate(LocalDateTime.now());
+
         var loanDto = _modelMapper.map(loan, LoanDto.class);
-        _loanConditionValidatorService.validate(loanDto);
+
+        var loanConditionsDto = _loanConditionsService.loadLoanCondition(loanDto.getCurrency());
+        _loanValidator.validate(loanConditionsDto, loanDto);
 
         var loanPaymentInfo = _loanCalculator.calculate(loanDto);
         var list = new ArrayList<Installment>();
@@ -65,13 +79,10 @@ public class DepositLoanService implements IDepositLoanService {
             list.add(installment);
         }
 
-        loan.setFirstPaymentDate(list.get(0).getDueDate());
-        loan.setDepositDate(LocalDateTime.now());
-
         _installmentRepository.saveAll(list);
         _loanRepository.save(loan);
 
-        var bankAccountId = _accountService.loadBankAccount(loan.getCurrency()).getId();
+        var bankAccountId = bankAccount.getId();
         var customerAccountId = loan.getAccount().getId();
 
         var transferDto = new TransferDto(loan.getAmount(), "Transfer to customer account",

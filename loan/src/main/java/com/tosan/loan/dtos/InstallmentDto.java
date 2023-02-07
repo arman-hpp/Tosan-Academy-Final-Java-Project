@@ -4,6 +4,7 @@ import com.tosan.dtos.BaseDto;
 import com.tosan.model.Currencies;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Setter
 public final class InstallmentDto extends BaseDto {
     private Integer installmentNo;
+    @DateTimeFormat(pattern ="yyyy-MM-dd")
     private LocalDate dueDate;
     private BigDecimal interestAmount;
     private BigDecimal principalAmount;

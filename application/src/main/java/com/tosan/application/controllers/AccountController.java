@@ -36,8 +36,8 @@ public class AccountController {
                 }
             }
 
-            var accounts = _accountService.loadAccounts();
-            model.addAttribute("accountOutputs", accounts);
+            var accountDtoList = _accountService.loadAccounts();
+            model.addAttribute("accountDtoList", accountDtoList);
 
             if (customerIdLong == null) {
                 model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto());

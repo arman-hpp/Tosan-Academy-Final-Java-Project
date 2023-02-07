@@ -27,4 +27,9 @@ public class ApplicationBeanConfiguration {
     public ILoanCalculator loanCalculator() {
         return new AmortizationLoanCalculator();
     }
+
+    @Bean
+    public ILoanValidator loanValidator() {
+        return new DefaultLoanValidator();
+    }
 }

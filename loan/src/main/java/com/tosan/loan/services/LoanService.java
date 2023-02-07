@@ -3,12 +3,11 @@ package com.tosan.loan.services;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.LoanDto;
 import com.tosan.loan.dtos.LoanInterestStatisticsDto;
-import com.tosan.loan.interfaces.ILoanService;
+import com.tosan.loan.interfaces.ILoanValidator;
 import com.tosan.model.Account;
 import com.tosan.model.Customer;
 import com.tosan.model.Loan;
 import com.tosan.repository.InstallmentRepository;
-import com.tosan.repository.LoanConditionsRepository;
 import com.tosan.repository.LoanRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,22 +17,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class LoanService implements ILoanService {
+public class LoanService {
     private final LoanRepository _loanRepository;
     private final InstallmentRepository _installmentRepository;
-    private final LoanConditionsValidatorService _loanConditionsValidatorService;
-    private final LoanConditionsRepository _loanConditionsRepository;
+    private final ILoanValidator _loanValidator;
+    private final LoanConditionsService _loanConditionsService;
     private final ModelMapper _modelMapper;
 
     public LoanService(LoanRepository loanRepository,
                        InstallmentRepository installmentRepository,
-                       LoanConditionsValidatorService loanConditionsValidatorService,
-                       LoanConditionsRepository loanConditionsRepository,
+                       ILoanValidator loanValidator,
+                       LoanConditionsService loanConditionsService,
                        ModelMapper modelMapper) {
         _loanRepository = loanRepository;
         _installmentRepository = installmentRepository;
-        _loanConditionsValidatorService = loanConditionsValidatorService;
-        _loanConditionsRepository = loanConditionsRepository;
+        _loanValidator = loanValidator;
+        _loanConditionsService= loanConditionsService;
         _modelMapper = modelMapper;
     }
 
@@ -91,35 +90,26 @@ public class LoanService implements ILoanService {
         loanDto.setCustomerId(customer.getId());
         loanDto.setAccountCustomerName(customer.getFullName());
 
-
         return loanDto;
     }
 
     public void addLoan(LoanDto loanDto) {
-        var loanConditions = _loanConditionsRepository
-                .findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(loanDto.getCurrency()).orElse(null);
-        if(loanConditions == null)
-            throw new BusinessException("can not find the active loan conditions");
-
-        _loanConditionsValidatorService.validate(loanConditions, loanDto);
+        var loanConditionsDto = _loanConditionsService.loadLoanCondition(loanDto.getCurrency());
+        _loanValidator.validate(loanConditionsDto, loanDto);
 
         var loan = _modelMapper.map(loanDto, Loan.class);
         loan.setCustomer(new Customer(loanDto.getCustomerId()));
         loan.setAccount(new Account(loanDto.getAccountId()));
         loan.setRequestDate(LocalDateTime.now());
-        loan.setInterestRate(loanConditions.getInterestRate());
+        loan.setInterestRate(loanConditionsDto.getInterestRate());
         loan.setPaid(false);
 
         _loanRepository.save(loan);
     }
 
     public void editLoan(LoanDto loanDto) {
-        var loanConditions = _loanConditionsRepository
-                .findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(loanDto.getCurrency()).orElse(null);
-        if(loanConditions == null)
-            throw new BusinessException("can not find the active loan conditions");
-
-        _loanConditionsValidatorService.validate(loanConditions, loanDto);
+        var loanConditionsDto = _loanConditionsService.loadLoanCondition(loanDto.getCurrency());
+        _loanValidator.validate(loanConditionsDto, loanDto);
 
         var loan = _loanRepository.findById(loanDto.getId()).orElse(null);
         if(loan == null)

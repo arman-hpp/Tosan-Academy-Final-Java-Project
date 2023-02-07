@@ -80,19 +80,18 @@
           </tr>
           </thead>
           <tbody>
-          <!--/*@thymesVar id="customer" type="com.tosan.core_banking.dtos.CustomerDto"*/-->
-          <tr th:each="customer,iterStat : ${customerOutputs}" th:class="${iterStat.odd}? 'odd'">
-            <td class="align-middle" th:text="${customer.id}"></td>
-            <td class="align-middle" th:text="${customer.firstName}"></td>
-            <td class="align-middle" th:text="${customer.lastName}"></td>
-            <td class="align-middle" th:text="${customer.address}"></td>
+          <tr th:each="customerDtoItem,iterStat : ${customerDtoList}" th:class="${iterStat.odd}? 'odd'">
+            <td class="align-middle" th:text="${customerDtoItem.id}"></td>
+            <td class="align-middle" th:text="${customerDtoItem.firstName}"></td>
+            <td class="align-middle" th:text="${customerDtoItem.lastName}"></td>
+            <td class="align-middle" th:text="${customerDtoItem.address}"></td>
             <td>
-              <form method="POST" th:action="@{/customer/editCustomer/{id}(id=${customer.id})}">
+              <form method="POST" th:action="@{/customer/editCustomer/{id}(id=${customerDtoItem.id})}">
                 <button class="btn btn-primary btn-sm" type="submit">Edit</button>
               </form>
             </td>
             <td>
-              <form method="POST" th:action="@{/customer/deleteCustomer/{id}(id=${customer.id})}">
+              <form method="POST" th:action="@{/customer/deleteCustomer/{id}(id=${customerDtoItem.id})}">
                 <button class="btn btn-secondary btn-sm" type="submit">Delete</button>
               </form>
             </td>

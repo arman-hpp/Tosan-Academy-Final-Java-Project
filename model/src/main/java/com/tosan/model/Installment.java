@@ -17,16 +17,16 @@ public class Installment extends BaseEntity {
     @Column(name = "due_date", nullable = false)
     private LocalDate dueDate;
 
-    @Column(name = "principal_amount", nullable = false, precision = 12, scale = 2)
+    @Column(name = "principal_amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal principalAmount;
 
-    @Column(name = "interest_amount", nullable = false, precision = 12, scale = 2)
+    @Column(name = "interest_amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal interestAmount;
 
-    @Column(name = "total_amount", nullable = false, precision = 12, scale = 2)
+    @Column(name = "total_amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal paymentAmount;
 
-    @Column(name = "loan_balance_amount", nullable = false, precision = 12, scale = 2)
+    @Column(name = "loan_balance_amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal loanBalanceAmount;
 
     @Column(name = "paid_date")

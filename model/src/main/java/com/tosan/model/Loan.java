@@ -12,7 +12,7 @@ import java.util.*;
 @Entity
 @Table(name = "Loans")
 public class Loan extends BaseEntity {
-    @Column(name = "amount", nullable = false, precision = 12, scale = 2)
+    @Column(name = "amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal amount;
 
     @Column(name = "interest_rate", nullable = false, precision = 7, scale = 2)

@@ -1,7 +1,6 @@
 package com.tosan.loan.services;
 
 import com.tosan.loan.dtos.InstallmentDto;
-import com.tosan.loan.interfaces.IInstallmentService;
 import com.tosan.repository.InstallmentRepository;
 
 import org.modelmapper.ModelMapper;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class InstallmentService implements IInstallmentService {
+public class InstallmentService {
     private final InstallmentRepository _installmentRepository;
     private final ModelMapper _modelMapper;
 

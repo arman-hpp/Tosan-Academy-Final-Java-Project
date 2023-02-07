@@ -24,12 +24,13 @@
         </form>
 
         <form action="#" th:action="@{/loan_request/addLoanRequest}" th:object="${loanDto}"  method="post">
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{accountId}">
+            <input type="hidden" th:field="*{customerId}">
+
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
                 <div class="col-4">
                     <div class="mb-3">
-                        <input type="hidden" th:field="*{id}">
-                        <input type="hidden" th:field="*{accountId}">
-                        <input type="hidden" th:field="*{customerId}">
                         <label for="fullName" class="form-label">Account Customer Name</label>
                         <input type="text" class="form-control" id="fullName" placeholder="" th:field="*{accountCustomerName}"
                                autocapitalize="none" maxlength="40" minlength="1" readonly />
@@ -59,7 +60,7 @@
                     <div class="mb-3">
                         <label for="amount" class="form-label">Amount</label>
                         <input type="number" class="form-control" id="amount" placeholder="" th:field="*{amount}"
-                               autocapitalize="none" maxlength="80" minlength="1" required />
+                               autocapitalize="none" min="1" max="999999999999999" required />
                         <input type="hidden" th:field="*{currency}">
                     </div>
                 </div>
@@ -67,7 +68,7 @@
                     <div class="mb-3">
                         <label for="duration" class="form-label">Refund Duration</label>
                         <input type="number" class="form-control" id="duration" placeholder="" th:field="*{refundDuration}"
-                               autocapitalize="none" maxlength="80" minlength="1" required />
+                               autocapitalize="none" min="1" max="999" required />
                     </div>
                 </div>
             </div>
@@ -102,20 +103,20 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="loan,iterStat : ${loanOutputs}" th:class="${iterStat.odd}? 'odd'">
-                    <td class="align-middle" th:text="${loan.id}"></td>
-                    <td class="align-middle" th:text="${loan.accountId}"></td>
-                    <td class="align-middle" th:text="${loan.accountCustomerName}"></td>
-                    <td class="align-middle" th:text="${loan.amount}"></td>
-                    <td class="align-middle" th:text="${loan.refundDuration}"></td>
-                    <td class="align-middle" th:text="${loan.currency}"></td>
+                <tr th:each="loanDtoItem,iterStat : ${loanDtoList}" th:class="${iterStat.odd}? 'odd'">
+                    <td class="align-middle" th:text="${loanDtoItem.id}"></td>
+                    <td class="align-middle" th:text="${loanDtoItem.accountId}"></td>
+                    <td class="align-middle" th:text="${loanDtoItem.accountCustomerName}"></td>
+                    <td class="align-middle" th:text="${loanDtoItem.amount}"></td>
+                    <td class="align-middle" th:text="${loanDtoItem.refundDuration}"></td>
+                    <td class="align-middle" th:text="${loanDtoItem.currency}"></td>
                     <td>
-                        <form method="POST" th:action="@{/loan_request/editLoanRequest/{id}(id=${loan.id})}">
+                        <form method="POST" th:action="@{/loan_request/editLoanRequest/{id}(id=${loanDtoItem.id})}">
                             <button class="btn btn-primary btn-sm" type="submit">Edit</button>
                         </form>
                     </td>
                     <td>
-                        <form method="POST" th:action="@{/loan_request/deleteLoanRequest/{id}(id=${loan.id})}">
+                        <form method="POST" th:action="@{/loan_request/deleteLoanRequest/{id}(id=${loanDtoItem.id})}">
                             <button class="btn btn-secondary btn-sm" type="submit">Delete</button>
                         </form>
                     </td>
