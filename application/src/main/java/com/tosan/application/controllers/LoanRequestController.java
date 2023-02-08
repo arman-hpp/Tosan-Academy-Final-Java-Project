@@ -47,7 +47,7 @@ public class LoanRequestController {
             } else {
                 model.addAttribute("accountSearchInputDto", new AccountSearchInputDto(accountIdLong));
 
-                var foundAccount = _accountService.loadAccount(accountIdLong);
+                var foundAccount = _accountService.loadCustomerAccount(accountIdLong);
                 var loanDto = new LoanDto();
                 loanDto.setAccountCustomerName(foundAccount.getCustomerName());
                 loanDto.setAccountBalance(foundAccount.getBalance());

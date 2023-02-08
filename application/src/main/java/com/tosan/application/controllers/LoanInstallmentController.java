@@ -86,7 +86,7 @@ public class LoanInstallmentController {
                 BigDecimal accountBalance = null;
 
                 if (accountIdLong != null) {
-                    var accountDto = _accountService.loadAccount(accountIdLong);
+                    var accountDto = _accountService.loadCustomerAccount(accountIdLong);
                     accountCustomerName = accountDto.getCustomerName();
                     accountCurrency = accountDto.getCurrency();
                     accountBalance = accountDto.getBalance();

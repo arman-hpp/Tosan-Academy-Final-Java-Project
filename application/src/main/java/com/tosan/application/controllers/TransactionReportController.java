@@ -1,6 +1,6 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.ExcelExporter;
+import com.tosan.application.extensions.exporters.ExcelExporter;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.TransactionDto;
 import com.tosan.core_banking.dtos.TransactionReportInputDto;
@@ -33,22 +33,6 @@ public class TransactionReportController {
         model.addAttribute("transactionReportInputDto", new TransactionReportInputDto(fromDateTime, toDateTime));
         return "transaction_report";
     }
-
-//    @PostMapping("/getTransactions")
-//    public String calcInterestsSubmit(@ModelAttribute TransactionReportInputDto transactionReportInputDto,
-//                                      BindingResult bindingResult,
-//                                      Model model) {
-//        if (bindingResult.hasErrors()) {
-//            return BindingResultHelper.getInputValidationError("redirect:/transaction_report/index");
-//        }
-//
-//        var transactionDtoList = _transactionService
-//                .loadTransactions(transactionReportInputDto.fromDate, transactionReportInputDto.toDate);
-//
-//        model.addAttribute("transactionDtoList", transactionDtoList);
-//
-//        return "transaction_report";
-//    }
 
     @GetMapping("/exportTransactions")
     public void exportToExcel(HttpServletResponse response,

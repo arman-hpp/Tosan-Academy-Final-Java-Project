@@ -55,8 +55,7 @@ class ApplicationTests {
         assertDoesNotThrow(() -> {
             accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, Currencies.Rial);
             transactionRepository.findByTraceNo("Test");
-            transactionRepository.findByRegDateBetweenOrderByRegDate(LocalDateTime.MIN, LocalDateTime.MAX);
-            transactionRepository.findByUserIdOrderByIdDesc(1L);
+            transactionRepository.findByRegDateWithDetails(LocalDateTime.MIN, LocalDateTime.MAX);
             transactionRepository.findTop5ByAccountIdOrderByRegDateDesc(1L);
             transactionRepository.findTop5ByOrderByRegDateDesc();
             transactionRepository.findUserTransactionsWithDetails(1L);

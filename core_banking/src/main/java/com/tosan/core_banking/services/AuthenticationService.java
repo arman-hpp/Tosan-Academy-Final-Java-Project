@@ -13,6 +13,10 @@ public class AuthenticationService {
         return true;
     }
 
+    public Boolean isUserAdmin() {
+        return true;
+    }
+
     public User loadCurrentUser() {
         return new User();
     }

@@ -107,6 +107,7 @@
                     <th scope="col">Amount</th>
                     <th scope="col">Transaction Type</th>
                     <th scope="col">Currency</th>
+                    <th scope="col">Description</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -117,6 +118,7 @@
                     <td class="align-middle" th:text="${transactionDtoItem.amount}"></td>
                     <td class="align-middle" th:text="${transactionDtoItem.transactionType}"></td>
                     <td class="align-middle" th:text="${transactionDtoItem.currency}"></td>
+                    <td class="align-middle" th:text="${transactionDtoItem.description.length() < 20 ? transactionDtoItem.description : transactionDtoItem.description.substring(0, 20).concat('...') }"></td>
                 </tr>
                 </tbody>
             </table>

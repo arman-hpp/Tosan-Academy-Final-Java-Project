@@ -9,8 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@Layout(value = Layout.NONE)
-@RequestMapping(("/auth"))
+@RequestMapping(("/login"))
+@Layout(title = "Login", value = "layouts/public")
 public class LoginController {
     private final UserService _userService;
 
@@ -18,14 +18,14 @@ public class LoginController {
         this._userService = _userService;
     }
 
-    @GetMapping("/login")
+    @GetMapping({"/", "/index"})
     public String loginForm(Model model) {
         model.addAttribute("loginInputDto", new UserLoginInputDto());
 
         return "login";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/authenticate")
     public String loginSubmit(@ModelAttribute UserLoginInputDto loginInputDto) {
         try {
             _userService.login(loginInputDto);
@@ -33,10 +33,10 @@ public class LoginController {
             return "redirect:/home";
         }
         catch (BusinessException ex) {
-            return "redirect:/login?error=" + ex.getEncodedMessage();
+            return "redirect:/login/index?error=" + ex.getEncodedMessage();
         }
         catch (Exception ex) {
-            return "redirect:/login?error=unhandled+error+occurred";
+            return "redirect:/login/index?error=unhandled+error+occurred";
         }
     }
 

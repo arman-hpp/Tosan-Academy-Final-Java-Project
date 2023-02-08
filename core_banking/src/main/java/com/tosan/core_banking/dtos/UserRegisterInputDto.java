@@ -10,4 +10,10 @@ import lombok.*;
 public final class UserRegisterInputDto extends BaseDto {
     private String username;
     private String password;
+    private String repeatPassword;
+    private Boolean agreeTerms;
+
+    public UserRegisterInputDto(String username) {
+        setUsername(username);
+    }
 }

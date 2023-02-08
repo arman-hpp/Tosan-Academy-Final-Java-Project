@@ -13,12 +13,18 @@ public interface AccountRepository extends BaseRepository<Account, Long> {
 
     List<Account> findByCustomerId(Long customerId);
 
+    List<Account> findByAccountType(AccountTypes accountType);
+
     @Query(value = "SELECT a FROM Account a JOIN FETCH a.customer ORDER BY a.id DESC")
     List<Account> findAllAccountsWithDetails();
 
     @Query(value = "SELECT a FROM Account a JOIN FETCH a.customer WHERE a.id = ?1 AND a.customer.id = ?2")
+
     List<Account> findAccountsWithDetails(Long accountId, Long customerId);
 
     @Query(value = "SELECT a FROM Account a JOIN FETCH a.customer WHERE a.id = ?1")
     Optional<Account> findAccountWithDetails(Long accountId);
+
+    @Query(value = "SELECT a FROM Account a LEFT JOIN FETCH a.customer WHERE a.id = ?1")
+    Optional<Account> findFromAllAccountWithDetails(Long accountId);
 }

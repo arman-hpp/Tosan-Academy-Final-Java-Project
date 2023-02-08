@@ -129,11 +129,35 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
                 </a>
             </li>
             <li>
+                <a th:href="@{/bank_account/index}" class="nav-link" th:classappend="${title} == 'Bank Accounts' ? 'active' : 'link-dark'">
+                    <svg class="bi me-2" width="16" height="16">
+                        <use xlink:href="#collection" />
+                    </svg>
+                    Bank Accounts
+                </a>
+            </li>
+            <li>
                 <a th:href="@{/transaction/index}" class="nav-link" th:classappend="${title} == 'Transactions' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
                         <use xlink:href="#grid" />
                     </svg>
                     Transactions
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/branch_transaction/index}" class="nav-link" th:classappend="${title} == 'Branch Transactions' ? 'active' : 'link-dark'">
+                    <svg class="bi me-2" width="16" height="16">
+                        <use xlink:href="#grid" />
+                    </svg>
+                    Branch Transactions
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/account_transaction/index}" class="nav-link" th:classappend="${title} == 'Account Transactions' ? 'active' : 'link-dark'">
+                    <svg class="bi me-2" width="16" height="16">
+                        <use xlink:href="#grid" />
+                    </svg>
+                    Account Transactions
                 </a>
             </li>
             <li>

@@ -6,6 +6,7 @@ import com.tosan.core_banking.dtos.*;
 import com.tosan.core_banking.services.*;
 
 import com.tosan.exceptions.BusinessException;
+import com.tosan.model.AccountTypes;
 import com.tosan.utils.ConvertorUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,9 +30,8 @@ public class TransactionController {
     }
 
     @GetMapping("/index")
-    public String loadForm(
-            @RequestParam(name = "account_id", required = false) String accountId,
-            Model model) {
+    public String loadForm(@RequestParam(name = "account_id", required = false) String accountId,
+                           Model model) {
         try {
             Long accountIdLong = null;
             if (accountId != null) {
@@ -56,6 +56,24 @@ public class TransactionController {
             } else {
                 model.addAttribute("accountSearchInputDto", new AccountSearchInputDto(accountIdLong));
                 var foundAccount = _accountService.loadAccount(accountIdLong);
+
+                if(foundAccount.getAccountType() == AccountTypes.BankAccount) {
+                    if(!_authenticationService.isUserAdmin()) {
+                        return "redirect:/transaction/index?error=You+are+not+authorized+to+perform+operations+on+the+bank+account";
+                    }
+                }
+
+                if(_authenticationService.isUserAdmin()) {
+                    if(foundAccount.getAccountType() == AccountTypes.CustomerAccount) {
+                        return "redirect:/transaction/index?error=You+are+not+authorized+to+perform+operations+on+the+customer+account";
+                    }
+                } else
+                {
+                    if(foundAccount.getAccountType() == AccountTypes.BankAccount) {
+                        return "redirect:/transaction/index?error=You+are+not+authorized+to+perform+operations+on+the+bank+account";
+                    }
+                }
+
                 var transactionDto = new TransactionDto();
                 transactionDto.setAccountCustomerName(foundAccount.getCustomerName());
                 transactionDto.setAccountBalance(foundAccount.getBalance());

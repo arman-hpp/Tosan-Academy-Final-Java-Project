@@ -39,6 +39,22 @@ public class AccountService {
     }
 
     public AccountDto loadAccount(Long accountId) {
+        var account = _accountRepository.findFromAllAccountWithDetails(accountId).orElse(null);
+        if(account == null)
+            throw new BusinessException("can not find the account");
+
+        var accountDto = _modelMapper.map(account, AccountDto.class);
+
+        var customer = account.getCustomer();
+        if(customer != null) {
+            accountDto.setCustomerId(customer.getId());
+            accountDto.setCustomerName(customer.getFullName());
+        }
+
+        return accountDto;
+    }
+
+    public AccountDto loadCustomerAccount(Long accountId) {
         var account = _accountRepository.findAccountWithDetails(accountId).orElse(null);
         if(account == null)
             throw new BusinessException("can not find the account");
@@ -58,6 +74,16 @@ public class AccountService {
             throw new BusinessException("can not find the bank account");
 
         return _modelMapper.map(account, AccountDto.class);
+    }
+
+    public List<AccountDto> loadBankAccounts() {
+        var accounts = _accountRepository.findByAccountType(AccountTypes.BankAccount);
+        var accountDtoList = new ArrayList<AccountDto>();
+        for(var account : accounts) {
+            accountDtoList.add(_modelMapper.map(account, AccountDto.class));
+        }
+
+        return accountDtoList;
     }
 
     public void addAccount(AccountDto accountDto) {
