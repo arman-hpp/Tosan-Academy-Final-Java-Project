@@ -33,6 +33,9 @@ public class PayInstallmentService {
         var installments = _installmentRepository
                 .findTopCountByLoanIdAndPaidOrderByInstallmentNo(payInstallmentCount, loanId, false);
 
+        if(payInstallmentCount > installments.size())
+            throw new BusinessException("installment count is bigger than loan not paid installments");
+
         return installments.stream()
                 .map(Installment::getPaymentAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

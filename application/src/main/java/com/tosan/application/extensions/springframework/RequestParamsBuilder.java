@@ -5,7 +5,7 @@ public class RequestParamsBuilder {
         var result = new StringBuilder();
         result.append("?");
         for (int i = 0; i < params.length; i = i + 2) {
-            result.append(params[i].toString()).append("=").append(params[i + 1].toString());
+            result.append(params[i].toString()).append("=").append(params[i + 1]);
             if(i != params.length - 2)
                 result.append("&");
         }

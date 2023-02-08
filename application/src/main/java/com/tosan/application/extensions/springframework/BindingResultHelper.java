@@ -48,6 +48,20 @@ public final class BindingResultHelper {
         }
     }
 
+    public static String getIllegalAccessError(String returnUrl) {
+        var errorMessage = getIllegalAccessError(true);
+        return createUrlError(returnUrl, errorMessage);
+    }
+
+    private static String getIllegalAccessError(Boolean encoded) {
+        var errorMessage = "Illegal Access";
+        if(encoded){
+            return Encode(errorMessage);
+        } else {
+            return errorMessage;
+        }
+    }
+
     public static String createUrlError(String referUrl, String errorMessage) {
         return referUrl + "?error=" + errorMessage;
     }

@@ -1,5 +1,6 @@
 package com.tosan.application.controllers;
 
+import com.tosan.application.extensions.springframework.BindingResultHelper;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.*;
 import com.tosan.core_banking.services.*;
@@ -17,10 +18,14 @@ import org.springframework.web.bind.annotation.*;
 public class TransactionController {
     private final TransactionService _transactionService;
     private final AccountService _accountService;
+    private final AuthenticationService _authenticationService;
 
-    public TransactionController(TransactionService transactionService, AccountService accountService) {
+    public TransactionController(TransactionService transactionService,
+                                 AccountService accountService,
+                                 AuthenticationService authenticationService) {
         _transactionService = transactionService;
         _accountService = accountService;
+        _authenticationService = authenticationService;
     }
 
     @GetMapping("/index")
@@ -36,8 +41,12 @@ public class TransactionController {
                 }
             }
 
-            // TODO: get userId
-            var transactionDtoList = _transactionService.loadUserTransactions(1L);
+            var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
+            if (currentUserId == null) {
+                return BindingResultHelper.getIllegalAccessError("redirect:/transaction/index");
+            }
+
+            var transactionDtoList = _transactionService.loadUserTransactions(currentUserId);
             model.addAttribute("transactionDtoList", transactionDtoList);
 
             if (accountIdLong == null) {
@@ -85,8 +94,12 @@ public class TransactionController {
         }
 
         try {
-            // TODO: Get From Current User
-            transactionDto.setUserId(1L);
+            var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
+            if (currentUserId == null) {
+                return BindingResultHelper.getIllegalAccessError("redirect:/transaction/index");
+            }
+
+            transactionDto.setUserId(currentUserId);
 
             _transactionService.doTransaction(transactionDto);
 

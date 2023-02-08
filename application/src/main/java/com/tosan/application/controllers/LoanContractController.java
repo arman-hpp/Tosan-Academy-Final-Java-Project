@@ -2,6 +2,7 @@ package com.tosan.application.controllers;
 
 import com.tosan.application.extensions.springframework.BindingResultHelper;
 import com.tosan.application.extensions.thymeleaf.Layout;
+import com.tosan.core_banking.services.AuthenticationService;
 import com.tosan.loan.dtos.InstallmentDto;
 import com.tosan.loan.dtos.LoanDto;
 import com.tosan.loan.dtos.LoanSearchInputDto;
@@ -23,13 +24,16 @@ public class LoanContractController {
     private final LoanService _loanService;
     private final InstallmentService _installmentService;
     private final DepositLoanService _depositLoanService;
+    private final AuthenticationService _authenticationService;
 
     public LoanContractController(LoanService loanService,
                                   InstallmentService installmentService,
-                                  DepositLoanService depositLoanService) {
+                                  DepositLoanService depositLoanService,
+                                  AuthenticationService authenticationService) {
         _loanService = loanService;
         _installmentService = installmentService;
         _depositLoanService = depositLoanService;
+        _authenticationService = authenticationService;
     }
 
     @GetMapping("/index")
@@ -86,8 +90,12 @@ public class LoanContractController {
         }
 
         try {
-            // TODO: get current user Id
-            _depositLoanService.depositLoan(1L, loanDto.getId());
+            var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
+            if(currentUserId == null){
+                return BindingResultHelper.getIllegalAccessError("redirect:/loan_contract/index");
+            }
+
+            _depositLoanService.depositLoan(currentUserId, loanDto.getId());
 
             return "redirect:/loan_contract/index?loan_id=" + loanDto.getId();
         } catch (Exception ex) {

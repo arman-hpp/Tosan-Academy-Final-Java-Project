@@ -1,7 +1,9 @@
 package com.tosan.application.controllers;
 
+import com.tosan.application.extensions.springframework.BindingResultHelper;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.UserDto;
+import com.tosan.core_banking.services.AuthenticationService;
 import com.tosan.core_banking.services.UserService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.utils.ConvertorUtils;
@@ -15,9 +17,11 @@ import org.springframework.web.bind.annotation.*;
 @Layout(title = "Users", value = "layouts/default")
 public class UserController {
     private final UserService _userService;
+    private final AuthenticationService _authenticationService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthenticationService authenticationService) {
         _userService = userService;
+        _authenticationService = authenticationService;
     }
 
     @GetMapping("/index")
@@ -81,7 +85,14 @@ public class UserController {
             return "redirect:/user/index?error=Invalid+input+parameters";
         }
 
-        // TODO: if current User Id = idLong then error
+        var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
+        if(currentUserId == null){
+            return BindingResultHelper.getIllegalAccessError("redirect:/user/index");
+        }
+
+        if(idLong.equals(currentUserId)) {
+            return BindingResultHelper.getIllegalAccessError("redirect:/user/index");
+        }
 
         try {
             _userService.removeUser(idLong);
@@ -101,7 +112,14 @@ public class UserController {
             return "redirect:/user/index?error=Invalid+input+parameters";
         }
 
-        // TODO: if current User Id = idLong then error
+        var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
+        if(currentUserId == null){
+            return BindingResultHelper.getIllegalAccessError("redirect:/user/index");
+        }
+
+        if(idLong.equals(currentUserId)) {
+            return BindingResultHelper.getIllegalAccessError("redirect:/user/index");
+        }
 
         return "redirect:/user/index/" + idLong;
     }
