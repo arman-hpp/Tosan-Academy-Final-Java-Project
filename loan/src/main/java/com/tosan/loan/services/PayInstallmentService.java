@@ -26,6 +26,18 @@ public class PayInstallmentService {
         _accountService = accountService;
     }
 
+    public BigDecimal sumNonPaidInstallment(Long loanId, Integer payInstallmentCount) {
+        if (payInstallmentCount <= 0)
+            throw new BusinessException("installment count is not valid");
+
+        var installments = _installmentRepository
+                .findTopCountByLoanIdAndPaidOrderByInstallmentNo(payInstallmentCount, loanId, false);
+
+        return installments.stream()
+                .map(Installment::getPaymentAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
     @Transactional
     public void payInstallments(Long loanId, Long accountId, Long userId, Integer payInstallmentCount) {
         if(payInstallmentCount <= 0)

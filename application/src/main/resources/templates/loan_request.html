@@ -27,6 +27,7 @@
             <input type="hidden" th:field="*{id}">
             <input type="hidden" th:field="*{accountId}">
             <input type="hidden" th:field="*{customerId}">
+            <input type="hidden" th:field="*{currency}">
 
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
                 <div class="col-4">
@@ -61,7 +62,7 @@
                         <label for="amount" class="form-label">Amount</label>
                         <input type="number" class="form-control" id="amount" placeholder="" th:field="*{amount}"
                                autocapitalize="none" min="1" max="999999999999999" required />
-                        <input type="hidden" th:field="*{currency}">
+
                     </div>
                 </div>
                 <div class="col-4">

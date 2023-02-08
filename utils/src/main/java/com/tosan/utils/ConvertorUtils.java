@@ -8,4 +8,12 @@ public final class ConvertorUtils {
             return defaultVal;
         }
     }
+
+    public static Integer tryParseInt(String value, Integer defaultVal) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultVal;
+        }
+    }
 }
