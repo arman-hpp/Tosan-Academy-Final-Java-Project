@@ -19,7 +19,8 @@ public interface TransactionRepository extends BaseRepository<Transaction, Long>
     @Query(value = "SELECT t FROM Transaction t JOIN FETCH t.account a JOIN FETCH a.customer WHERE t.userId = ?1 ORDER BY t.id DESC")
     List<Transaction> findUserTransactionsWithDetails(Long userId);
 
-    List<Transaction> findByRegDateBetweenOrderByRegDate(LocalDateTime from, LocalDateTime to);
+    @Query(value = "SELECT t FROM Transaction t JOIN FETCH t.account a JOIN FETCH a.customer WHERE t.regDate >= ?1 AND t.regDate <= ?2 ORDER BY t.id DESC")
+    List<Transaction> findByRegDateWithDetails(LocalDateTime from, LocalDateTime to);
 
     Optional<Transaction> findByTraceNo(String traceNo);
 }

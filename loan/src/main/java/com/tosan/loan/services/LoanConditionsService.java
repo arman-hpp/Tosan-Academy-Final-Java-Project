@@ -44,8 +44,7 @@ public class LoanConditionsService {
 
     @Transactional
     public void editLoanConditions(LoanConditionsDto loanConditionsDto) {
-        var currentLoanConfigs = _loanConditionsRepository
-                .findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(loanConditionsDto.getCurrency()).orElse(null);
+        var currentLoanConfigs = _loanConditionsRepository.findById(loanConditionsDto.getId()).orElse(null);
         if(currentLoanConfigs == null)
             throw new BusinessException("can not find the active loan configuration");
 

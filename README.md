@@ -40,6 +40,7 @@ The Application module includes Service Implementation modules (core_banking and
 * [Lombok](https://mvnrepository.com/artifact/org.projectlombok/lombok)
 * [Model Mapper](https://mvnrepository.com/artifact/org.modelmapper/modelmapper)
 * [H2 Database Engine](https://mvnrepository.com/artifact/com.h2database/h2)
+* [Apache POI Common](https://mvnrepository.com/artifact/org.apache.poi/poi)
 
 ### Installation
 * `git clone https://github.com/arman-arian/Tosan-Academy-Final-Java-Project.git`

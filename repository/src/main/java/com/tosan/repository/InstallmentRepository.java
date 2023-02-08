@@ -23,7 +23,7 @@ public interface InstallmentRepository extends BaseRepository<Installment, Long>
         return findByLoanIdAndPaidOrderByInstallmentNo(loanId, paid, PageRequest.of(0, count));
     }
 
-    @Query(value = "SELECT i.currency, sum(i.interestAmount) FROM Installment i WHERE i.paid = true AND i.paidDate > ?1 AND i.paidDate < ?2 GROUP BY i.currency")
+    @Query(value = "SELECT new com.tosan.model.LoanInterestStatistics(i.currency, sum(i.interestAmount)) FROM Installment i WHERE i.paid = true AND i.paidDate > ?1 AND i.paidDate < ?2 GROUP BY i.currency")
     List<LoanInterestStatistics> sumTotalInterests(LocalDateTime fromDateTime, LocalDateTime toDateTime);
 }
 

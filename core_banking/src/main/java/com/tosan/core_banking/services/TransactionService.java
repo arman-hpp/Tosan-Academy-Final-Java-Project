@@ -31,70 +31,38 @@ public class TransactionService {
         _modelMapper = modelMapper;
     }
 
+
     public List<TransactionDto> loadTransactions() {
         var transactions = _transactionRepository.findAll();
-        var transactionDtoList = new ArrayList<TransactionDto>();
-        for(var transaction : transactions) {
-            transactionDtoList.add(_modelMapper.map(transaction, TransactionDto.class));
-        }
-
-        return transactionDtoList;
+        return mapToTransactionDtoList((List<Transaction>) transactions);
     }
 
     public List<TransactionDto> loadTransactions(LocalDateTime fromDate, LocalDateTime toDate) {
-        var transactions = _transactionRepository.findByRegDateBetweenOrderByRegDate(fromDate, toDate);
-        var transactionDtoList = new ArrayList<TransactionDto>();
-        for(var transaction : transactions) {
-            transactionDtoList.add(_modelMapper.map(transaction, TransactionDto.class));
-        }
-
-        return transactionDtoList;
+        var transactions = _transactionRepository.findByRegDateWithDetails(fromDate, toDate);
+        return mapToTransactionDtoList(transactions);
     }
 
     public TransactionDto loadTransactionByTraceNo(String traceNo) {
         var transaction = _transactionRepository.findByTraceNo(traceNo).orElse(null);
         if(transaction == null)
-            throw new BusinessException("Can not find the transaction");
+            throw new BusinessException("can not find the transaction");
 
-        return _modelMapper.map(transaction, TransactionDto.class);
+        return mapToTransactionDto(transaction);
     }
 
     public List<TransactionDto> loadLastAccountTransactions(Long accountId) {
         var transactions = _transactionRepository.findTop5ByAccountIdOrderByRegDateDesc(accountId);
-        var transactionDtoList = new ArrayList<TransactionDto>();
-        for(var transaction : transactions) {
-            transactionDtoList.add(_modelMapper.map(transaction, TransactionDto.class));
-        }
-
-        return transactionDtoList;
+        return mapToTransactionDtoList(transactions);
     }
 
     public List<TransactionDto> loadLastBranchTransactions() {
         var transactions = _transactionRepository.findTop5ByOrderByRegDateDesc();
-        var transactionDtoList = new ArrayList<TransactionDto>();
-        for(var transaction : transactions) {
-            transactionDtoList.add(_modelMapper.map(transaction, TransactionDto.class));
-        }
-
-        return transactionDtoList;
+        return mapToTransactionDtoList(transactions);
     }
 
     public List<TransactionDto> loadUserTransactions(Long userId) {
         var transactions = _transactionRepository.findUserTransactionsWithDetails(userId);
-        var transactionDtoList = new ArrayList<TransactionDto>();
-        for(var transaction : transactions) {
-            var transactionDto = _modelMapper.map(transaction, TransactionDto.class);
-            var account = transaction.getAccount();
-            var customer = account.getCustomer();
-            transactionDto.setAccountCurrency(account.getCurrency());
-            transactionDto.setAccountBalance(account.getBalance());
-            transactionDto.setAccountCustomerName(customer.getFullName());
-            transactionDto.setAccountId(account.getId());
-            transactionDto.setCurrency(account.getCurrency());
-            transactionDtoList.add(transactionDto);
-        }
-
-        return transactionDtoList;
+        return mapToTransactionDtoList(transactions);
     }
 
     @Transactional
@@ -141,4 +109,32 @@ public class TransactionService {
         _accountRepository.save(account);
         _transactionRepository.save(transaction);
     }
+
+    private TransactionDto mapToTransactionDto(Transaction transaction) {
+        var transactionDto = _modelMapper.map(transaction, TransactionDto.class);
+        var account = transaction.getAccount();
+        if(account != null) {
+            transactionDto.setAccountId(account.getId());
+            transactionDto.setAccountCurrency(account.getCurrency());
+            transactionDto.setAccountBalance(account.getBalance());
+            transactionDto.setCurrency(account.getCurrency());
+
+            var customer = account.getCustomer();
+            if(customer != null) {
+                transactionDto.setAccountCustomerName(customer.getFullName());
+            }
+        }
+
+        return transactionDto;
+    }
+
+    private List<TransactionDto> mapToTransactionDtoList(List<Transaction> transactionList) {
+        var transactionDtoList = new ArrayList<TransactionDto>();
+        for(var transaction : transactionList) {
+            transactionDtoList.add(mapToTransactionDto(transaction));
+        }
+
+        return transactionDtoList;
+    }
+
 }
