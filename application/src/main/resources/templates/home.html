@@ -1,12 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
 </head>
 <body>
-    <div th:fragment="content">
-        Welcome Arman :)
+    <div th:fragment="content" class="p-4">
+        <p class="lh-lg fs-6">This repository is the final project of Java course by Ali Gholami at Tosan Academy.</p>
+        <p class="lh-lg fs-6">The project is based on Spring Boot 3, which requires Java 17.</p>
+        <p class="lh-lg fs-6">The project is a multi-module project. It has been built from a parent pom that manages a group of submodules. This project has 6 modules named <u>utils</u>, <u>model</u>, <u>repository</u>, <u>loan</u>, <u>core_banking</u>, <u>application</u>.
+            When a multi-module project is run, all the modules are deployed together; furthermore an individual module can be deployed.</p>
+        <ul>
+            <li><p class="lh-base fs-6"><strong>Utils module</strong> - The Utils module contains helpers which are being used throughout the entire application.</p></li>
+            <li><p class="lh-base fs-6"><strong>Model module</strong> - The Model module contains Entities which have been used in the project.</p></li>
+            <li><p class="lh-base fs-6"><strong>Repository module</strong> - The Repository module contains repositories which have been used in the project. It depends on the Model module.</p></li>
+            <li><p class="lh-base fs-6"><strong>Service module (core_banking and loan)</strong> - The Service module implements the services. It depends on Repository module, Model module and Utils module. According to the documentation of the project, this module has been broken into two modules named <u>core_banking</u> and <u>loan</u>.</p></li>
+            <li><p class="lh-base fs-6"><strong>Application module</strong> application module is the main module of the project. It contains the application class in which the main method is defined that is necessary to run the Spring Boot Application. It also contains application configuration properties, controllers, views, and resources.
+                The Application module includes Service Implementation modules (core_banking and loan) as dependency that contains Model module, Repository module, and Utils module.</p></li>
+        </ul>
     </div>
 </body>
 </html>

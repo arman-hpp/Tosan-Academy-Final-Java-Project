@@ -105,7 +105,7 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
         <!--/*@thymesVar id="title" type="java.lang.String"*/-->
         <ul class="nav nav-pills flex-column mb-auto pb-3">
             <li class="nav-item">
-                <a href="#" class="nav-link" th:classappend="${title} == 'Home' ? 'active' : 'link-dark'">
+                <a th:href="@{/home/index}" class="nav-link" th:classappend="${title} == 'Home' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
                     <use xlink:href="#home" />
                     </svg>
@@ -142,6 +142,14 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
                         <use xlink:href="#collection" />
                     </svg>
                     Customer Accounts
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/customer_loan/index}" class="nav-link" th:classappend="${title} == 'Customer Loans' ? 'active' : 'link-dark'">
+                    <svg class="bi me-2" width="16" height="16">
+                        <use xlink:href="#collection" />
+                    </svg>
+                    Customer Loans
                 </a>
             </li>
             <li>
