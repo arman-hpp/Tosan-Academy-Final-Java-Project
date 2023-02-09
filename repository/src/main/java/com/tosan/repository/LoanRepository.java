@@ -13,7 +13,6 @@ public interface LoanRepository extends BaseRepository<Loan, Long> {
     List<Loan> findLoanWithDetails();
     @Query(value = "SELECT l FROM Loan l JOIN FETCH l.account a JOIN FETCH l.customer WHERE l.id = ?1 ORDER BY l.id DESC")
     Optional<Loan> findLoanByIdWithDetails(Long id);
-    List<Loan> findAllByOrderByIdDesc();
     List<Loan> findByCustomerIdOrderByRequestDate(Long customerId);
     List<Loan> findByAccountIdOrderByRequestDate(Long accountId);
 }

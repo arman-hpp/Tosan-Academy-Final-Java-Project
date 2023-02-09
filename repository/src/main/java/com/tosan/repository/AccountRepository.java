@@ -1,11 +1,13 @@
 package com.tosan.repository;
 
-import com.tosan.model.*;
-
+import com.tosan.model.Account;
+import com.tosan.model.AccountTypes;
+import com.tosan.model.Currencies;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends BaseRepository<Account, Long> {
@@ -17,10 +19,6 @@ public interface AccountRepository extends BaseRepository<Account, Long> {
 
     @Query(value = "SELECT a FROM Account a JOIN FETCH a.customer ORDER BY a.id DESC")
     List<Account> findAllAccountsWithDetails();
-
-    @Query(value = "SELECT a FROM Account a JOIN FETCH a.customer WHERE a.id = ?1 AND a.customer.id = ?2")
-
-    List<Account> findAccountsWithDetails(Long accountId, Long customerId);
 
     @Query(value = "SELECT a FROM Account a JOIN FETCH a.customer WHERE a.id = ?1")
     Optional<Account> findAccountWithDetails(Long accountId);

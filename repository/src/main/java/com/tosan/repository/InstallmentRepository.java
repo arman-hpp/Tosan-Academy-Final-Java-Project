@@ -1,8 +1,9 @@
 package com.tosan.repository;
 
-import com.tosan.model.*;
-
-import org.springframework.data.domain.*;
+import com.tosan.model.Installment;
+import com.tosan.model.LoanInterestStatistics;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
