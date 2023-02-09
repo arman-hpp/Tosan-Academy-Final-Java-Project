@@ -9,12 +9,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(("/login"))
+@RequestMapping(("/auth"))
 @Layout(title = "Login", value = "layouts/public")
-public class LoginController {
+public class AuthenticationController {
     private final UserService _userService;
 
-    public LoginController(UserService _userService) {
+    public AuthenticationController(UserService _userService) {
         this._userService = _userService;
     }
 
@@ -33,14 +33,14 @@ public class LoginController {
             return "redirect:/home";
         }
         catch (BusinessException ex) {
-            return "redirect:/login/index?error=" + ex.getEncodedMessage();
+            return "redirect:/auth/index?error=" + ex.getEncodedMessage();
         }
         catch (Exception ex) {
-            return "redirect:/login/index?error=unhandled+error+occurred";
+            return "redirect:/auth/index?error=unhandled+error+occurred";
         }
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public String logout() {
         return "redirect:/index";
     }

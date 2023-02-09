@@ -2,7 +2,6 @@ package com.tosan.application.controllers;
 
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.AccountSearchInputDto;
-import com.tosan.core_banking.dtos.TransactionDto;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.LoanDto;
 import com.tosan.loan.services.LoanService;

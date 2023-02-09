@@ -2,13 +2,16 @@ package com.tosan.application.configs;
 
 import com.tosan.application.extensions.exporters.ExporterFactory;
 import com.tosan.application.extensions.exporters.IExporterFactory;
-import com.tosan.core_banking.interfaces.*;
-import com.tosan.core_banking.services.*;
-import com.tosan.loan.interfaces.*;
-import com.tosan.loan.services.*;
+import com.tosan.core_banking.interfaces.ITraceNoGenerator;
+import com.tosan.core_banking.services.RandomTraceNoGenerator;
+import com.tosan.loan.interfaces.ILoanCalculator;
+import com.tosan.loan.interfaces.ILoanValidator;
+import com.tosan.loan.services.AmortizationLoanCalculator;
+import com.tosan.loan.services.DefaultLoanValidator;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ApplicationBeanConfiguration {

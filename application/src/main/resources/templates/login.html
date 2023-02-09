@@ -6,7 +6,7 @@
 </head>
 <body>
     <div th:fragment="content">
-        <form action="#" th:action="@{/login/authenticate}" th:object="${loginInputDto}" method="post">
+        <form action="#" th:action="@{/auth/authenticate}" th:object="${loginInputDto}" method="post">
             <div class="form-outline mb-4 position-relative">
                 <input type="text" id="username" class="form-control" placeholder="Username" th:field="*{username}"
                        autocomplete="username" spellcheck="false" autocapitalize="none"  tabindex="1"
