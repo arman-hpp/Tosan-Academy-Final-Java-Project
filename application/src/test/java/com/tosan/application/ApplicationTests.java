@@ -68,7 +68,6 @@ class ApplicationTests {
             installmentRepository.sumTotalInterests(LocalDateTime.MIN, LocalDateTime.MAX);
             loanConditionsRepository.findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(Currencies.Rial);
             userRepository.findByUsername("arman");
-            accountRepository.findAccountsWithDetails(1L, 1L);
             accountRepository.findAccountWithDetails(1L);
             accountRepository.findAllAccountsWithDetails();
         });

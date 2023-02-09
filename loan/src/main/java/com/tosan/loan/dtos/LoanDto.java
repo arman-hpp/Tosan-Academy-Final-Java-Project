@@ -2,12 +2,15 @@ package com.tosan.loan.dtos;
 
 import com.tosan.dtos.BaseDto;
 import com.tosan.model.Currencies;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,13 +34,4 @@ public final class LoanDto extends BaseDto {
     private String accountCustomerName;
     private BigDecimal accountBalance;
     private Currencies accountCurrency;
-
-    public LoanDto(BigDecimal amount, Integer refundDuration,
-                   Long customerId, Long accountId, Currencies currency) {
-        setAmount(amount);
-        setRefundDuration(refundDuration);
-        setCustomerId(customerId);
-        setCurrency(currency);
-        setAccountId(accountId);
-    }
 }

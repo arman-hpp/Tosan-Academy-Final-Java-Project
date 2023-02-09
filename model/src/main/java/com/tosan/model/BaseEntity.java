@@ -26,9 +26,6 @@ public abstract class BaseEntity {
     @Setter(AccessLevel.PROTECTED)
     private Long id;
 
-    @Version
-    private Integer version;
-
     @CreatedDate
     @Column(name = "created_date")
     private LocalDateTime createdDate;

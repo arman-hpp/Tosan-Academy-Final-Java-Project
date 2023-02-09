@@ -1,16 +1,15 @@
 package com.tosan.loan.services;
 
 import com.tosan.exceptions.BusinessException;
-import com.tosan.loan.dtos.*;
-import com.tosan.model.*;
+import com.tosan.loan.dtos.LoanConditionsDto;
+import com.tosan.model.Currencies;
+import com.tosan.model.LoanCondition;
 import com.tosan.repository.LoanConditionsRepository;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
 
 @Service
 public class LoanConditionsService {
@@ -21,16 +20,6 @@ public class LoanConditionsService {
                                  ModelMapper modelMapper) {
         _loanConditionsRepository = loanConditionsRepository;
         _modelMapper = modelMapper;
-    }
-
-    public List<LoanConditionsDto> loadLoanConditions() {
-        var loanConditions = _loanConditionsRepository.findAll();
-        var loanConditionsDtoList = new ArrayList<LoanConditionsDto>();
-        for(var loanCondition : loanConditions) {
-            loanConditionsDtoList.add(_modelMapper.map(loanCondition, LoanConditionsDto.class));
-        }
-
-        return loanConditionsDtoList;
     }
 
     public LoanConditionsDto loadLoanCondition(Currencies currency) {

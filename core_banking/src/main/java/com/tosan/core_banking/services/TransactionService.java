@@ -1,19 +1,22 @@
 package com.tosan.core_banking.services;
 
-import com.tosan.core_banking.dtos.*;
-import com.tosan.core_banking.interfaces.*;
+import com.tosan.core_banking.dtos.TransactionDto;
+import com.tosan.core_banking.dtos.TransferDto;
+import com.tosan.core_banking.interfaces.ITraceNoGenerator;
 import com.tosan.exceptions.BusinessException;
-import com.tosan.model.*;
-import com.tosan.repository.*;
-import com.tosan.utils.*;
-
+import com.tosan.model.Transaction;
+import com.tosan.model.TransactionTypes;
+import com.tosan.repository.AccountRepository;
+import com.tosan.repository.TransactionRepository;
+import com.tosan.utils.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -31,12 +34,6 @@ public class TransactionService {
         _accountRepository = accountRepository;
         _traceNoGenerator = traceNoGenerator;
         _modelMapper = modelMapper;
-    }
-
-
-    public List<TransactionDto> loadTransactions() {
-        var transactions = _transactionRepository.findAll();
-        return mapToTransactionDtoList((List<Transaction>) transactions);
     }
 
     @Async

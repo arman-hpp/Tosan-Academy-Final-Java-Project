@@ -1,11 +1,11 @@
 package com.tosan.loan.services;
 
 import com.tosan.core_banking.dtos.TransferDto;
-import com.tosan.core_banking.services.*;
+import com.tosan.core_banking.services.AccountService;
+import com.tosan.core_banking.services.TransactionService;
 import com.tosan.exceptions.BusinessException;
-import com.tosan.model.*;
+import com.tosan.model.Installment;
 import com.tosan.repository.InstallmentRepository;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

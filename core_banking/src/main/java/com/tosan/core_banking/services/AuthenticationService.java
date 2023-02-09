@@ -1,6 +1,7 @@
 package com.tosan.core_banking.services;
 
-import com.tosan.model.User;
+import com.tosan.core_banking.dtos.UserDto;
+import com.tosan.model.UserTypes;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,8 +18,13 @@ public class AuthenticationService {
         return false;
     }
 
-    public User loadCurrentUser() {
-        return new User();
+    public UserDto loadCurrentUser() {
+        var userDto = new UserDto();
+        userDto.setId(1L);
+        userDto.setUsername("arman");
+        userDto.setUserType(UserTypes.User);
+
+        return userDto;
     }
 
     public Optional<String> loadCurrentUsername() {

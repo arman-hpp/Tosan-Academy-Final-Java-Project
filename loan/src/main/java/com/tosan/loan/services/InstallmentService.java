@@ -2,11 +2,11 @@ package com.tosan.loan.services;
 
 import com.tosan.loan.dtos.InstallmentDto;
 import com.tosan.repository.InstallmentRepository;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class InstallmentService {

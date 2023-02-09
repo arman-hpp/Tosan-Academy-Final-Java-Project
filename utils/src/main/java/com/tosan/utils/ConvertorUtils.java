@@ -1,5 +1,6 @@
 package com.tosan.utils;
 
+@SuppressWarnings("unused")
 public final class ConvertorUtils {
     public static Long tryParseLong(String value, Long defaultVal) {
         try {

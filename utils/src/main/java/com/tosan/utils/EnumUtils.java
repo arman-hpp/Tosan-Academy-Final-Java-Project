@@ -1,8 +1,10 @@
 package com.tosan.utils;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
+@SuppressWarnings("unused")
 public final class EnumUtils {
     public static Map<Integer, String> getEnumNames(Class<?> clazz) {
         var enumElementsMap = new HashMap<Integer, String>();

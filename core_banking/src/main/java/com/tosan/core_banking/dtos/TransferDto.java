@@ -1,9 +1,11 @@
 package com.tosan.core_banking.dtos;
 
 import com.tosan.dtos.BaseDto;
-
 import com.tosan.model.Currencies;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 

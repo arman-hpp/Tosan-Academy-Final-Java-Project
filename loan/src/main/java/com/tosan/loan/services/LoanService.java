@@ -77,7 +77,9 @@ public class LoanService {
         var loans = _loanRepository.findByAccountIdOrderByRequestDate(accountId);
         var loanDtoList = new ArrayList<LoanDto>();
         for (var loan : loans) {
-            loanDtoList.add(_modelMapper.map(loan, LoanDto.class));
+            var loanDto = _modelMapper.map(loan, LoanDto.class);
+            loanDto.setAccountId(accountId);
+            loanDtoList.add(loanDto);
         }
 
         return loanDtoList;

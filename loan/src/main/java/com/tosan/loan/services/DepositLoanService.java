@@ -5,10 +5,11 @@ import com.tosan.core_banking.services.AccountService;
 import com.tosan.core_banking.services.TransactionService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.LoanDto;
-import com.tosan.loan.interfaces.*;
-import com.tosan.model.*;
-import com.tosan.repository.*;
-
+import com.tosan.loan.interfaces.ILoanCalculator;
+import com.tosan.loan.interfaces.ILoanValidator;
+import com.tosan.model.Installment;
+import com.tosan.repository.InstallmentRepository;
+import com.tosan.repository.LoanRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
