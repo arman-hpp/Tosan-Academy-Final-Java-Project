@@ -59,8 +59,8 @@
           <div class="col-4">
             <label for="search-input" class="form-label">Search by CustomerId</label>
             <div class="input-group mb-3">
-              <input type="search" class="form-control" id="search-input" placeholder=""
-                     aria-label="Search by Customer Id" aria-describedby="search-submit" th:field="*{customerId}" required>
+              <input type="search" class="form-control" id="search-input" placeholder="" autocapitalize="off"
+                     aria-label="Search by Customer Id" aria-describedby="search-submit" th:field="*{customerId}">
               <button class="btn btn-outline-secondary" type="submit" id="search-submit">Search</button>
             </div>
           </div>
@@ -75,8 +75,9 @@
             <th scope="col">FirstName</th>
             <th scope="col">LastName</th>
             <th scope="col">Address</th>
-            <th>Edit</th>
-            <th>Delete</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+            <th scope="col">Actions</th>
           </tr>
           </thead>
           <tbody>
@@ -85,15 +86,27 @@
             <td class="align-middle" th:text="${customerDtoItem.firstName}"></td>
             <td class="align-middle" th:text="${customerDtoItem.lastName}"></td>
             <td class="align-middle" th:text="${customerDtoItem.address}"></td>
-            <td>
+            <td class="align-middle">
               <form method="POST" th:action="@{/customer/editCustomer/{id}(id=${customerDtoItem.id})}">
                 <button class="btn btn-primary btn-sm" type="submit">Edit</button>
               </form>
             </td>
-            <td>
+            <td class="align-middle">
               <form method="POST" th:action="@{/customer/deleteCustomer/{id}(id=${customerDtoItem.id})}">
                 <button class="btn btn-secondary btn-sm" type="submit">Delete</button>
               </form>
+            </td>
+            <td class="align-middle">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  Actions
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" th:href="@{/account/index(customer_id=${customerDtoItem.id})}">Open Account</a></li>
+                  <li><a class="dropdown-item" th:href="@{/customer_account/index(customer_id=${customerDtoItem.id})}">Show Accounts</a></li>
+                  <li><a class="dropdown-item" th:href="@{/customer_loan/index(customer_id=${customerDtoItem.id})}">Show Loans</a></li>
+                </ul>
+              </div>
             </td>
           </tr>
           </tbody>

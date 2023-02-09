@@ -31,6 +31,7 @@
           <th scope="col">Owner</th>
           <th scope="col">Balance</th>
           <th scope="col">Currency</th>
+          <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -39,6 +40,18 @@
           <td class="align-middle" th:text="${accountDtoItem.customerName}"></td>
           <td class="align-middle" th:text="${accountDtoItem.balance}"></td>
           <td class="align-middle" th:text="${accountDtoItem.currency}"></td>
+          <td class="align-middle">
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Actions
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" th:href="@{/loan_request/index(account_id=${accountDtoItem.id})}">Request Loan</a></li>
+                <li><a class="dropdown-item" th:href="@{/transaction/index(account_id=${accountDtoItem.id})}">Do Transaction</a></li>
+                <li><a class="dropdown-item" th:href="@{/account_transaction/index(account_id=${accountDtoItem.id})}">Show Transactions</a></li>
+              </ul>
+            </div>
+          </td>
         </tr>
         </tbody>
       </table>

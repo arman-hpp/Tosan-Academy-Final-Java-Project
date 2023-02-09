@@ -99,8 +99,9 @@
                     <th scope="col">Amount</th>
                     <th scope="col">Duration</th>
                     <th scope="col">Currency</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                    <th scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -111,15 +112,26 @@
                     <td class="align-middle" th:text="${loanDtoItem.amount}"></td>
                     <td class="align-middle" th:text="${loanDtoItem.refundDuration}"></td>
                     <td class="align-middle" th:text="${loanDtoItem.currency}"></td>
-                    <td>
+                    <td class="align-middle">
                         <form method="POST" th:action="@{/loan_request/editLoanRequest/{id}(id=${loanDtoItem.id})}">
                             <button class="btn btn-primary btn-sm" type="submit">Edit</button>
                         </form>
                     </td>
-                    <td>
+                    <td class="align-middle">
                         <form method="POST" th:action="@{/loan_request/deleteLoanRequest/{id}(id=${loanDtoItem.id})}">
                             <button class="btn btn-secondary btn-sm" type="submit">Delete</button>
                         </form>
+                    </td>
+                    <td class="align-middle">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" th:href="@{/loan_contract/index(loan_id=${loanDtoItem.id})}">Show Contract</a></li>
+                                <li th:if="${loanDtoItem.paid == true}"><a class="dropdown-item" th:href="@{/pay_installment/index(loan_id=${loanDtoItem.id})}">Pay Installments</a></li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
