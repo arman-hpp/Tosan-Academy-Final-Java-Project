@@ -14,7 +14,7 @@ public class AuthenticationService {
     }
 
     public Boolean isUserAdmin() {
-        return true;
+        return false;
     }
 
     public User loadCurrentUser() {

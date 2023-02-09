@@ -1,6 +1,0 @@
-#FileLock
-#Thu Feb 09 09:37:04 IRST 2023
-hostName=192.168.1.102
-id=18634c8da588578d84e0e44c436a7b01fa104ca6378
-method=file
-server=192.168.1.102\:53487
