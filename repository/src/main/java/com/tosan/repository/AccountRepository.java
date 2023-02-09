@@ -11,7 +11,7 @@ import java.util.*;
 public interface AccountRepository extends BaseRepository<Account, Long> {
     Optional<Account> findByAccountTypeAndCurrency(AccountTypes accountType, Currencies currency);
 
-    List<Account> findByCustomerId(Long customerId);
+    List<Account> findByCustomerIdOrderByIdDesc(Long customerId);
 
     List<Account> findByAccountType(AccountTypes accountType);
 

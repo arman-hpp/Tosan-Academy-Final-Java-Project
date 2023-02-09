@@ -68,6 +68,16 @@ public class AccountService {
         return accountDto;
     }
 
+    public List<AccountDto> loadCustomerAccounts(Long customerId) {
+        var accounts = _accountRepository.findByCustomerIdOrderByIdDesc(customerId);
+        var accountDtoList = new ArrayList<AccountDto>();
+        for(var account : accounts) {
+            accountDtoList.add(_modelMapper.map(account, AccountDto.class));
+        }
+
+        return accountDtoList;
+    }
+
     public AccountDto loadBankAccount(Currencies currency) {
         var account = _accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, currency).orElse(null);
         if(account == null)

@@ -24,9 +24,8 @@ public class AccountController {
     }
 
     @GetMapping("/index")
-    public String loadForm(
-            @RequestParam(name = "customer_id", required = false) String customerId,
-            Model model) {
+    public String loadForm(@RequestParam(name = "customer_id", required = false) String customerId,
+                           Model model) {
         try {
             Long customerIdLong = null;
             if (customerId != null) {
