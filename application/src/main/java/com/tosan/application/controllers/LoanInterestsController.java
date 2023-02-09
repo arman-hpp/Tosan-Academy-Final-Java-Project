@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.ExecutionException;
 
 @Controller
 @RequestMapping("/loan_interest")
@@ -37,10 +38,15 @@ public class LoanInterestsController {
             return BindingResultHelper.getInputValidationError("redirect:/loan_interest/index");
         }
 
-        var loanInterestStatisticsDtoList = _loanService
+        var future = _loanService
                 .loadLoanSumInterests(loanInterestSearchDto.fromDate, loanInterestSearchDto.toDate);
 
-        model.addAttribute("loanInterestStatisticsDtoList", loanInterestStatisticsDtoList);
+        try {
+            var loanInterestStatisticsDtoList = future.get();
+            model.addAttribute("loanInterestStatisticsDtoList", loanInterestStatisticsDtoList);
+        } catch(ExecutionException | InterruptedException ex)  {
+            BindingResultHelper.addGlobalError(bindingResult, ex);
+        }
 
         return "loan_interest";
     }
