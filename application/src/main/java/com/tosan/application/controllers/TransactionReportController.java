@@ -1,6 +1,9 @@
 package com.tosan.application.controllers;
 
+import com.tosan.application.extensions.exporters.CsvExporter;
 import com.tosan.application.extensions.exporters.ExcelExporter;
+import com.tosan.application.extensions.exporters.Exporter;
+import com.tosan.model.ExportTypes;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.TransactionDto;
 import com.tosan.core_banking.dtos.TransactionReportInputDto;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/transaction_report")
@@ -30,7 +34,7 @@ public class TransactionReportController {
     public String loadForm(Model model) {
         var fromDateTime = LocalDateTime.now().minusYears(1).withHour(0).withMinute(0).withSecond(1);
         var toDateTime = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
-        model.addAttribute("transactionReportInputDto", new TransactionReportInputDto(fromDateTime, toDateTime));
+        model.addAttribute("transactionReportInputDto", new TransactionReportInputDto(fromDateTime, toDateTime, ExportTypes.CSV));
         return "transaction_report";
     }
 
@@ -43,14 +47,17 @@ public class TransactionReportController {
         var currentDateTime = LocalDateTime.now().format(dateFormatter);
 
         String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=transactions_" + currentDateTime + ".xlsx";
+        String headerValue =
+                "attachment; filename=transactions_" +
+                currentDateTime +
+                transactionReportInputDto.getExportType().getFileExtension();
         response.setHeader(headerKey, headerValue);
 
         var transactionDtoList = _transactionService
                 .loadTransactions(transactionReportInputDto.getFromDate(), transactionReportInputDto.getToDate());
 
         try {
-            ExcelExporter.export(response, TransactionDto.class, transactionDtoList);
+            Exporter.export(transactionReportInputDto.getExportType(), response, TransactionDto.class, transactionDtoList);
         }
         catch (IOException e) {
             // ignore

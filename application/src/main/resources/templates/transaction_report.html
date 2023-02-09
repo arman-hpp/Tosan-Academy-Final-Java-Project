@@ -14,17 +14,29 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
             <div class="col-4">
                 <div class="mb-3">
-                    <label for="interest-rate" class="form-label">Interest Rate</label>
-                    <input type="datetime-local" class="form-control" id="interest-rate" placeholder="" th:field="*{fromDate}"
+                    <label for="fromDate" class="form-label">From Date</label>
+                    <input type="datetime-local" class="form-control" id="fromDate" placeholder="" th:field="*{fromDate}"
                            autocapitalize="none" required />
 
                 </div>
             </div>
             <div class="col-4">
                 <div class="mb-3">
-                    <label for="start-date" class="form-label">Start Date</label>
-                    <input type="datetime-local" class="form-control" id="start-date" placeholder="" th:field="*{toDate}"
+                    <label for="to-date" class="form-label">To Date</label>
+                    <input type="datetime-local" class="form-control" id="to-date" placeholder="" th:field="*{toDate}"
                            autocapitalize="none" required />
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="currencies" class="form-label">Currency</label>
+                    <select id="currencies" th:field="*{exportType}"  class="form-select" aria-label="select currency">
+                        <option th:each="exportType : ${T(com.tosan.model.ExportTypes).values()}" th:value="${exportType}" th:text="${exportType}">
+                        </option>
+                    </select>
                 </div>
             </div>
         </div>

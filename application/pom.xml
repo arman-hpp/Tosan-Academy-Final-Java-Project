@@ -52,6 +52,11 @@
             <version>5.2.3</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.10.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.model</groupId>
             <artifactId>model</artifactId>
             <version>0.0.1-SNAPSHOT</version>

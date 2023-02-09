@@ -1,6 +1,7 @@
 package com.tosan.core_banking.dtos;
 
 import com.tosan.dtos.BaseDto;
+import com.tosan.model.ExportTypes;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +19,6 @@ public final class TransactionReportInputDto extends BaseDto {
     private LocalDateTime fromDate;
     @DateTimeFormat(pattern ="yyyy-MM-dd'T'HH:mm")
     private LocalDateTime toDate;
+
+    private ExportTypes exportType;
 }
