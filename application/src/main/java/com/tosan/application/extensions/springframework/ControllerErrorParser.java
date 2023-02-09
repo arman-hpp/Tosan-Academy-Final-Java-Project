@@ -10,7 +10,7 @@ public final class ControllerErrorParser {
         if (exception instanceof BusinessException) {
             errorMessage = exception.getMessage();
         } else {
-            errorMessage = "unhandled error occurred";
+            errorMessage = "Unhandled error occurred";
         }
 
         if(encode) {
@@ -25,6 +25,10 @@ public final class ControllerErrorParser {
     }
 
     public static String getError(BindingResult bindingResult) {
+        if(bindingResult == null) {
+            return "Unknown+exception";
+        }
+
         return "Invalid+input+parameters";
     }
 
@@ -33,7 +37,7 @@ public final class ControllerErrorParser {
     }
 
     public static String getIllegalAccessError() {
-        return "illegal+access";
+        return "Illegal+access";
     }
 
 
