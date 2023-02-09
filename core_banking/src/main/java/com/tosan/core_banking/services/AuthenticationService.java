@@ -22,7 +22,7 @@ public class AuthenticationService {
     }
 
     public Optional<String> loadCurrentUsername() {
-        return Optional.empty();
+        return Optional.of("Arman");
     }
 
     public Optional<Long> loadCurrentUserId() {
