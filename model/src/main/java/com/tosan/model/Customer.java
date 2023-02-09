@@ -1,12 +1,16 @@
 package com.tosan.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "Customers")
 public class Customer extends BaseEntity {
@@ -24,9 +28,6 @@ public class Customer extends BaseEntity {
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Loan> loans = new HashSet<>();
-
-    public Customer() {
-    }
 
     public Customer(Long Id) {
         setId(Id);

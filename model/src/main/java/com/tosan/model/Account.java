@@ -1,13 +1,17 @@
 package com.tosan.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "Accounts")
 public class Account extends BaseEntity {
@@ -28,9 +32,6 @@ public class Account extends BaseEntity {
 
     @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Transaction> transactions = new HashSet<>();
-
-    public Account() {
-    }
 
     public Account(Long Id) {
         setId(Id);
