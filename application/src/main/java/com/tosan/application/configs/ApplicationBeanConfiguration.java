@@ -1,5 +1,7 @@
 package com.tosan.application.configs;
 
+import com.tosan.application.extensions.exporters.ExporterFactory;
+import com.tosan.application.extensions.exporters.IExporterFactory;
 import com.tosan.core_banking.interfaces.*;
 import com.tosan.core_banking.services.*;
 import com.tosan.loan.interfaces.*;
@@ -31,5 +33,10 @@ public class ApplicationBeanConfiguration {
     @Bean
     public ILoanValidator loanValidator() {
         return new DefaultLoanValidator();
+    }
+
+    @Bean
+    public IExporterFactory exporterFactory() {
+        return new ExporterFactory();
     }
 }
