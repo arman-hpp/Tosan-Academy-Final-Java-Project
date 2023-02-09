@@ -1,11 +1,11 @@
 package com.tosan.application.controllers;
 
+import com.tosan.application.extensions.exporters.ExportTypes;
 import com.tosan.application.extensions.exporters.IExporterFactory;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.TransactionDto;
 import com.tosan.core_banking.dtos.TransactionReportInputDto;
 import com.tosan.core_banking.services.TransactionService;
-import com.tosan.model.ExportTypes;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +35,9 @@ public class TransactionReportController {
     public String loadForm(Model model) {
         var fromDateTime = LocalDateTime.now().minusYears(1).toLocalDate().atTime(LocalTime.MIN);
         var toDateTime = LocalDateTime.now().toLocalDate().atTime(LocalTime.MAX);
-        model.addAttribute("transactionReportInputDto", new TransactionReportInputDto(fromDateTime, toDateTime, ExportTypes.CSV));
+        model.addAttribute("transactionReportInputDto",
+                new TransactionReportInputDto(fromDateTime, toDateTime, ExportTypes.CSV.toString()));
+
         return "transaction_report";
     }
 
@@ -46,12 +48,14 @@ public class TransactionReportController {
 
         var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         var currentDateTime = LocalDateTime.now().format(dateFormatter);
+        var exportType = ExportTypes.valueOf(transactionReportInputDto.getExportType());
+
 
         String headerKey = "Content-Disposition";
         String headerValue =
                 "attachment; filename=transactions_" +
                 currentDateTime +
-                transactionReportInputDto.getExportType().getFileExtension();
+                        exportType.getFileExtension();
         response.setHeader(headerKey, headerValue);
 
         var future = _transactionService
@@ -60,7 +64,7 @@ public class TransactionReportController {
         try {
             var transactionDtoList = future.get();
 
-            var exporter = _exporterFactory.CreateExporter(transactionReportInputDto.getExportType());
+            var exporter = _exporterFactory.CreateExporter(exportType);
             exporter.export(response, TransactionDto.class, transactionDtoList);
         }
         catch (IOException | InterruptedException | ExecutionException e) {

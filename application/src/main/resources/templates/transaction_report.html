@@ -34,7 +34,7 @@
                 <div class="mb-3">
                     <label for="currencies" class="form-label">Currency</label>
                     <select id="currencies" th:field="*{exportType}"  class="form-select" aria-label="select currency">
-                        <option th:each="exportType : ${T(com.tosan.model.ExportTypes).values()}" th:value="${exportType}" th:text="${exportType}">
+                        <option th:each="exportType : ${T(com.tosan.application.extensions.exporters.ExportTypes).values()}" th:value="${exportType}" th:text="${exportType}">
                         </option>
                     </select>
                 </div>

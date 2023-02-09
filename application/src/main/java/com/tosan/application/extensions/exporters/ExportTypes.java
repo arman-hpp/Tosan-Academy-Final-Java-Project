@@ -1,4 +1,4 @@
-package com.tosan.model;
+package com.tosan.application.extensions.exporters;
 
 public enum ExportTypes {
     Excel(".xlsx"),
