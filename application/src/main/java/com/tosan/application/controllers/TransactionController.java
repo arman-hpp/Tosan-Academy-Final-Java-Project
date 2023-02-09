@@ -1,13 +1,12 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.springframework.BindingResultHelper;
+import com.tosan.application.extensions.springframework.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.AccountSearchInputDto;
 import com.tosan.core_banking.dtos.TransactionDto;
 import com.tosan.core_banking.services.AccountService;
 import com.tosan.core_banking.services.AuthenticationService;
 import com.tosan.core_banking.services.TransactionService;
-import com.tosan.exceptions.BusinessException;
 import com.tosan.model.AccountTypes;
 import com.tosan.utils.ConvertorUtils;
 import org.springframework.stereotype.Controller;
@@ -32,20 +31,13 @@ public class TransactionController {
     }
 
     @GetMapping("/index")
-    public String loadForm(@RequestParam(name = "account_id", required = false) String accountId,
-                           Model model) {
-        try {
-            Long accountIdLong = null;
-            if (accountId != null) {
-                accountIdLong = ConvertorUtils.tryParseLong(accountId, -1L);
-                if (accountIdLong <= 0) {
-                    return "redirect:/transaction/index?error=Invalid+input+parameters";
-                }
-            }
+    public String loadForm(@RequestParam(name = "account_id", required = false) String accountId, Model model) {
+        var accountIdLong = ConvertorUtils.tryParseLong(accountId, null);
 
+        try {
             var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
             if (currentUserId == null) {
-                return BindingResultHelper.getIllegalAccessError("redirect:/transaction/index");
+                return "redirect:/transaction/index?error=" + ControllerErrorParser.getIllegalAccessError();
             }
 
             var transactionDtoList = _transactionService.loadUserTransactions(currentUserId);
@@ -59,20 +51,14 @@ public class TransactionController {
                 model.addAttribute("accountSearchInputDto", new AccountSearchInputDto(accountIdLong));
                 var foundAccount = _accountService.loadAccount(accountIdLong);
 
-                if(foundAccount.getAccountType() == AccountTypes.BankAccount) {
-                    if(!_authenticationService.isUserAdmin()) {
-                        return "redirect:/transaction/index?error=You+are+not+authorized+to+perform+operations+on+the+bank+account";
-                    }
-                }
-
                 if(_authenticationService.isUserAdmin()) {
                     if(foundAccount.getAccountType() == AccountTypes.CustomerAccount) {
-                        return "redirect:/transaction/index?error=You+are+not+authorized+to+perform+operations+on+the+customer+account";
+                        return "redirect:/transaction/index?error=" + ControllerErrorParser.getIllegalAccessError();
                     }
                 } else
                 {
                     if(foundAccount.getAccountType() == AccountTypes.BankAccount) {
-                        return "redirect:/transaction/index?error=You+are+not+authorized+to+perform+operations+on+the+bank+account";
+                        return "redirect:/transaction/index?error=" + ControllerErrorParser.getIllegalAccessError();
                     }
                 }
 
@@ -86,37 +72,30 @@ public class TransactionController {
             }
 
             return "transaction";
-        } catch (BusinessException ex) {
-            return "redirect:/transaction/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/transaction/index?error=unhandled+error+occurred";
+            return "redirect:/transaction/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
     @PostMapping("/searchAccount")
     public String searchAccountSubmit(@ModelAttribute AccountSearchInputDto accountSearchInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/transaction/index?error=Invalid+input+parameters";
+            return "redirect:/transaction/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
-        var accountId = accountSearchInputDto.getAccountId();
-        if (accountId == null) {
-            return "redirect:/transaction/index";
-        }
-
-        return "redirect:/transaction/index?account_id=" + accountId;
+        return "redirect:/transaction/index?account_id=" + accountSearchInputDto.getAccountId();
     }
 
     @PostMapping("/addTransaction")
     public String addSubmit(@ModelAttribute TransactionDto transactionDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/transaction/index?error=Invalid+input+parameters";
+            return "redirect:/transaction/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         try {
             var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
             if (currentUserId == null) {
-                return BindingResultHelper.getIllegalAccessError("redirect:/transaction/index");
+                return "redirect:/transaction/index?error=" + ControllerErrorParser.getIllegalAccessError();
             }
 
             transactionDto.setUserId(currentUserId);
@@ -124,10 +103,8 @@ public class TransactionController {
             _transactionService.doTransaction(transactionDto);
 
             return "redirect:/transaction/index";
-        } catch (BusinessException ex) {
-            return "redirect:/transaction/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/transaction/index?error=unhandled+error+occurred";
+            return "redirect:/transaction/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 }

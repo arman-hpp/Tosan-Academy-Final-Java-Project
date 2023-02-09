@@ -1,8 +1,8 @@
 package com.tosan.application.controllers;
 
+import com.tosan.application.extensions.springframework.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.AccountSearchInputDto;
-import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.LoanDto;
 import com.tosan.loan.services.LoanService;
 import com.tosan.utils.ConvertorUtils;
@@ -26,37 +26,29 @@ public class AccountLoanController {
     @GetMapping("/index")
     public String loadForm(@RequestParam(name = "account_id", required = false) String accountId,
                            Model model) {
-        Long accountIdLong = null;
-        if (accountId != null) {
-            accountIdLong = ConvertorUtils.tryParseLong(accountId, -1L);
-            if (accountIdLong <= 0) {
-                return "redirect:/account_loan/index?error=Invalid+input+parameters";
-            }
-        }
+        var accountIdLong = ConvertorUtils.tryParseLong(accountId, null);
 
         try {
-            if(accountIdLong != null) {
+            if (accountIdLong == null) {
+                model.addAttribute("accountSearchInputDto", new AccountSearchInputDto());
+                model.addAttribute("loanDtoList", new ArrayList<LoanDto>());
+            } else {
                 model.addAttribute("accountSearchInputDto", new AccountSearchInputDto(accountIdLong));
 
                 var loanDtoList = _loanService.loadLoansByAccountId(accountIdLong);
                 model.addAttribute("loanDtoList", loanDtoList);
-            } else {
-                model.addAttribute("accountSearchInputDto", new AccountSearchInputDto());
-                model.addAttribute("loanDtoList", new ArrayList<LoanDto>());
             }
 
             return "account_loan";
-        } catch (BusinessException ex) {
-            return "redirect:/account_loan/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/account_loan/index?error=unhandled+error+occurred";
+            return "redirect:/account_loan/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
     @PostMapping("/searchAccount")
     public String searchAccountSubmit(@ModelAttribute AccountSearchInputDto accountSearchInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/account_loan/index?error=Invalid+input+parameters";
+            return "redirect:/account_loan/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         var accountId = accountSearchInputDto.getAccountId();

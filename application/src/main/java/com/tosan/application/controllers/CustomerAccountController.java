@@ -1,10 +1,10 @@
 package com.tosan.application.controllers;
 
+import com.tosan.application.extensions.springframework.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.AccountDto;
 import com.tosan.core_banking.dtos.CustomerSearchInputDto;
 import com.tosan.core_banking.services.AccountService;
-import com.tosan.exceptions.BusinessException;
 import com.tosan.utils.ConvertorUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,15 +26,9 @@ public class CustomerAccountController {
     @GetMapping("/index")
     public String loadForm(@RequestParam(name = "customer_id", required = false) String customerId,
                            Model model) {
-        try {
-            Long customerIdLong = null;
-            if (customerId != null) {
-                customerIdLong = ConvertorUtils.tryParseLong(customerId, -1L);
-                if (customerIdLong <= 0) {
-                    return "redirect:/customer_account/index?error=Invalid+input+parameters";
-                }
-            }
+        var customerIdLong = ConvertorUtils.tryParseLong(customerId, null);
 
+        try {
             if (customerIdLong == null) {
                 model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto());
                 model.addAttribute("accountDtoList", new ArrayList<AccountDto>());
@@ -45,17 +39,15 @@ public class CustomerAccountController {
             }
 
             return "customer_account";
-        } catch (BusinessException ex) {
-            return "redirect:/customer_account/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/customer_account/index?error=unhandled+error+occurred";
+            return "redirect:/customer_account/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
     @PostMapping("/searchCustomer")
     public String searchCustomerSubmit(@ModelAttribute CustomerSearchInputDto customerSearchInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/customer_account/index?error=Invalid+input+parameters";
+            return "redirect:/customer_account/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         var customerId = customerSearchInputDto.getCustomerId();

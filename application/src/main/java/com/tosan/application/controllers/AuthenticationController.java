@@ -1,12 +1,15 @@
 package com.tosan.application.controllers;
 
+import com.tosan.application.extensions.springframework.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
-import com.tosan.core_banking.services.UserService;
 import com.tosan.core_banking.dtos.UserLoginInputDto;
-import com.tosan.exceptions.BusinessException;
+import com.tosan.core_banking.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(("/auth"))
@@ -25,18 +28,14 @@ public class AuthenticationController {
         return "login";
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     public String loginSubmit(@ModelAttribute UserLoginInputDto loginInputDto) {
         try {
             _userService.login(loginInputDto);
 
             return "redirect:/home";
-        }
-        catch (BusinessException ex) {
-            return "redirect:/auth/index?error=" + ex.getEncodedMessage();
-        }
-        catch (Exception ex) {
-            return "redirect:/auth/index?error=unhandled+error+occurred";
+        } catch (Exception ex) {
+            return "redirect:/auth/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 

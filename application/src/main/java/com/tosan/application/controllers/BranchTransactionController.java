@@ -1,8 +1,8 @@
 package com.tosan.application.controllers;
 
+import com.tosan.application.extensions.springframework.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.services.TransactionService;
-import com.tosan.exceptions.BusinessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +25,8 @@ public class BranchTransactionController {
             model.addAttribute("transactionDtoList", transactionDtoList);
 
             return "branch_transaction";
-        } catch (BusinessException ex) {
-            return "redirect:/branch_transaction/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/branch_transaction/index?error=unhandled+error+occurred";
+            return "redirect:/branch_transaction/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 }

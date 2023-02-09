@@ -1,10 +1,10 @@
 package com.tosan.application.controllers;
 
+import com.tosan.application.extensions.springframework.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.CustomerDto;
 import com.tosan.core_banking.dtos.CustomerSearchInputDto;
 import com.tosan.core_banking.services.CustomerService;
-import com.tosan.exceptions.BusinessException;
 import com.tosan.utils.ConvertorUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,30 +22,25 @@ public class CustomerController {
     }
 
     @GetMapping("/index")
-    public String loadForm(@RequestParam(required = false) String id, Model model) {
-        try {
-            if (id != null) {
-                var idLong = ConvertorUtils.tryParseLong(id, -1L);
-                if (idLong <= 0) {
-                    return "redirect:/customer/index?error=Invalid+input+parameters";
-                }
+    public String loadForm(@RequestParam(required = false, name = "customer_id") String customerId, Model model) {
+        var customerIdLong = ConvertorUtils.tryParseLong(customerId, null);
 
-                var foundCustomer = _customerService.loadCustomer(idLong);
-                model.addAttribute("customerDto", new CustomerDto());
-                model.addAttribute("customerDtoList", foundCustomer);
-                model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto(idLong));
-            } else {
+        try {
+            if (customerIdLong == null) {
                 var customerDtoList = _customerService.loadCustomers();
                 model.addAttribute("customerDto", new CustomerDto());
                 model.addAttribute("customerDtoList", customerDtoList);
                 model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto());
+            } else {
+                var foundCustomer = _customerService.loadCustomer(customerIdLong);
+                model.addAttribute("customerDto", new CustomerDto());
+                model.addAttribute("customerDtoList", foundCustomer);
+                model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto(customerIdLong));
             }
 
             return "customer";
-        } catch (BusinessException ex) {
-            return "redirect:/customer/index?error=" + ex.getEncodedMessage();
-        } catch (Exception ex) {
-            return "redirect:/customer/index?error=unhandled+error+occurred";
+        }catch (Exception ex) {
+            return "redirect:/customer/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
@@ -53,7 +48,7 @@ public class CustomerController {
     public String loadFormById(@PathVariable String id, Model model) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/customer/index?error=Invalid+input+parameters";
+            return "redirect:/customer/index?error=" + ControllerErrorParser.getInvalidArgumentError();
         }
 
         try {
@@ -66,27 +61,23 @@ public class CustomerController {
             model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto());
 
             return "customer";
-        } catch (BusinessException ex) {
-            return "redirect:/customer/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/customer/index?error=unhandled+error+occurred";
+            return "redirect:/customer/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
     @PostMapping("/addCustomer")
     public String addSubmit(@ModelAttribute CustomerDto customerDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/customer/index?error=Invalid+input+parameters";
+            return "redirect:/customer/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         try {
             _customerService.addOrEditCustomer(customerDto);
 
             return "redirect:/customer/index";
-        } catch (BusinessException ex) {
-            return "redirect:/customer/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/customer/index?error=unhandled+error+occurred";
+            return "redirect:/customer/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
@@ -94,17 +85,15 @@ public class CustomerController {
     public String deleteSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/customer/index?error=Invalid+input+parameters";
+            return "redirect:/customer/index?error=" + ControllerErrorParser.getInvalidArgumentError();
         }
 
         try {
             _customerService.removeCustomer(idLong);
 
             return "redirect:/customer/index";
-        } catch (BusinessException ex) {
-            return "redirect:/customer/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/customer/index?error=unhandled+error+occurred";
+            return "redirect:/customer/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
@@ -112,7 +101,7 @@ public class CustomerController {
     public String editSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/customer/index?error=Invalid+input+parameters";
+            return "redirect:/customer/index?error=" + ControllerErrorParser.getInvalidArgumentError();
         }
 
         return "redirect:/customer/index/" + idLong;
@@ -121,7 +110,7 @@ public class CustomerController {
     @PostMapping("/searchCustomer")
     public String searchSubmit(@ModelAttribute CustomerSearchInputDto customerSearchInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/customer/index?error=Invalid+input+parameters";
+            return "redirect:/customer/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         var customerId = customerSearchInputDto.getCustomerId();
@@ -129,6 +118,6 @@ public class CustomerController {
             return "redirect:/customer/index";
         }
 
-        return "redirect:/customer/index?search=true&id=" + customerId;
+        return "redirect:/customer/index?customer_id=" + customerId;
     }
 }

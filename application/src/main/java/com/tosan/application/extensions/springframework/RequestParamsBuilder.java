@@ -1,15 +1,28 @@
 package com.tosan.application.extensions.springframework;
 
 public class RequestParamsBuilder {
-    public static String build(Object... params) {
-        var result = new StringBuilder();
-        result.append("?");
-        for (int i = 0; i < params.length; i = i + 2) {
-            result.append(params[i].toString()).append("=").append(params[i + 1]);
-            if(i != params.length - 2)
-                result.append("&");
+    private final StringBuilder q;
+    private Boolean First = true;
+
+    public RequestParamsBuilder(String baseUrl) {
+        q = new StringBuilder(baseUrl);
+    }
+
+    public RequestParamsBuilder Add(String paramName, Object paramValue) {
+        if(First) {
+            q.append("?");
+            First = false;
+        } else {
+            q.append("&");
         }
 
-        return result.toString();
+        q.append(paramName).append("=").append(paramValue);
+
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return q.toString();
     }
 }

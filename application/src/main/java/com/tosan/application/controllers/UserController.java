@@ -1,11 +1,10 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.springframework.BindingResultHelper;
+import com.tosan.application.extensions.springframework.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.UserDto;
 import com.tosan.core_banking.services.AuthenticationService;
 import com.tosan.core_banking.services.UserService;
-import com.tosan.exceptions.BusinessException;
 import com.tosan.utils.ConvertorUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,10 +31,8 @@ public class UserController {
             model.addAttribute("userOutputs", users);
 
             return "user";
-        } catch (BusinessException ex) {
-            return "redirect:/user/index?error=" + ex.getEncodedMessage();
-        } catch (Exception ex) {
-            return "redirect:/user/index?error=unhandled+error+occurred";
+        }catch (Exception ex) {
+            return "redirect:/user/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
@@ -43,7 +40,7 @@ public class UserController {
     public String loadFormById(@PathVariable String id, Model model) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/user/index?error=Invalid+input+parameters";
+            return "redirect:/user/index?error=" + ControllerErrorParser.getInvalidArgumentError();
         }
 
         try {
@@ -54,27 +51,23 @@ public class UserController {
             model.addAttribute("userOutputs", users);
 
             return "user";
-        } catch (BusinessException ex) {
-            return "redirect:/user/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/user/index?error=unhandled+error+occurred";
+            return "redirect:/user/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
     @PostMapping("/addUser")
     public String addSubmit(@ModelAttribute UserDto userDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/user/index?error=Invalid+input+parameters";
+            return "redirect:/user/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         try {
             _userService.addOrEditUser(userDto);
 
             return "redirect:/user/index";
-        } catch (BusinessException ex) {
-            return "redirect:/user/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/user/index?error=unhandled+error+occurred";
+            return "redirect:/user/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
@@ -82,26 +75,24 @@ public class UserController {
     public String deleteSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/user/index?error=Invalid+input+parameters";
+            return "redirect:/user/index?error=" + ControllerErrorParser.getInvalidArgumentError();
         }
 
         var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
         if(currentUserId == null){
-            return BindingResultHelper.getIllegalAccessError("redirect:/user/index");
+            return "redirect:/user/index?error=" + ControllerErrorParser.getIllegalAccessError();
         }
 
         if(idLong.equals(currentUserId)) {
-            return BindingResultHelper.getIllegalAccessError("redirect:/user/index");
+            return "redirect:/user/index?error=" + ControllerErrorParser.getIllegalAccessError();
         }
 
         try {
             _userService.removeUser(idLong);
 
             return "redirect:/user/index";
-        } catch (BusinessException ex) {
-            return "redirect:/user/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/user/index?error=unhandled+error+occurred";
+            return "redirect:/user/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
@@ -109,18 +100,24 @@ public class UserController {
     public String editSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/user/index?error=Invalid+input+parameters";
+            return "redirect:/user/index?error=" + ControllerErrorParser.getInvalidArgumentError();
         }
 
-        var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
-        if(currentUserId == null){
-            return BindingResultHelper.getIllegalAccessError("redirect:/user/index");
+        try {
+            var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
+            if(currentUserId == null){
+                return "redirect:/user/index?error=" + ControllerErrorParser.getIllegalAccessError();
+            }
+
+            if(idLong.equals(currentUserId)) {
+                return "redirect:/user/index?error=" + ControllerErrorParser.getIllegalAccessError();
+            }
+
+            return "redirect:/user/index/" + idLong;
+        } catch (Exception ex) {
+            return "redirect:/user/index?error=" + ControllerErrorParser.getError(ex);
         }
 
-        if(idLong.equals(currentUserId)) {
-            return BindingResultHelper.getIllegalAccessError("redirect:/user/index");
-        }
 
-        return "redirect:/user/index/" + idLong;
     }
 }

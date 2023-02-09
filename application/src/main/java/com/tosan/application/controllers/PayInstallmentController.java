@@ -1,13 +1,12 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.springframework.BindingResultHelper;
+import com.tosan.application.extensions.springframework.ControllerErrorParser;
 import com.tosan.application.extensions.springframework.RequestParamsBuilder;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.AccountSearchInputDto;
 import com.tosan.core_banking.dtos.TransactionDto;
 import com.tosan.core_banking.services.AccountService;
 import com.tosan.core_banking.services.AuthenticationService;
-import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.InstallmentDto;
 import com.tosan.loan.dtos.LoanSearchInputDto;
 import com.tosan.loan.dtos.PayInstallmentInputDto;
@@ -49,29 +48,9 @@ public class PayInstallmentController {
             @RequestParam(name = "account_id", required = false) String accountId,
             Model model) {
 
-        Long loanIdLong = null;
-        if (loanId != null) {
-            loanIdLong = ConvertorUtils.tryParseLong(loanId, -1L);
-            if (loanIdLong <= 0) {
-                return BindingResultHelper.getInputValidationError("redirect:/pay_installment/index");
-            }
-        }
-
-        Integer installmentCountLong = null;
-        if (installmentCount != null) {
-            installmentCountLong = ConvertorUtils.tryParseInt(installmentCount, -1);
-            if (installmentCountLong <= 0) {
-                return BindingResultHelper.getInputValidationError("redirect:/pay_installment/index");
-            }
-        }
-
-        Long accountIdLong = null;
-        if (accountId != null) {
-            accountIdLong = ConvertorUtils.tryParseLong(accountId, -1L);
-            if (accountIdLong <= 0) {
-                return BindingResultHelper.getInputValidationError("redirect:/pay_installment/index");
-            }
-        }
+        var loanIdLong = ConvertorUtils.tryParseLong(loanId, null);
+        var installmentCountLong = ConvertorUtils.tryParseInt(installmentCount, null);
+        var accountIdLong = ConvertorUtils.tryParseLong(accountId, null);
 
         try {
             if (loanIdLong == null) {
@@ -113,47 +92,40 @@ public class PayInstallmentController {
             return "pay_installment";
         } catch (Exception ex) {
             if(loanIdLong != null) {
-                var requestParams = RequestParamsBuilder
-                        .build("loan_id", loanIdLong, "error", ex.getMessage());
-
-                return "redirect:/pay_installment/index" + requestParams;
+                return new RequestParamsBuilder("redirect:/pay_installment/index")
+                        .Add("loan_id", loanIdLong)
+                        .Add("error", ControllerErrorParser.getError(ex))
+                        .toString();
             }
 
-            return BindingResultHelper.getGlobalError("redirect:/pay_installment/index", ex);
+            return "redirect:/pay_installment/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
     @PostMapping("/searchLoan")
     public String searchLoanSubmit(@ModelAttribute LoanSearchInputDto loanSearchInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return BindingResultHelper.getInputValidationError("redirect:/pay_installment/index");
+            return "redirect:/pay_installment/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
-        var loanId = loanSearchInputDto.getLoanId();
-        if (loanId == null) {
-            return "redirect:/pay_installment/index";
-        }
-
-        return "redirect:/pay_installment/index?loan_id=" + loanId;
+        return "redirect:/pay_installment/index?loan_id=" + loanSearchInputDto.getLoanId();
     }
 
     @PostMapping("/calculateInstallments")
     public String calculateInstallments(@ModelAttribute PayInstallmentInputDto payInstallmentInputDto,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/pay_installment/index?error=Invalid+input+parameters";
+            return "redirect:/pay_installment/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         try {
-            var requestParams = RequestParamsBuilder.build(
-                    "loan_id", payInstallmentInputDto.getLoanId(),
-                    "installment_count", payInstallmentInputDto.getInstallmentCount());
+            return new RequestParamsBuilder("redirect:/pay_installment/index")
+                    .Add("loan_id", payInstallmentInputDto.getLoanId())
+                    .Add("installment_count", payInstallmentInputDto.getInstallmentCount())
+                    .toString();
 
-            return "redirect:/pay_installment/index" + requestParams;
-        } catch (BusinessException ex) {
-            return "redirect:/pay_installment/index?error=" + ex.getEncodedMessage();
-        } catch (Exception ex) {
-            return "redirect:/pay_installment/index?error=unhandled+error+occurred";
+        }catch (Exception ex) {
+            return "redirect:/pay_installment/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
@@ -161,35 +133,27 @@ public class PayInstallmentController {
     @PostMapping("/searchAccount")
     public String searchAccountSubmit(@ModelAttribute PayInstallmentInputDto payInstallmentInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return BindingResultHelper.getInputValidationError("redirect:/pay_installment/index");
-        }
-
-        var loanId = payInstallmentInputDto.getLoanId();
-        if (loanId == null) {
-            return BindingResultHelper.getInputValidationError("redirect:/pay_installment/index");
+            return "redirect:/pay_installment/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         var installmentCount = payInstallmentInputDto.getInstallmentCount();
         if (installmentCount == null) {
-            var requestParams = RequestParamsBuilder.build("loan_id", loanId);
-            return "redirect:/pay_installment/index" + requestParams;
+            return "redirect:/pay_installment/index?loan_id=" + payInstallmentInputDto.getLoanId();
         }
 
         var accountId = payInstallmentInputDto.getAccountId();
         if (accountId == null) {
-            var requestParams = RequestParamsBuilder.build(
-                    "loan_id", loanId,
-                    "installment_count", installmentCount);
-
-            return "redirect:/pay_installment/index" + requestParams;
+            return new RequestParamsBuilder("redirect:/pay_installment/index")
+                    .Add("loan_id", payInstallmentInputDto.getLoanId())
+                    .Add("installment_count", installmentCount)
+                    .toString();
         }
 
-        var requestParams = RequestParamsBuilder.build(
-                "loan_id", loanId,
-                "installment_count", installmentCount,
-                "account_id", accountId);
-
-        return "redirect:/pay_installment/index" + requestParams;
+        return new RequestParamsBuilder("redirect:/pay_installment/index")
+                .Add("loan_id", payInstallmentInputDto.getLoanId())
+                .Add("installment_count", installmentCount)
+                .Add("account_id", accountId)
+                .toString();
     }
 
     @PostMapping("/addTransaction")
@@ -197,13 +161,13 @@ public class PayInstallmentController {
                             BindingResult bindingResult,
                             Model model) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/pay_installment/index?error=Invalid+input+parameters";
+            return "redirect:/pay_installment/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         try {
             var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
             if (currentUserId == null) {
-                return BindingResultHelper.getIllegalAccessError("redirect:/pay_installment/index");
+                return  "redirect:/pay_installment/index?error=" + ControllerErrorParser.getIllegalAccessError();
             }
 
             _payInstallmentService.payInstallments(payInstallmentInputDto.getLoanId(),
@@ -214,12 +178,10 @@ public class PayInstallmentController {
         } catch (Exception ex) {
             model.addAttribute("loanSearchInputDto",
                     new LoanSearchInputDto(payInstallmentInputDto.getLoanId()));
-
             var installments = _installmentService
                     .loadInstallments(payInstallmentInputDto.getLoanId());
             model.addAttribute("installmentDtoList", installments);
-
-            BindingResultHelper.addGlobalError(bindingResult, ex);
+            ControllerErrorParser.setError(bindingResult, ex);
 
             return "pay_installment";
         }

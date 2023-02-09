@@ -1,6 +1,6 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.springframework.BindingResultHelper;
+import com.tosan.application.extensions.springframework.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.AccountSearchInputDto;
 import com.tosan.core_banking.services.AccountService;
@@ -25,28 +25,17 @@ public class LoanRequestController {
     }
 
     @GetMapping("/index")
-    public String loadForm(
-            @RequestParam(name = "account_id", required = false) String accountId,
-            Model model) {
+    public String loadForm(@RequestParam(name = "account_id", required = false) String accountId, Model model) {
+        var accountIdLong = ConvertorUtils.tryParseLong(accountId, null);
         try {
-            Long accountIdLong = null;
-            if (accountId != null) {
-                accountIdLong = ConvertorUtils.tryParseLong(accountId, -1L);
-                if (accountIdLong <= 0) {
-                    return BindingResultHelper.getInputValidationError("redirect:/loan_request/index");
-                }
-            }
-
             var loanDtoList = _loanService.loadLoans();
             model.addAttribute("loanDtoList", loanDtoList);
 
             if (accountIdLong == null) {
                 model.addAttribute("accountSearchInputDto", new AccountSearchInputDto());
                 model.addAttribute("loanDto", new LoanDto());
-
             } else {
                 model.addAttribute("accountSearchInputDto", new AccountSearchInputDto(accountIdLong));
-
                 var foundAccount = _accountService.loadCustomerAccount(accountIdLong);
                 var loanDto = new LoanDto();
                 loanDto.setAccountCustomerName(foundAccount.getCustomerName());
@@ -55,13 +44,12 @@ public class LoanRequestController {
                 loanDto.setAccountId(foundAccount.getId());
                 loanDto.setCurrency(foundAccount.getCurrency());
                 loanDto.setCustomerId(foundAccount.getCustomerId());
-
                 model.addAttribute("loanDto", loanDto);
             }
 
             return "loan_request";
         } catch (Exception ex) {
-           return BindingResultHelper.getGlobalError("redirect:/loan_request/index", ex);
+           return "redirect:/loan_request/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
@@ -69,7 +57,7 @@ public class LoanRequestController {
     public String loadFormById(@PathVariable String id, Model model) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return BindingResultHelper.getInputValidationError("redirect:/loan_request/index");
+            return "redirect:/loan_request/index?error=" + ControllerErrorParser.getInvalidArgumentError();
         }
 
         try {
@@ -85,28 +73,23 @@ public class LoanRequestController {
 
             return "loan_request";
         } catch (Exception ex) {
-            return BindingResultHelper.getGlobalError("redirect:/loan_request/index", ex);
+            return "redirect:/loan_request/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
     @PostMapping("/searchAccount")
     public String searchAccountSubmit(@ModelAttribute AccountSearchInputDto accountSearchInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return BindingResultHelper.getInputValidationError("redirect:/loan_request/index");
+            return "redirect:/loan_request/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
-        var accountId = accountSearchInputDto.getAccountId();
-        if (accountId == null) {
-            return "redirect:/loan_request/index";
-        }
-
-        return "redirect:/loan_request/index?account_id=" + accountId;
+        return "redirect:/loan_request/index?account_id=" + accountSearchInputDto.getAccountId();
     }
 
     @PostMapping("/addLoanRequest")
     public String addSubmit(@ModelAttribute LoanDto loanDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return BindingResultHelper.getInputValidationError("redirect:/loan_request/index");
+            return "redirect:/loan_request/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         try {
@@ -117,7 +100,7 @@ public class LoanRequestController {
             var loanDtoList = _loanService.loadLoans();
             model.addAttribute("loanDtoList", loanDtoList);
             model.addAttribute("accountSearchInputDto", new AccountSearchInputDto(loanDto.getAccountId()));
-            BindingResultHelper.addGlobalError(bindingResult, ex);
+            ControllerErrorParser.setError(bindingResult, ex);
 
             return "loan_request";
         }
@@ -127,7 +110,7 @@ public class LoanRequestController {
     public String deleteSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-           return BindingResultHelper.getInputValidationError("redirect:/loan_request/index");
+           return "redirect:/loan_request/index?error=" + ControllerErrorParser.getInvalidArgumentError();
         }
 
         try {
@@ -135,7 +118,7 @@ public class LoanRequestController {
 
             return "redirect:/loan_request/index";
         } catch (Exception ex) {
-            return BindingResultHelper.getGlobalError("redirect:/loan_request/index", ex);
+            return "redirect:/loan_request/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
@@ -143,7 +126,7 @@ public class LoanRequestController {
     public String editSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-           return BindingResultHelper.getInputValidationError("redirect:/loan_request/index");
+            return "redirect:/loan_request/index?error=" + ControllerErrorParser.getInvalidArgumentError();
         }
 
         return "redirect:/loan_request/index/" + idLong;

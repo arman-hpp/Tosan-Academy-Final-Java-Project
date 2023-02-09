@@ -1,5 +1,6 @@
 package com.tosan.application.controllers;
 
+import com.tosan.application.extensions.springframework.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.services.AuthenticationService;
 import org.springframework.stereotype.Controller;
@@ -19,8 +20,12 @@ public class ProfileController {
 
     @GetMapping("/index")
     public String loadForm(Model model) {
-        var userDto = _authenticationService.loadCurrentUser();
-        model.addAttribute("userDto", userDto);
+        try {
+            var userDto = _authenticationService.loadCurrentUser();
+            model.addAttribute("userDto", userDto);
+        } catch (Exception ex) {
+            return "redirect:/profile/index?error=" + ControllerErrorParser.getError(ex);
+        }
 
         return "profile";
     }

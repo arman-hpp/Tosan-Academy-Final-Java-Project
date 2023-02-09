@@ -1,6 +1,6 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.springframework.BindingResultHelper;
+import com.tosan.application.extensions.springframework.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.services.AuthenticationService;
 import com.tosan.loan.dtos.InstallmentDto;
@@ -37,42 +37,32 @@ public class LoanContractController {
     }
 
     @GetMapping("/index")
-    public String loadForm(
-            @RequestParam(name = "loan_id", required = false) String loanId,
-            Model model) {
-        try {
-            Long loanIdLong = null;
-            if (loanId != null) {
-                loanIdLong = ConvertorUtils.tryParseLong(loanId, -1L);
-                if (loanIdLong <= 0) {
-                    return BindingResultHelper.getInputValidationError("redirect:/loan_contract/index");
-                }
-            }
+    public String loadForm(@RequestParam(name = "loan_id", required = false) String loanId, Model model) {
+        var loanIdLong = ConvertorUtils.tryParseLong(loanId, null);
 
+        try {
             if (loanIdLong == null) {
                 model.addAttribute("loanSearchInputDto", new LoanSearchInputDto());
                 model.addAttribute("loanDto", new LoanDto());
                 model.addAttribute("installmentDtoList", new ArrayList<InstallmentDto>());
             } else {
                 model.addAttribute("loanSearchInputDto", new LoanSearchInputDto(loanIdLong));
-
                 var loanDto = _loanService.loadLoan(loanIdLong);
                 model.addAttribute("loanDto", loanDto);
-
                 var installments = _installmentService.loadInstallments(loanIdLong);
                 model.addAttribute("installmentDtoList", installments);
             }
 
             return "loan_contract";
         } catch (Exception ex) {
-            return BindingResultHelper.getGlobalError("redirect:/loan_contract/index", ex);
+            return "redirect:/loan_contract/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
     @PostMapping("/searchLoan")
     public String searchLoanSubmit(@ModelAttribute LoanSearchInputDto loanSearchInputDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return BindingResultHelper.getInputValidationError("redirect:/loan_contract/index");
+            return "redirect:/loan_contract/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         var loanId = loanSearchInputDto.getLoanId();
@@ -86,13 +76,13 @@ public class LoanContractController {
     @PostMapping("/depositLoan")
     public String depositSubmit(@ModelAttribute LoanDto loanDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return BindingResultHelper.getInputValidationError("redirect:/loan_contract/index");
+            return "redirect:/loan_contract/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         try {
             var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
             if(currentUserId == null){
-                return BindingResultHelper.getIllegalAccessError("redirect:/loan_contract/index");
+                return "redirect:/loan_contract/index?error=" + ControllerErrorParser.getIllegalAccessError();
             }
 
             _depositLoanService.depositLoan(currentUserId, loanDto.getId());
@@ -102,7 +92,8 @@ public class LoanContractController {
             var installments = _installmentService.loadInstallments(loanDto.getId());
             model.addAttribute("installmentDtoList", installments);
             model.addAttribute("loanSearchInputDto", new LoanSearchInputDto(loanDto.getId()));
-            BindingResultHelper.addGlobalError(bindingResult, ex);
+
+            ControllerErrorParser.setError(bindingResult, ex);
 
             return "loan_contract";
         }

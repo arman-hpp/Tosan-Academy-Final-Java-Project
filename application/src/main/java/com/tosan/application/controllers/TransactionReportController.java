@@ -50,7 +50,6 @@ public class TransactionReportController {
         var currentDateTime = LocalDateTime.now().format(dateFormatter);
         var exportType = ExportTypes.valueOf(transactionReportInputDto.getExportType());
 
-
         String headerKey = "Content-Disposition";
         String headerValue =
                 "attachment; filename=transactions_" +
@@ -69,6 +68,7 @@ public class TransactionReportController {
         }
         catch (IOException | InterruptedException | ExecutionException e) {
              // ignore
+            //TODO: response.sendRedirect();
         }
     }
 }

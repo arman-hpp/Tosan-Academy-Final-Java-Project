@@ -1,7 +1,7 @@
 package com.tosan.application.controllers;
 
+import com.tosan.application.extensions.springframework.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
-import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.LoanConditionsDto;
 import com.tosan.loan.services.LoanConditionsService;
 import com.tosan.model.Currencies;
@@ -38,17 +38,15 @@ public class LoanConditionsController {
             }
 
             return "loan_condition";
-        } catch (BusinessException ex) {
-            return "redirect:/loan_condition/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/loan_condition/index?error=unhandled+error+occurred";
+            return "redirect:/loan_condition/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 
     @PostMapping("/searchCurrency")
     public String searchCurrencySubmit(@ModelAttribute LoanConditionsDto loanConditionsDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/loan_condition/index?error=Invalid+input+parameters";
+            return "redirect:/loan_condition/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         var currency =loanConditionsDto.getCurrency();
@@ -62,17 +60,15 @@ public class LoanConditionsController {
     @PostMapping("/editLoanConditions")
     public String editSubmit(@ModelAttribute LoanConditionsDto loanConditionsDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "redirect:/loan_condition/index?error=Invalid+input+parameters";
+            return "redirect:/loan_condition/index?error=" + ControllerErrorParser.getError(bindingResult);
         }
 
         try {
             _loanConditionsService.editLoanConditions(loanConditionsDto);
 
             return "redirect:/loan_condition/index?currency=" + loanConditionsDto.getCurrency().toString();
-        } catch (BusinessException ex) {
-            return "redirect:/loan_condition/index?error=" + ex.getEncodedMessage();
         } catch (Exception ex) {
-            return "redirect:/loan_condition/index?error=unhandled+error+occurred";
+            return "redirect:/loan_condition/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
 }
