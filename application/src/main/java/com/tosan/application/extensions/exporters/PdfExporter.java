@@ -5,12 +5,14 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.scheduling.annotation.Async;
 
 import java.io.IOException;
 import java.util.List;
 
-public class PdfExporter {
-    public static <T> void export(HttpServletResponse response, Class<T> clazz, List<T> list) throws IOException {
+public class PdfExporter implements IExporter {
+    @Async
+    public <T> void export(HttpServletResponse response, Class<T> clazz, List<T> list) throws IOException {
         var fields = clazz.getDeclaredFields();
 
         var outputStream = response.getOutputStream();

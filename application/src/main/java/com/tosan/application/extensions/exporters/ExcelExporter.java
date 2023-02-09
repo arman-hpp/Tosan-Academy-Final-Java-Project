@@ -4,14 +4,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.scheduling.annotation.Async;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public final class ExcelExporter {
-    public static <T> void export(HttpServletResponse response, Class<T> clazz, List<T> list) throws IOException {
+public class ExcelExporter implements IExporter {
+    @Async
+    public <T> void export(HttpServletResponse response, Class<T> clazz, List<T> list) throws IOException {
         var workbook = new XSSFWorkbook();
         var sheet = workbook.createSheet(clazz.getName());
 

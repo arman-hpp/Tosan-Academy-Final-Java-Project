@@ -1,6 +1,6 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.exporters.Exporter;
+import com.tosan.application.extensions.exporters.IExporterFactory;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.TransactionDto;
 import com.tosan.core_banking.dtos.TransactionReportInputDto;
@@ -17,15 +17,18 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ExecutionException;
 
 @Controller
 @RequestMapping("/transaction_report")
 @Layout(title = "Transactions Report", value = "layouts/default")
 public class TransactionReportController {
     private final TransactionService _transactionService;
+    private final IExporterFactory _exporterFactory;
 
-    public TransactionReportController(TransactionService transactionService) {
+    public TransactionReportController(TransactionService transactionService, IExporterFactory exporterFactory) {
         _transactionService = transactionService;
+        _exporterFactory = exporterFactory;
     }
 
     @GetMapping("/index")
@@ -51,16 +54,17 @@ public class TransactionReportController {
                 transactionReportInputDto.getExportType().getFileExtension();
         response.setHeader(headerKey, headerValue);
 
-        var transactionDtoList = _transactionService
+        var future = _transactionService
                 .loadTransactions(transactionReportInputDto.getFromDate(), transactionReportInputDto.getToDate());
 
         try {
-            Exporter.export(transactionReportInputDto.getExportType(), response, TransactionDto.class, transactionDtoList);
+            var transactionDtoList = future.get();
 
-         //   return "transaction_report";
+            var exporter = _exporterFactory.CreateExporter(transactionReportInputDto.getExportType());
+            exporter.export(response, TransactionDto.class, transactionDtoList);
         }
-        catch (IOException e) {
-         //   return "redirect:/transaction_report/index?error=unhandled+error+occurred";
+        catch (IOException | InterruptedException | ExecutionException e) {
+             // ignore
         }
     }
 }
