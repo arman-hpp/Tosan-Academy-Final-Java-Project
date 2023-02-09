@@ -42,6 +42,7 @@ The Application module includes Service Implementation modules (core_banking and
 * [H2 Database Engine](https://mvnrepository.com/artifact/com.h2database/h2)
 * [Apache POI Common](https://mvnrepository.com/artifact/org.apache.poi/poi)
 * [Apache Commons CSV](https://mvnrepository.com/artifact/org.apache.commons/commons-csv)
+* [IText Core](https://mvnrepository.com/artifact/com.itextpdf/itextpdf)
 
 ### Installation
 * `git clone https://github.com/arman-arian/Tosan-Academy-Final-Java-Project.git`

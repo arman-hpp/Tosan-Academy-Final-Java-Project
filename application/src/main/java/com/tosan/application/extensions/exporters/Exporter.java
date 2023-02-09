@@ -12,6 +12,8 @@ public class Exporter {
             ExcelExporter.export(response, clazz, list);
         } else if (exportTypes == ExportTypes.CSV) {
             CsvExporter.export(response, clazz, list);
+        } else if (exportTypes == ExportTypes.PDF) {
+            PdfExporter.export(response, clazz, list);
         }
     }
 }

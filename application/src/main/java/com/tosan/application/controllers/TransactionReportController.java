@@ -1,13 +1,11 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.exporters.CsvExporter;
-import com.tosan.application.extensions.exporters.ExcelExporter;
 import com.tosan.application.extensions.exporters.Exporter;
-import com.tosan.model.ExportTypes;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.TransactionDto;
 import com.tosan.core_banking.dtos.TransactionReportInputDto;
 import com.tosan.core_banking.services.TransactionService;
+import com.tosan.model.ExportTypes;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 
 @Controller
 @RequestMapping("/transaction_report")
@@ -32,8 +30,8 @@ public class TransactionReportController {
 
     @GetMapping("/index")
     public String loadForm(Model model) {
-        var fromDateTime = LocalDateTime.now().minusYears(1).withHour(0).withMinute(0).withSecond(1);
-        var toDateTime = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
+        var fromDateTime = LocalDateTime.now().minusYears(1).toLocalDate().atTime(LocalTime.MIN);
+        var toDateTime = LocalDateTime.now().toLocalDate().atTime(LocalTime.MAX);
         model.addAttribute("transactionReportInputDto", new TransactionReportInputDto(fromDateTime, toDateTime, ExportTypes.CSV));
         return "transaction_report";
     }
@@ -58,9 +56,11 @@ public class TransactionReportController {
 
         try {
             Exporter.export(transactionReportInputDto.getExportType(), response, TransactionDto.class, transactionDtoList);
+
+         //   return "transaction_report";
         }
         catch (IOException e) {
-            // ignore
+         //   return "redirect:/transaction_report/index?error=unhandled+error+occurred";
         }
     }
 }

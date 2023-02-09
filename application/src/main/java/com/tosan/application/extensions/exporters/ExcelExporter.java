@@ -59,6 +59,7 @@ public final class ExcelExporter {
         workbook.write(outputStream);
         workbook.close();
 
+        outputStream.flush();
         outputStream.close();
     }
 
