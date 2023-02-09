@@ -1,5 +1,6 @@
 package com.tosan.loan.services;
 
+import com.tosan.core_banking.services.AccountService;
 import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.LoanDto;
 import com.tosan.loan.dtos.LoanInterestStatisticsDto;
@@ -10,11 +11,13 @@ import com.tosan.model.Loan;
 import com.tosan.repository.InstallmentRepository;
 import com.tosan.repository.LoanRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class LoanService {
@@ -22,24 +25,26 @@ public class LoanService {
     private final InstallmentRepository _installmentRepository;
     private final ILoanValidator _loanValidator;
     private final LoanConditionsService _loanConditionsService;
+    private final AccountService _accountService;
     private final ModelMapper _modelMapper;
 
     public LoanService(LoanRepository loanRepository,
                        InstallmentRepository installmentRepository,
                        ILoanValidator loanValidator,
                        LoanConditionsService loanConditionsService,
-                       ModelMapper modelMapper) {
+                       AccountService accountService, ModelMapper modelMapper) {
         _loanRepository = loanRepository;
         _installmentRepository = installmentRepository;
         _loanValidator = loanValidator;
-        _loanConditionsService= loanConditionsService;
+        _loanConditionsService = loanConditionsService;
+        _accountService = accountService;
         _modelMapper = modelMapper;
     }
 
     public List<LoanDto> loadLoans() {
         var loans = _loanRepository.findLoanWithDetails();
         var loanDtoList = new ArrayList<LoanDto>();
-        for(var loan : loans) {
+        for (var loan : loans) {
             var loanDto = _modelMapper.map(loan, LoanDto.class);
             var account = loan.getAccount();
             var customer = loan.getCustomer();
@@ -59,8 +64,10 @@ public class LoanService {
     public List<LoanDto> loadLoansByCustomerId(Long customerId) {
         var loans = _loanRepository.findByCustomerIdOrderByRequestDate(customerId);
         var loanDtoList = new ArrayList<LoanDto>();
-        for(var loan : loans) {
-            loanDtoList.add(_modelMapper.map(loan, LoanDto.class));
+        for (var loan : loans) {
+            var loanDto = _modelMapper.map(loan, LoanDto.class);
+            loanDto.setAccountId(loan.getAccount().getId());
+            loanDtoList.add(loanDto);
         }
 
         return loanDtoList;
@@ -69,7 +76,7 @@ public class LoanService {
     public List<LoanDto> loadLoansByAccountId(Long accountId) {
         var loans = _loanRepository.findByAccountIdOrderByRequestDate(accountId);
         var loanDtoList = new ArrayList<LoanDto>();
-        for(var loan : loans) {
+        for (var loan : loans) {
             loanDtoList.add(_modelMapper.map(loan, LoanDto.class));
         }
 
@@ -78,7 +85,7 @@ public class LoanService {
 
     public LoanDto loadLoan(Long loanId) {
         var loan = _loanRepository.findLoanByIdWithDetails(loanId).orElse(null);
-        if(loan == null)
+        if (loan == null)
             throw new BusinessException("can not find the loan");
 
         var loanDto = _modelMapper.map(loan, LoanDto.class);
@@ -98,6 +105,11 @@ public class LoanService {
         _loanValidator.validate(loanConditionsDto, loanDto);
 
         var loan = _modelMapper.map(loanDto, Loan.class);
+
+        var bankAccount = _accountService.loadBankAccount(loan.getCurrency());
+        if (bankAccount.getBalance().compareTo(loan.getAmount()) < 0)
+            throw new BusinessException("bank account balance is not enough!");
+
         loan.setCustomer(new Customer(loanDto.getCustomerId()));
         loan.setAccount(new Account(loanDto.getAccountId()));
         loan.setRequestDate(LocalDateTime.now());
@@ -112,10 +124,10 @@ public class LoanService {
         _loanValidator.validate(loanConditionsDto, loanDto);
 
         var loan = _loanRepository.findById(loanDto.getId()).orElse(null);
-        if(loan == null)
+        if (loan == null)
             throw new BusinessException("can not find the loan");
 
-        if(loan.getPaid())
+        if (loan.getPaid())
             throw new BusinessException("the loan has been paid and it cannot be edit");
 
         loan.setRefundDuration(loanDto.getRefundDuration());
@@ -127,32 +139,32 @@ public class LoanService {
     }
 
     public void addOrEditLoan(LoanDto loanDto) {
-        if(loanDto.getId()  == null || loanDto.getId() <= 0) {
+        if (loanDto.getId() == null || loanDto.getId() <= 0) {
             addLoan(loanDto);
-        }
-        else {
+        } else {
             editLoan(loanDto);
         }
     }
 
     public void removeLoan(Long loanId) {
         var loan = _loanRepository.findById(loanId).orElse(null);
-        if(loan == null)
+        if (loan == null)
             throw new BusinessException("can not find the loan");
 
-        if(loan.getPaid())
+        if (loan.getPaid())
             throw new BusinessException("can not remove the loan, because it deposited already");
 
         _loanRepository.delete(loan);
     }
 
-    public List<LoanInterestStatisticsDto> loadLoanSumInterests(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
+    @Async
+    public CompletableFuture<List<LoanInterestStatisticsDto>> loadLoanSumInterests(LocalDateTime fromDateTime, LocalDateTime toDateTime) {
         var loanInterestStatistics = _installmentRepository.sumTotalInterests(fromDateTime, toDateTime);
         var loanInterestStatisticsDtoList = new ArrayList<LoanInterestStatisticsDto>();
-        for(var loanInterestStatistic : loanInterestStatistics) {
+        for (var loanInterestStatistic : loanInterestStatistics) {
             loanInterestStatisticsDtoList.add(_modelMapper.map(loanInterestStatistic, LoanInterestStatisticsDto.class));
         }
 
-        return loanInterestStatisticsDtoList;
+        return CompletableFuture.completedFuture(loanInterestStatisticsDtoList);
     }
 }

@@ -8,11 +8,13 @@ import com.tosan.repository.*;
 import com.tosan.utils.*;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class TransactionService {
@@ -37,9 +39,10 @@ public class TransactionService {
         return mapToTransactionDtoList((List<Transaction>) transactions);
     }
 
-    public List<TransactionDto> loadTransactions(LocalDateTime fromDate, LocalDateTime toDate) {
+    @Async
+    public CompletableFuture<List<TransactionDto>> loadTransactions(LocalDateTime fromDate, LocalDateTime toDate) {
         var transactions = _transactionRepository.findByRegDateWithDetails(fromDate, toDate);
-        return mapToTransactionDtoList(transactions);
+        return CompletableFuture.completedFuture(mapToTransactionDtoList(transactions));
     }
 
     public TransactionDto loadTransactionByTraceNo(String traceNo) {
