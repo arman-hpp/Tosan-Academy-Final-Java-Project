@@ -40,7 +40,7 @@ public class CustomerAccountController {
                 model.addAttribute("accountDtoList", new ArrayList<AccountDto>());
             } else {
                 model.addAttribute("customerSearchInputDto", new CustomerSearchInputDto(customerIdLong));
-                var accountDtoList = _accountService.loadCustomerAccount(customerIdLong);
+                var accountDtoList = _accountService.loadCustomerAccounts(customerIdLong);
                 model.addAttribute("accountDtoList", accountDtoList);
             }
 
