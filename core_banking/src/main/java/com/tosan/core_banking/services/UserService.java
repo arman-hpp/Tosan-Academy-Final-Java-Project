@@ -4,7 +4,7 @@ import com.tosan.core_banking.dtos.UserChangePasswordInputDto;
 import com.tosan.core_banking.dtos.UserDto;
 import com.tosan.core_banking.dtos.UserLoginInputDto;
 import com.tosan.core_banking.dtos.UserRegisterInputDto;
-import com.tosan.exceptions.BusinessException;
+import com.tosan.model.DomainException;
 import com.tosan.model.User;
 import com.tosan.model.UserTypes;
 import com.tosan.repository.UserRepository;
@@ -28,7 +28,7 @@ public class UserService {
     public UserDto loadUser(Long userId) {
         var user = _userRepository.findById(userId).orElse(null);
         if(user == null)
-            throw new BusinessException("can not find the user");
+            throw new DomainException("error.auth.notFound");
 
         return _modelMapper.map(user, UserDto.class);
     }
@@ -46,7 +46,7 @@ public class UserService {
     public void removeUser(Long userId) {
         var user = _userRepository.findById(userId).orElse(null);
         if(user == null)
-            throw new BusinessException("can not find the user");
+            throw new DomainException("error.auth.notFound");
 
         _userRepository.delete(user);
     }
@@ -57,12 +57,12 @@ public class UserService {
     }
 
     public void editUser(UserDto userDto) {
-        var customer = _userRepository.findById(userDto.getId()).orElse(null);
-        if(customer == null)
-            throw new BusinessException("can not find the customer");
+        var user = _userRepository.findById(userDto.getId()).orElse(null);
+        if(user == null)
+            throw new DomainException("error.auth.notFound");
 
-        _modelMapper.map(userDto, customer);
-        _userRepository.save(customer);
+        _modelMapper.map(userDto, user);
+        _userRepository.save(user);
     }
 
     public void addOrEditUser(UserDto userDto) {
@@ -77,15 +77,15 @@ public class UserService {
     public void login(UserLoginInputDto userLoginInputDto) {
         var user = _userRepository.findByUsername(userLoginInputDto.getUsername()).orElse(null);
         if(user == null)
-            throw new BusinessException("user not found!");
+            throw new DomainException("error.auth.notFound");
 
         if (!Objects.equals(user.getPassword(), userLoginInputDto.getPassword()))
-            throw new BusinessException("username or password is invalid");
+            throw new DomainException("error.auth.credentials.invalid");
     }
 
     public void register(UserRegisterInputDto userRegisterInputDto) {
         if(_userRepository.findByUsername(userRegisterInputDto.getUsername()).orElse(null) != null)
-            throw new BusinessException("the user is exists. choose new username");
+            throw new DomainException("error.auth.username.duplicate");
 
         var user = _modelMapper.map(userRegisterInputDto, User.class);
         user.setUserType(UserTypes.User);
@@ -95,10 +95,10 @@ public class UserService {
     public void changePassword(UserChangePasswordInputDto userChangePasswordInputDto) {
         var user = _userRepository.findByUsername(userChangePasswordInputDto.getUsername()).orElse(null);
         if(user == null)
-            throw new BusinessException("user not found!");
+            throw new DomainException("error.auth.notFound");
 
         if (!Objects.equals(user.getPassword(), userChangePasswordInputDto.getOldPassword()))
-            throw new BusinessException("password is invalid");
+            throw new DomainException("error.auth.credentials.invalid");
 
         user.setPassword(userChangePasswordInputDto.getNewPassword());
         _userRepository.save(user);
@@ -107,7 +107,7 @@ public class UserService {
     public Boolean isAdmin(Long userId) {
         var user = _userRepository.findById(userId).orElse(null);
         if(user == null)
-            throw new BusinessException("user not found!");
+            throw new DomainException("error.auth.notFound");
 
         return user.getUserType() == UserTypes.Administrator;
     }

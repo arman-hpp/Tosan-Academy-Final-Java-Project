@@ -7,7 +7,7 @@
 <body>
     <div th:fragment="content">
         <div th:if="${param.error}" class="alert alert-danger" role="alert">
-            <strong><span th:text="${param.error}"></span></strong>
+            <strong><span th:text="#{${param.error}}"></span></strong>
         </div>
 
         <form action="#" th:action="@{/loan_request/searchAccount}" th:object="${accountSearchInputDto}" method="post">
@@ -83,7 +83,7 @@
             <div th:if="${#fields.hasErrors('global')}" class="row row-cols-1 row-cols-sm-2 row-cols-md-8 g-4 mb-3">
                 <div class="col-8">
                     <div class="alert alert-danger" role="alert">
-                        <strong><span th:each="err : ${#fields.errors('global')}" th:text="${err}"></span></strong>
+                        <strong><span th:each="err : ${#fields.errors('global')}" th:text="#{${err}}"></span></strong>
                     </div>
                 </div>
             </div>

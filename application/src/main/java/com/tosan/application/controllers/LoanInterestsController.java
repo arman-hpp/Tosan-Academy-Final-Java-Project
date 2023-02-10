@@ -1,6 +1,6 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.springframework.ControllerErrorParser;
+import com.tosan.application.extensions.errors.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.loan.dtos.LoanInterestSearchDto;
 import com.tosan.loan.services.LoanService;

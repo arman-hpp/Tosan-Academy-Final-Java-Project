@@ -34,7 +34,7 @@
             </div>
             <button type="submit" class="btn btn-outline-success btn-block mb-4">Sign Up</button>
             <div th:if="${#fields.hasErrors('global')}" class="alert alert-danger">
-                <strong><span th:each="err : ${#fields.errors('global')}" th:text="${err}"></span></strong>
+                <strong><span th:each="err : ${#fields.errors('global')}" th:text="#{${err}}"></span></strong>
             </div>
             <div th:if="${param.error}" class="alert alert-danger" role="alert">
                 <strong><span th:text="${param.error}"></span></strong>

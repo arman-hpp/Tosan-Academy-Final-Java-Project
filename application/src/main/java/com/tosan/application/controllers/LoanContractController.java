@@ -1,6 +1,7 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.springframework.ControllerErrorParser;
+import com.tosan.application.extensions.errors.ControllerDefaultErrors;
+import com.tosan.application.extensions.errors.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.services.AuthenticationService;
 import com.tosan.loan.dtos.InstallmentDto;
@@ -82,7 +83,7 @@ public class LoanContractController {
         try {
             var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
             if(currentUserId == null){
-                return "redirect:/loan_contract/index?error=" + ControllerErrorParser.getIllegalAccessError();
+                return "redirect:/loan_contract/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
             }
 
             _depositLoanService.depositLoan(currentUserId, loanDto.getId());

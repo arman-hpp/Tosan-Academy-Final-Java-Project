@@ -1,6 +1,6 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.springframework.ControllerErrorParser;
+import com.tosan.application.extensions.errors.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.CustomerSearchInputDto;
 import com.tosan.loan.dtos.LoanDto;

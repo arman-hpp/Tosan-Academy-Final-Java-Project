@@ -1,8 +1,8 @@
 package com.tosan.loan.services;
 
-import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.LoanConditionsDto;
 import com.tosan.model.Currencies;
+import com.tosan.model.DomainException;
 import com.tosan.model.LoanCondition;
 import com.tosan.repository.LoanConditionsRepository;
 import org.modelmapper.ModelMapper;
@@ -26,7 +26,7 @@ public class LoanConditionsService {
         var loanConditions = _loanConditionsRepository
                 .findTop1ByCurrencyAndExpireDateIsNullOrderByStartDateDesc(currency).orElse(null);
         if(loanConditions == null)
-            throw new BusinessException("can not find the active loan configuration");
+            throw new DomainException("error.loan.conditions.notFound");
 
         return _modelMapper.map(loanConditions, LoanConditionsDto.class);
     }
@@ -35,7 +35,7 @@ public class LoanConditionsService {
     public void editLoanConditions(LoanConditionsDto loanConditionsDto) {
         var currentLoanConfigs = _loanConditionsRepository.findById(loanConditionsDto.getId()).orElse(null);
         if(currentLoanConfigs == null)
-            throw new BusinessException("can not find the active loan configuration");
+            throw new DomainException("error.loan.conditions.notFound");
 
         currentLoanConfigs.setExpireDate(LocalDateTime.now());
 

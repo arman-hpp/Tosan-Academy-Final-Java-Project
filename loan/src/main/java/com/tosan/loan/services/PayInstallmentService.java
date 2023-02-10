@@ -3,7 +3,7 @@ package com.tosan.loan.services;
 import com.tosan.core_banking.dtos.TransferDto;
 import com.tosan.core_banking.services.AccountService;
 import com.tosan.core_banking.services.TransactionService;
-import com.tosan.exceptions.BusinessException;
+import com.tosan.model.DomainException;
 import com.tosan.model.Installment;
 import com.tosan.repository.InstallmentRepository;
 import org.springframework.stereotype.Service;
@@ -28,13 +28,13 @@ public class PayInstallmentService {
 
     public BigDecimal sumNonPaidInstallment(Long loanId, Integer payInstallmentCount) {
         if (payInstallmentCount <= 0)
-            throw new BusinessException("installment count is not valid");
+            throw new DomainException("error.loan.installments.count.invalid");
 
         var installments = _installmentRepository
                 .findTopCountByLoanIdAndPaidOrderByInstallmentNo(payInstallmentCount, loanId, false);
 
         if(payInstallmentCount > installments.size())
-            throw new BusinessException("installment count is bigger than loan not paid installments");
+            throw new DomainException("error.loan.installments.count.excess");
 
         return installments.stream()
                 .map(Installment::getPaymentAmount)
@@ -44,10 +44,13 @@ public class PayInstallmentService {
     @Transactional
     public void payInstallments(Long loanId, Long accountId, Long userId, Integer payInstallmentCount) {
         if(payInstallmentCount <= 0)
-            throw new BusinessException("installment count is not valid");
+            throw new DomainException("error.loan.installments.count.invalid");
 
         var installments = _installmentRepository
                 .findTopCountByLoanIdAndPaidOrderByInstallmentNo(payInstallmentCount, loanId, false);
+
+        if(payInstallmentCount > installments.size())
+            throw new DomainException("error.loan.installments.count.excess");
 
         var sumInstallmentsAmount = installments.stream()
                 .map(Installment::getPaymentAmount)

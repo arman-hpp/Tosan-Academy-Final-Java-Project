@@ -10,8 +10,10 @@ import com.tosan.loan.services.AmortizationLoanCalculator;
 import com.tosan.loan.services.DefaultLoanValidator;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @Configuration
 public class ApplicationBeanConfiguration {
@@ -20,6 +22,7 @@ public class ApplicationBeanConfiguration {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT);
+
         return mapper;
     }
 
@@ -41,5 +44,14 @@ public class ApplicationBeanConfiguration {
     @Bean
     public IExporterFactory exporterFactory() {
         return new ExporterFactory();
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        var messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasenames("classpath:/messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        messageSource.setCacheSeconds(30);
+        return messageSource;
     }
 }

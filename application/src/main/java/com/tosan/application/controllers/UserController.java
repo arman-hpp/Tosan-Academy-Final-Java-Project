@@ -1,6 +1,7 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.springframework.ControllerErrorParser;
+import com.tosan.application.extensions.errors.ControllerDefaultErrors;
+import com.tosan.application.extensions.errors.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.UserDto;
 import com.tosan.core_banking.services.AuthenticationService;
@@ -40,7 +41,7 @@ public class UserController {
     public String loadFormById(@PathVariable String id, Model model) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/user/index?error=" + ControllerErrorParser.getInvalidArgumentError();
+            return "redirect:/user/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.InvalidInputParameters);
         }
 
         try {
@@ -75,16 +76,16 @@ public class UserController {
     public String deleteSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/user/index?error=" + ControllerErrorParser.getInvalidArgumentError();
+            return "redirect:/user/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.InvalidInputParameters);
         }
 
         var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
         if(currentUserId == null){
-            return "redirect:/user/index?error=" + ControllerErrorParser.getIllegalAccessError();
+            return "redirect:/user/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
         }
 
         if(idLong.equals(currentUserId)) {
-            return "redirect:/user/index?error=" + ControllerErrorParser.getIllegalAccessError();
+            return "redirect:/user/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
         }
 
         try {
@@ -100,17 +101,17 @@ public class UserController {
     public String editSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/user/index?error=" + ControllerErrorParser.getInvalidArgumentError();
+            return "redirect:/user/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.InvalidInputParameters);
         }
 
         try {
             var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
             if(currentUserId == null){
-                return "redirect:/user/index?error=" + ControllerErrorParser.getIllegalAccessError();
+                return "redirect:/user/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
             }
 
             if(idLong.equals(currentUserId)) {
-                return "redirect:/user/index?error=" + ControllerErrorParser.getIllegalAccessError();
+                return "redirect:/user/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
             }
 
             return "redirect:/user/index/" + idLong;

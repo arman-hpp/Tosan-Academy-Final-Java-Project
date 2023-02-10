@@ -3,6 +3,7 @@ package com.tosan.application.controllers;
 import com.tosan.application.extensions.exporters.ExportTypes;
 import com.tosan.application.extensions.exporters.IExporterFactory;
 import com.tosan.application.extensions.thymeleaf.Layout;
+import com.tosan.application.extensions.errors.ControllerErrorParser;
 import com.tosan.core_banking.dtos.TransactionDto;
 import com.tosan.core_banking.dtos.TransactionReportInputDto;
 import com.tosan.core_banking.services.TransactionService;
@@ -66,9 +67,12 @@ public class TransactionReportController {
             var exporter = _exporterFactory.CreateExporter(exportType);
             exporter.export(response, TransactionDto.class, transactionDtoList);
         }
-        catch (IOException | InterruptedException | ExecutionException e) {
-             // ignore
-            //TODO: response.sendRedirect();
+        catch (IOException | InterruptedException | ExecutionException ex) {
+             try {
+                 response.sendRedirect("/transaction_report/index?error=" + ControllerErrorParser.getError(ex));
+             } catch (IOException innerEx) {
+                // ignore
+             }
         }
     }
 }

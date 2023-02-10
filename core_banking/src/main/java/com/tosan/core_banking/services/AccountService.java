@@ -1,11 +1,7 @@
 package com.tosan.core_banking.services;
 
 import com.tosan.core_banking.dtos.AccountDto;
-import com.tosan.exceptions.BusinessException;
-import com.tosan.model.Account;
-import com.tosan.model.AccountTypes;
-import com.tosan.model.Currencies;
-import com.tosan.model.Customer;
+import com.tosan.model.*;
 import com.tosan.repository.AccountRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -41,7 +37,7 @@ public class AccountService {
     public AccountDto loadAccount(Long accountId) {
         var account = _accountRepository.findFromAllAccountWithDetails(accountId).orElse(null);
         if(account == null)
-            throw new BusinessException("can not find the account");
+            throw new DomainException("error.account.notFound");
 
         var accountDto = _modelMapper.map(account, AccountDto.class);
 
@@ -57,7 +53,7 @@ public class AccountService {
     public AccountDto loadCustomerAccount(Long accountId) {
         var account = _accountRepository.findAccountWithDetails(accountId).orElse(null);
         if(account == null)
-            throw new BusinessException("can not find the account");
+            throw new DomainException("error.account.notFound");
 
         var accountDto = _modelMapper.map(account, AccountDto.class);
 
@@ -81,7 +77,7 @@ public class AccountService {
     public AccountDto loadBankAccount(Currencies currency) {
         var account = _accountRepository.findByAccountTypeAndCurrency(AccountTypes.BankAccount, currency).orElse(null);
         if(account == null)
-            throw new BusinessException("can not find the bank account");
+            throw new DomainException("error.account.notFound");
 
         return _modelMapper.map(account, AccountDto.class);
     }
@@ -98,7 +94,7 @@ public class AccountService {
 
     public void addAccount(AccountDto accountDto) {
         if(accountDto.getCustomerId() == null) {
-            throw new BusinessException("please select a customer to open the account");
+            throw new DomainException("error.account.notCustomerFound");
         }
 
         var account = _modelMapper.map(accountDto, Account.class);

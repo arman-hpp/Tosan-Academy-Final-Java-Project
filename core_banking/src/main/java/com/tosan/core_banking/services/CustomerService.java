@@ -1,8 +1,8 @@
 package com.tosan.core_banking.services;
 
 import com.tosan.core_banking.dtos.CustomerDto;
-import com.tosan.exceptions.BusinessException;
 import com.tosan.model.Customer;
+import com.tosan.model.DomainException;
 import com.tosan.repository.CustomerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class CustomerService {
     public CustomerDto loadCustomer(Long customerId) {
         var customer = _customerRepository.findById(customerId).orElse(null);
         if(customer == null)
-            throw new BusinessException("can not find the customer");
+            throw new DomainException("error.customer.notFound");
 
         return _modelMapper.map(customer, CustomerDto.class);
     }
@@ -46,7 +46,7 @@ public class CustomerService {
     public void editCustomer(CustomerDto customerDto) {
         var customer = _customerRepository.findById(customerDto.getId()).orElse(null);
         if(customer == null)
-            throw new BusinessException("can not find the customer");
+            throw new DomainException("error.customer.notFound");
 
         _modelMapper.map(customerDto, customer);
         _customerRepository.save(customer);
@@ -64,7 +64,7 @@ public class CustomerService {
     public void removeCustomer(Long customerId) {
         var customer = _customerRepository.findById(customerId).orElse(null);
         if(customer == null)
-            throw new BusinessException("can not find the customer");
+            throw new DomainException("error.customer.notFound");
 
         _customerRepository.delete(customer);
     }

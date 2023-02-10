@@ -1,7 +1,8 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.springframework.ControllerErrorParser;
-import com.tosan.application.extensions.springframework.RequestParamsBuilder;
+import com.tosan.application.extensions.errors.ControllerDefaultErrors;
+import com.tosan.application.extensions.errors.ControllerErrorParser;
+import com.tosan.application.extensions.web.RequestParamsBuilder;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.AccountSearchInputDto;
 import com.tosan.core_banking.dtos.TransactionDto;
@@ -167,7 +168,7 @@ public class PayInstallmentController {
         try {
             var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
             if (currentUserId == null) {
-                return  "redirect:/pay_installment/index?error=" + ControllerErrorParser.getIllegalAccessError();
+                return  "redirect:/pay_installment/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
             }
 
             _payInstallmentService.payInstallments(payInstallmentInputDto.getLoanId(),

@@ -1,6 +1,7 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.springframework.ControllerErrorParser;
+import com.tosan.application.extensions.errors.ControllerDefaultErrors;
+import com.tosan.application.extensions.errors.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.AccountSearchInputDto;
 import com.tosan.core_banking.dtos.TransactionDto;
@@ -37,7 +38,7 @@ public class TransactionController {
         try {
             var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
             if (currentUserId == null) {
-                return "redirect:/transaction/index?error=" + ControllerErrorParser.getIllegalAccessError();
+                return "redirect:/transaction/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
             }
 
             var transactionDtoList = _transactionService.loadUserTransactions(currentUserId);
@@ -53,12 +54,12 @@ public class TransactionController {
 
                 if(_authenticationService.isUserAdmin()) {
                     if(foundAccount.getAccountType() == AccountTypes.CustomerAccount) {
-                        return "redirect:/transaction/index?error=" + ControllerErrorParser.getIllegalAccessError();
+                        return "redirect:/transaction/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
                     }
                 } else
                 {
                     if(foundAccount.getAccountType() == AccountTypes.BankAccount) {
-                        return "redirect:/transaction/index?error=" + ControllerErrorParser.getIllegalAccessError();
+                        return "redirect:/transaction/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
                     }
                 }
 
@@ -95,7 +96,7 @@ public class TransactionController {
         try {
             var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
             if (currentUserId == null) {
-                return "redirect:/transaction/index?error=" + ControllerErrorParser.getIllegalAccessError();
+                return "redirect:/transaction/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
             }
 
             transactionDto.setUserId(currentUserId);

@@ -7,7 +7,7 @@
 <body>
   <div th:fragment="content">
     <div th:if="${param.error}" class="alert alert-danger" role="alert">
-      <strong><span th:text="${param.error}"></span></strong>
+      <strong><span th:text="#{${param.error}}"></span></strong>
     </div>
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">

@@ -1,7 +1,8 @@
 package com.tosan.application.controllers;
 
-import com.tosan.application.extensions.springframework.ControllerErrorParser;
+import com.tosan.application.extensions.errors.ControllerDefaultErrors;
 import com.tosan.application.extensions.thymeleaf.Layout;
+import com.tosan.application.extensions.errors.ControllerErrorParser;
 import com.tosan.core_banking.dtos.CustomerDto;
 import com.tosan.core_banking.dtos.CustomerSearchInputDto;
 import com.tosan.core_banking.services.CustomerService;
@@ -48,7 +49,7 @@ public class CustomerController {
     public String loadFormById(@PathVariable String id, Model model) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/customer/index?error=" + ControllerErrorParser.getInvalidArgumentError();
+            return "redirect:/customer/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.InvalidInputParameters);
         }
 
         try {
@@ -85,7 +86,7 @@ public class CustomerController {
     public String deleteSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/customer/index?error=" + ControllerErrorParser.getInvalidArgumentError();
+            return "redirect:/customer/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.InvalidInputParameters);
         }
 
         try {
@@ -101,7 +102,7 @@ public class CustomerController {
     public String editSubmit(@PathVariable String id) {
         var idLong = ConvertorUtils.tryParseLong(id, -1L);
         if (idLong <= 0) {
-            return "redirect:/customer/index?error=" + ControllerErrorParser.getInvalidArgumentError();
+            return "redirect:/customer/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.InvalidInputParameters);
         }
 
         return "redirect:/customer/index/" + idLong;

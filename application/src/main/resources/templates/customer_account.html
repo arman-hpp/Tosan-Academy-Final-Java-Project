@@ -7,7 +7,7 @@
 <body>
   <div th:fragment="content">
     <div th:if="${param.error}" class="alert alert-danger" role="alert">
-      <strong><span th:text="${param.error}"></span></strong>
+      <strong><span th:text="#{${param.error}}"></span></strong>
     </div>
 
     <form action="#" th:action="@{/customer_account/searchCustomer}" th:object="${customerSearchInputDto}" method="post">

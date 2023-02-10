@@ -1,12 +1,12 @@
 package com.tosan.loan.services;
 
 import com.tosan.core_banking.services.AccountService;
-import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.LoanDto;
 import com.tosan.loan.dtos.LoanInterestStatisticsDto;
 import com.tosan.loan.interfaces.ILoanValidator;
 import com.tosan.model.Account;
 import com.tosan.model.Customer;
+import com.tosan.model.DomainException;
 import com.tosan.model.Loan;
 import com.tosan.repository.InstallmentRepository;
 import com.tosan.repository.LoanRepository;
@@ -88,7 +88,7 @@ public class LoanService {
     public LoanDto loadLoan(Long loanId) {
         var loan = _loanRepository.findLoanByIdWithDetails(loanId).orElse(null);
         if (loan == null)
-            throw new BusinessException("can not find the loan");
+            throw new DomainException("error.loan.noFound");
 
         var loanDto = _modelMapper.map(loan, LoanDto.class);
         var account = loan.getAccount();
@@ -110,7 +110,7 @@ public class LoanService {
 
         var bankAccount = _accountService.loadBankAccount(loan.getCurrency());
         if (bankAccount.getBalance().compareTo(loan.getAmount()) < 0)
-            throw new BusinessException("bank account balance is not enough!");
+            throw new DomainException("error.loan.deposit.bankAccount.balance.notEnough");
 
         loan.setCustomer(new Customer(loanDto.getCustomerId()));
         loan.setAccount(new Account(loanDto.getAccountId()));
@@ -127,10 +127,10 @@ public class LoanService {
 
         var loan = _loanRepository.findById(loanDto.getId()).orElse(null);
         if (loan == null)
-            throw new BusinessException("can not find the loan");
+            throw new DomainException("error.loan.noFound");
 
         if (loan.getPaid())
-            throw new BusinessException("the loan has been paid and it cannot be edit");
+            throw new DomainException("error.loan.update.paidLoan");
 
         loan.setRefundDuration(loanDto.getRefundDuration());
         loan.setAmount(loanDto.getAmount());
@@ -151,10 +151,10 @@ public class LoanService {
     public void removeLoan(Long loanId) {
         var loan = _loanRepository.findById(loanId).orElse(null);
         if (loan == null)
-            throw new BusinessException("can not find the loan");
+            throw new DomainException("error.loan.noFound");
 
         if (loan.getPaid())
-            throw new BusinessException("can not remove the loan, because it deposited already");
+            throw new DomainException("error.loan.remove.paidLoan");
 
         _loanRepository.delete(loan);
     }

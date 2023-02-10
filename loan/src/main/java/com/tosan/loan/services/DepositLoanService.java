@@ -3,10 +3,10 @@ package com.tosan.loan.services;
 import com.tosan.core_banking.dtos.TransferDto;
 import com.tosan.core_banking.services.AccountService;
 import com.tosan.core_banking.services.TransactionService;
-import com.tosan.exceptions.BusinessException;
 import com.tosan.loan.dtos.LoanDto;
 import com.tosan.loan.interfaces.ILoanCalculator;
 import com.tosan.loan.interfaces.ILoanValidator;
+import com.tosan.model.DomainException;
 import com.tosan.model.Installment;
 import com.tosan.repository.InstallmentRepository;
 import com.tosan.repository.LoanRepository;
@@ -51,14 +51,14 @@ public class DepositLoanService {
     public void depositLoan(Long userId, Long loanId) {
         var loan = _loanRepository.findById(loanId).orElse(null);
         if(loan == null)
-            throw new BusinessException("can not find the loan");
+            throw new DomainException("error.loan.noFound");
 
         if(loan.getDepositDate() != null)
-            throw new BusinessException("the loan has been already paid");
+            throw new DomainException("error.loan.deposit.duplicate");
 
         var bankAccount= _accountService.loadBankAccount(loan.getCurrency());
         if(bankAccount.getBalance().compareTo(loan.getAmount()) < 0)
-            throw new BusinessException("bank account balance is not enough!");
+            throw new DomainException("error.loan.deposit.bankAccount.balance.notEnough");
 
         loan.setPaid(true);
         loan.setFirstPaymentDate(LocalDate.now().plusMonths(1));
