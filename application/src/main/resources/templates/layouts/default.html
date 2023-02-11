@@ -4,28 +4,28 @@
     <meta charset="UTF-8">
     <!--/*@thymesVar id="title" type="java.lang.String"*/-->
     <title th:text="${title}">Default Layout</title>
-    <link href="../../static/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../static/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="../../static/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <link href="../../static/modules/css/dashboard.css" rel="stylesheet" />
-    <link href="../../static/icons/favicon.ico" rel="icon" type="image/x-icon" />
+    <link href="../../static/modules/css/dashboard.css" rel="stylesheet"/>
+    <link href="../../static/icons/favicon.ico" rel="icon" type="image/x-icon"/>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <!--/*@thymesVar id="title" type="java.lang.String"*/-->
-                    <h1 class="h2" th:text="${title}"></h1>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <!--/*@thymesVar id="title" type="java.lang.String"*/-->
+                <h1 class="h2" th:text="${title}"></h1>
+            </div>
+            <div class="py-4 bg-light">
+                <div class="container">
+                    <!--/*@thymesVar id="view" type="java.lang.String"*/-->
+                    <div th:replace="~{${view} :: content}"></div>
                 </div>
-                <div class="py-4 bg-light">
-                    <div class="container">
-                        <!--/*@thymesVar id="view" type="java.lang.String"*/-->
-                        <div th:replace="~{${view} :: content}"></div>
-                    </div>
-                </div>
-            </main>
-        </div>
+            </div>
+        </main>
     </div>
+</div>
 </body>
 </html>
