@@ -85,7 +85,7 @@
                 <td class="align-middle" th:text="${customerDtoItem.id}"></td>
                 <td class="align-middle" th:text="${customerDtoItem.firstName}"></td>
                 <td class="align-middle" th:text="${customerDtoItem.lastName}"></td>
-                <td class="align-middle" th:text="${customerDtoItem.address}"></td>
+                <td class="align-middle" th:text="${customerDtoItem.address.length() < 30 ? customerDtoItem.address : customerDtoItem.address.substring(0, 20).concat('...')}"></td>
                 <td class="align-middle">
                     <form method="POST" th:action="@{/customer/editCustomer/{id}(id=${customerDtoItem.id})}">
                         <button class="btn btn-primary btn-sm" type="submit">Edit</button>
