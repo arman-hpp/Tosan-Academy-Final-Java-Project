@@ -1,8 +1,8 @@
 # Tosan-Academy-Final-Java-Project
 
 ### About
-This repository is the final project of Java course by Ali Gholami at Tosan Academy.\
-The project is based on Spring Boot 3, which requires Java 17.\
+This repository has been developed by Arman Hassanpour to fulfill the final project of Java course by Ali Gholami at Tosan Academy. It is subject to submitted documents.
+To develop the project, Spring Boot 3 has been used. The project is compatible with Java 17 and can be run on JDK 18.\
 \
 The project is a multi-module project. It has been built from a parent pom that manages a group of submodules. This project has 6 modules named `utils`,`model`,`repository`,`loan`,`core_banking`,`application`.
 When a multi-module project is run, all the modules are deployed together; furthermore an individual module can be deployed.
@@ -63,3 +63,15 @@ The Application module includes Service Implementation modules (core_banking and
 ### Start Spring boot Application with JAR file
 * `$mvnw clean package`
 * `$java -jar target/<filename>.jar`
+
+### Test Users
+| Username  | Password  | UserType  |
+|-----------|-----------|-----------|
+| admin     | 12345     | Admin     |
+| arman     | 12345     | User      |
+| ali       | 12345     | Admin     |
+
+### Database Users
+| Username | Password  |
+|----------|-----------|
+| sa       | 12345     |
