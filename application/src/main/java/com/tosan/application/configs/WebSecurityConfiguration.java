@@ -36,7 +36,7 @@ public class WebSecurityConfiguration {
                                 .requestMatchers("/auth/**", "/register/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/", "/index").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/static/**").permitAll()
-                                .requestMatchers(HttpMethod.GET,  "/errors/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,  "/errors/**", "/error/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
@@ -85,6 +85,4 @@ public class WebSecurityConfiguration {
     public LogoutSuccessHandler logoutSuccessHandler() {
         return new CustomLogoutSuccessHandler();
     }
-
-
 }
