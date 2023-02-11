@@ -1,7 +1,7 @@
 # Tosan-Academy-Final-Java-Project
 
 ### About
-This repository has been developed by Arman Hassanpour to fulfill the final project of Java course by Ali Gholami at Tosan Academy. It is subject to submitted documents.
+This repository has been developed by `Arman Hassanpour` to fulfill the final project of Java course by `Ali Gholami` at `Tosan Academy`. It is subject to submitted documents.
 To develop the project, Spring Boot 3 has been used. The project is compatible with Java 17 and can be run on JDK 18.\
 \
 The project is a multi-module project. It has been built from a parent pom that manages a group of submodules. This project has 6 modules named `utils`,`model`,`repository`,`loan`,`core_banking`,`application`.
