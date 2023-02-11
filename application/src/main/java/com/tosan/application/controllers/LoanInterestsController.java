@@ -4,7 +4,7 @@ import com.tosan.application.extensions.errors.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.loan.dtos.LoanInterestSearchDto;
 import com.tosan.loan.services.LoanService;
-import jakarta.annotation.security.RolesAllowed;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 @Controller
 @RequestMapping("/loan_interest")
 @Layout(title = "Loan Interests", value = "layouts/default")
-@RolesAllowed("ROLE_ADMIN")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class LoanInterestsController {
     private final LoanService _loanService;
 

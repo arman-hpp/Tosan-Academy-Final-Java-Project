@@ -2,7 +2,6 @@ package com.tosan.application.controllers;
 
 import com.tosan.application.extensions.errors.ControllerDefaultErrors;
 import com.tosan.application.extensions.errors.ControllerErrorParser;
-import com.tosan.web.RequestParamsBuilder;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.AccountSearchInputDto;
 import com.tosan.core_banking.dtos.TransactionDto;
@@ -15,7 +14,8 @@ import com.tosan.loan.services.InstallmentService;
 import com.tosan.loan.services.PayInstallmentService;
 import com.tosan.model.Currencies;
 import com.tosan.utils.ConvertorUtils;
-import jakarta.annotation.security.RolesAllowed;
+import com.tosan.web.RequestParamsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 @Controller
 @RequestMapping("/pay_installment")
 @Layout(title = "Pay Installments", value = "layouts/default")
-@RolesAllowed("ROLE_USER")
+@PreAuthorize("hasAuthority('ROLE_USER')")
 public class PayInstallmentController {
     private final InstallmentService _installmentService;
     private final PayInstallmentService _payInstallmentService;

@@ -8,7 +8,7 @@ import com.tosan.core_banking.services.AccountService;
 import com.tosan.loan.dtos.LoanDto;
 import com.tosan.loan.services.LoanService;
 import com.tosan.utils.ConvertorUtils;
-import jakarta.annotation.security.RolesAllowed;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/loan_request")
 @Layout(title = "Loan Requests", value = "layouts/default")
-@RolesAllowed("ROLE_USER")
+@PreAuthorize("hasAuthority('ROLE_USER')")
 public class LoanRequestController {
     private final LoanService _loanService;
     private final AccountService _accountService;

@@ -3,7 +3,7 @@ package com.tosan.application.controllers;
 import com.tosan.application.extensions.errors.ControllerErrorParser;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.services.AccountService;
-import jakarta.annotation.security.RolesAllowed;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/bank_account")
 @Layout(title = "Bank Accounts", value = "layouts/default")
-@RolesAllowed("ROLE_ADMIN")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class BankAccountController {
     private final AccountService _accountService;
 

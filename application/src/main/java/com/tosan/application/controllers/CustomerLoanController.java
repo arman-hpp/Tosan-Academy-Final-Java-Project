@@ -6,7 +6,7 @@ import com.tosan.core_banking.dtos.CustomerSearchInputDto;
 import com.tosan.loan.dtos.LoanDto;
 import com.tosan.loan.services.LoanService;
 import com.tosan.utils.ConvertorUtils;
-import jakarta.annotation.security.RolesAllowed;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 @Controller
 @RequestMapping("/customer_loan")
 @Layout(title = "Customer Loans", value = "layouts/default")
-@RolesAllowed("ROLE_USER")
+@PreAuthorize("hasAuthority('ROLE_USER')")
 public class CustomerLoanController {
     private final LoanService _loanService;
 

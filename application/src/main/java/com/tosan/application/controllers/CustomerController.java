@@ -1,13 +1,13 @@
 package com.tosan.application.controllers;
 
 import com.tosan.application.extensions.errors.ControllerDefaultErrors;
-import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.application.extensions.errors.ControllerErrorParser;
+import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.CustomerDto;
 import com.tosan.core_banking.dtos.CustomerSearchInputDto;
 import com.tosan.core_banking.services.CustomerService;
 import com.tosan.utils.ConvertorUtils;
-import jakarta.annotation.security.RolesAllowed;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/customer")
 @Layout(title = "Customers", value = "layouts/default")
-@RolesAllowed("ROLE_USER")
+@PreAuthorize("hasAuthority('ROLE_USER')")
 public class CustomerController {
     private final CustomerService _customerService;
 

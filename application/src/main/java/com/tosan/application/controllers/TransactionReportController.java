@@ -1,14 +1,14 @@
 package com.tosan.application.controllers;
 
+import com.tosan.application.extensions.errors.ControllerErrorParser;
 import com.tosan.application.extensions.exporters.ExportTypes;
 import com.tosan.application.extensions.exporters.IExporterFactory;
 import com.tosan.application.extensions.thymeleaf.Layout;
-import com.tosan.application.extensions.errors.ControllerErrorParser;
 import com.tosan.core_banking.dtos.TransactionDto;
 import com.tosan.core_banking.dtos.TransactionReportInputDto;
 import com.tosan.core_banking.services.TransactionService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 @Controller
 @RequestMapping("/transaction_report")
 @Layout(title = "Transactions Report", value = "layouts/default")
-@RolesAllowed("ROLE_ADMIN")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class TransactionReportController {
     private final TransactionService _transactionService;
     private final IExporterFactory _exporterFactory;

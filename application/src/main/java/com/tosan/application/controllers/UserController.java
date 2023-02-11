@@ -7,7 +7,7 @@ import com.tosan.core_banking.dtos.UserDto;
 import com.tosan.core_banking.services.AuthenticationService;
 import com.tosan.core_banking.services.UserService;
 import com.tosan.utils.ConvertorUtils;
-import jakarta.annotation.security.RolesAllowed;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/user")
 @Layout(title = "Users", value = "layouts/default")
-@RolesAllowed("ROLE_ADMIN")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class UserController {
     private final UserService _userService;
     private final AuthenticationService _authenticationService;

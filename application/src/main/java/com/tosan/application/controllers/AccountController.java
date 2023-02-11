@@ -7,7 +7,7 @@ import com.tosan.core_banking.dtos.CustomerSearchInputDto;
 import com.tosan.core_banking.services.AccountService;
 import com.tosan.core_banking.services.CustomerService;
 import com.tosan.utils.ConvertorUtils;
-import jakarta.annotation.security.RolesAllowed;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/account")
 @Layout(title = "Accounts", value = "layouts/default")
-@RolesAllowed("ROLE_USER")
+@PreAuthorize("hasAuthority('ROLE_USER')")
 public class AccountController {
     private final AccountService _accountService;
     private final CustomerService _customerService;
