@@ -30,7 +30,7 @@
                 <td class="align-middle" th:text="${transactionDtoItem.transactionType}"></td>
                 <td class="align-middle" th:text="${transactionDtoItem.currency}"></td>
                 <td class="align-middle"
-                    th:text="${transactionDtoItem.description.length() < 20 ? transactionDtoItem.description : transactionDtoItem.description.substring(0, 20).concat('...') }"></td>
+                    th:text="${transactionDtoItem.description.length() < 30 ? transactionDtoItem.description : transactionDtoItem.description.substring(0, 30).concat('...') }"></td>
             </tr>
             </tbody>
         </table>
