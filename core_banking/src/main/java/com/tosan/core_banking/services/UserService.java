@@ -57,16 +57,6 @@ public class UserService {
         _userRepository.delete(user);
     }
 
-    public void addUser(UserDto userDto) {
-        var user = _modelMapper.map(userDto, User.class);
-        user.setPassword(_passwordEncoder.encode(userDto.getPassword()));
-        user.setUserState(UserState.Enabled);
-        user.setFailedAttempt(0);
-        user.setLastPasswordChangedDate(LocalDateTime.now());
-
-        _userRepository.save(user);
-    }
-
     public void editUser(UserDto userDto) {
         var user = _userRepository.findById(userDto.getId()).orElse(null);
         if(user == null)
@@ -78,7 +68,9 @@ public class UserService {
 
     public void addOrEditUser(UserDto userDto) {
         if(userDto.getId()  == null || userDto.getId() <= 0) {
-            addUser(userDto);
+            register(
+                    new UserRegisterInputDto(userDto.getUsername(), userDto.getPassword(),
+                            userDto.getPassword(), true));
         }
         else {
             editUser(userDto);

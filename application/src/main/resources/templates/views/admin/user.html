@@ -10,7 +10,7 @@
         <strong><span th:text="#{${param.error}}"></span></strong>
     </div>
 
-    <form action="#" th:action="@{/templates/views/user/addUser}" th:object="${userInputs}" method="post">
+    <form action="#" th:action="@{/user/addUser}" th:object="${userInputs}" method="post">
         <input type="hidden" th:field="*{id}">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
             <div class="col-4">
@@ -80,12 +80,12 @@
                 <td class="align-middle" th:text="${user.username}"></td>
                 <td class="align-middle" th:text="${user.userType}"></td>
                 <td>
-                    <form method="POST" th:action="@{/templates/views/user/editUser/{id}(id=${user.id})}">
+                    <form method="POST" th:action="@{/user/editUser/{id}(id=${user.id})}">
                         <button class="btn btn-primary btn-sm" type="submit">Edit</button>
                     </form>
                 </td>
                 <td>
-                    <form method="POST" th:action="@{/templates/views/user/deleteUser/{id}(id=${user.id})}">
+                    <form method="POST" th:action="@{/user/deleteUser/{id}(id=${user.id})}">
                         <button class="btn btn-secondary btn-sm" type="submit">Delete</button>
                     </form>
                 </td>
