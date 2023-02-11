@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
+@SuppressWarnings("unused")
 public class TransactionService {
     private final TransactionRepository _transactionRepository;
     private final AccountRepository _accountRepository;

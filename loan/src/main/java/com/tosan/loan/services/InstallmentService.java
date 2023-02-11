@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Service
 public class InstallmentService {
     private final InstallmentRepository _installmentRepository;
