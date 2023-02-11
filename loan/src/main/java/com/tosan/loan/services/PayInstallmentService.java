@@ -64,12 +64,12 @@ public class PayInstallmentService {
         _installmentRepository.saveAll(installments);
 
         var currency = installments.get(0).getCurrency();
-
         var bankAccountId = _accountService.loadBankAccount(currency).getId();
 
-        var transferDto = new TransferDto(sumInstallmentsAmount, "Pay Installments",
-                "Pay Installments", accountId, bankAccountId,
-                userId, currency);
+        var transferDto = new TransferDto(sumInstallmentsAmount,
+                "Pay " + payInstallmentCount + " installment(s) for loan Id " + loanId,
+                "Deposit for loan's installment(s) from account Id " + accountId + " and loan Id " + loanId,
+                accountId, bankAccountId, userId, currency);
 
         _transactionService.transfer(transferDto);
     }

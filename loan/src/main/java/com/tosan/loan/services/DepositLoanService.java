@@ -50,14 +50,14 @@ public class DepositLoanService {
     @Transactional
     public void depositLoan(Long userId, Long loanId) {
         var loan = _loanRepository.findById(loanId).orElse(null);
-        if(loan == null)
+        if (loan == null)
             throw new DomainException("error.loan.noFound");
 
-        if(loan.getDepositDate() != null)
+        if (loan.getDepositDate() != null)
             throw new DomainException("error.loan.deposit.duplicate");
 
-        var bankAccount= _accountService.loadBankAccount(loan.getCurrency());
-        if(bankAccount.getBalance().compareTo(loan.getAmount()) < 0)
+        var bankAccount = _accountService.loadBankAccount(loan.getCurrency());
+        if (bankAccount.getBalance().compareTo(loan.getAmount()) < 0)
             throw new DomainException("error.loan.deposit.bankAccount.balance.notEnough");
 
         loan.setPaid(true);
@@ -86,9 +86,10 @@ public class DepositLoanService {
         var bankAccountId = bankAccount.getId();
         var customerAccountId = loan.getAccount().getId();
 
-        var transferDto = new TransferDto(loan.getAmount(), "Transfer to customer account",
-                "Transfer loan from bank account", bankAccountId, customerAccountId,
-                userId, loan.getCurrency());
+        var transferDto = new TransferDto(loan.getAmount(),
+                "Debit for loan to customer account " + customerAccountId,
+                "Deposit loan Id " + loanId,
+                bankAccountId, customerAccountId, userId, loan.getCurrency());
 
         _transactionService.transfer(transferDto);
     }
