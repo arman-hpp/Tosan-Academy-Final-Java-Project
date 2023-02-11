@@ -11,13 +11,13 @@ public class DomainException extends RuntimeException {
     private final String resourceKey;
     private final Object[] args;
 
-    public DomainException(String resourceKey, Object... args) {
+    public DomainException(/*@PropertyKey(resourceBundle = "")*/ String resourceKey, Object... args) {
         super(resourceKey);
         this.resourceKey = resourceKey;
         this.args = args;
 
         var messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasenames("classpath:/messages");
+        messageSource.setBasenames("classpath:/messages/messages");
         messageSource.setDefaultEncoding("UTF-8");
         //messageSource.setCacheMillis(500);
         _messageSource = messageSource;
