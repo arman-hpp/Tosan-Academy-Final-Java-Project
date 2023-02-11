@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "Loan_Conditions")
+@SuppressWarnings("JpaDataSourceORMInspection")
 public class LoanCondition extends BaseEntity {
     @Column(name = "interest_rate", nullable = false, precision = 7, scale = 2)
     private BigDecimal interestRate;

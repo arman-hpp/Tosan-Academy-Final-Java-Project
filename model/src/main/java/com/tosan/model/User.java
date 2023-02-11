@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@SuppressWarnings("JpaDataSourceORMInspection")
 @Getter
 @Setter
 @Entity
 @Table(name = "Users")
+@SuppressWarnings("JpaDataSourceORMInspection")
 public class User extends BaseEntity implements UserDetails {
     private static final int PASSWORD_EXPIRATION_TIME = 30; // 30 days
     private static final int MAX_FAILED_ATTEMPTS = 5;

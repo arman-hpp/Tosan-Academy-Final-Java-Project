@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "Installments")
+@SuppressWarnings("JpaDataSourceORMInspection")
 public class Installment extends BaseEntity {
     @Column(name = "installment_no", nullable = false)
     private Integer installmentNo;

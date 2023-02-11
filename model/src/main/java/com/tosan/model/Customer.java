@@ -13,6 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "Customers")
+@SuppressWarnings("JpaDataSourceORMInspection")
 public class Customer extends BaseEntity {
     @Column(name = "first_name", length = 40, nullable = false)
     private String firstName;

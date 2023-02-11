@@ -14,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "Accounts")
+@SuppressWarnings("JpaDataSourceORMInspection")
 public class Account extends BaseEntity {
     @Column(name = "balance", nullable = false, precision = 15, scale = 2)
     private BigDecimal balance;

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "Transactions")
+@SuppressWarnings("JpaDataSourceORMInspection")
 public class Transaction extends BaseEntity {
     @Column(name = "amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal amount;
