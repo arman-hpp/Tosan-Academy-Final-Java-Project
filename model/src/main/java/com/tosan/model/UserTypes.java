@@ -1,6 +1,6 @@
 package com.tosan.model;
 
 public enum UserTypes {
-    User,
-    Administrator
+    ROLE_USER,
+    ROLE_ADMIN
 }
