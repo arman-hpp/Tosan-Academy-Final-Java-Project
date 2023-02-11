@@ -5,6 +5,7 @@ import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.loan.dtos.LoanConditionsDto;
 import com.tosan.loan.services.LoanConditionsService;
 import com.tosan.model.Currencies;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/loan_condition")
 @Layout(title = "Loan Conditions", value = "layouts/default")
+@RolesAllowed("ROLE_ADMIN")
 public class LoanConditionsController {
     private final LoanConditionsService _loanConditionsService;
 
@@ -20,7 +22,7 @@ public class LoanConditionsController {
         _loanConditionsService = loanConditionsService;
     }
 
-    @GetMapping("/index")
+    @GetMapping({"/","/index"})
     public String loadForm(
             @RequestParam(name = "currency", required = false) String currency,
             Model model) {
@@ -37,7 +39,7 @@ public class LoanConditionsController {
                 model.addAttribute("loanConditionsDto", loanConditionsDto);
             }
 
-            return "loan_condition";
+            return "views/admin/loan_condition";
         } catch (Exception ex) {
             return "redirect:/loan_condition/index?error=" + ControllerErrorParser.getError(ex);
         }

@@ -11,6 +11,7 @@ import com.tosan.loan.services.DepositLoanService;
 import com.tosan.loan.services.InstallmentService;
 import com.tosan.loan.services.LoanService;
 import com.tosan.utils.ConvertorUtils;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 @Controller
 @RequestMapping("/loan_contract")
 @Layout(title = "Loan Contracts", value = "layouts/default")
+@RolesAllowed("ROLE_USER")
 public class LoanContractController {
     private final LoanService _loanService;
     private final InstallmentService _installmentService;
@@ -37,7 +39,7 @@ public class LoanContractController {
         _authenticationService = authenticationService;
     }
 
-    @GetMapping("/index")
+    @GetMapping({"/","/index"})
     public String loadForm(@RequestParam(name = "loan_id", required = false) String loanId, Model model) {
         var loanIdLong = ConvertorUtils.tryParseLong(loanId, null);
 
@@ -54,7 +56,7 @@ public class LoanContractController {
                 model.addAttribute("installmentDtoList", installments);
             }
 
-            return "loan_contract";
+            return "views/user/loan_contract";
         } catch (Exception ex) {
             return "redirect:/loan_contract/index?error=" + ControllerErrorParser.getError(ex);
         }
@@ -96,7 +98,7 @@ public class LoanContractController {
 
             ControllerErrorParser.setError(bindingResult, ex);
 
-            return "loan_contract";
+            return "views/user/loan_contract";
         }
     }
 }

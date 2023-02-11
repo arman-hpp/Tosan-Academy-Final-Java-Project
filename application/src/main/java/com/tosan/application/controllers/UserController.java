@@ -7,6 +7,7 @@ import com.tosan.core_banking.dtos.UserDto;
 import com.tosan.core_banking.services.AuthenticationService;
 import com.tosan.core_banking.services.UserService;
 import com.tosan.utils.ConvertorUtils;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/user")
 @Layout(title = "Users", value = "layouts/default")
+@RolesAllowed("ROLE_ADMIN")
 public class UserController {
     private final UserService _userService;
     private final AuthenticationService _authenticationService;
@@ -24,15 +26,15 @@ public class UserController {
         _authenticationService = authenticationService;
     }
 
-    @GetMapping("/index")
+    @GetMapping({"/", "/index"})
     public String loadForm(Model model) {
         try {
             var users = _userService.loadUsers();
             model.addAttribute("userInputs", new UserDto());
             model.addAttribute("userOutputs", users);
 
-            return "user";
-        }catch (Exception ex) {
+            return "views/admin/user";
+        } catch (Exception ex) {
             return "redirect:/user/index?error=" + ControllerErrorParser.getError(ex);
         }
     }
@@ -51,7 +53,7 @@ public class UserController {
             var users = _userService.loadUsers();
             model.addAttribute("userOutputs", users);
 
-            return "user";
+            return "views/admin/user";
         } catch (Exception ex) {
             return "redirect:/user/index?error=" + ControllerErrorParser.getError(ex);
         }
@@ -80,11 +82,11 @@ public class UserController {
         }
 
         var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
-        if(currentUserId == null){
+        if (currentUserId == null) {
             return "redirect:/user/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
         }
 
-        if(idLong.equals(currentUserId)) {
+        if (idLong.equals(currentUserId)) {
             return "redirect:/user/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
         }
 
@@ -106,11 +108,11 @@ public class UserController {
 
         try {
             var currentUserId = _authenticationService.loadCurrentUserId().orElse(null);
-            if(currentUserId == null){
+            if (currentUserId == null) {
                 return "redirect:/user/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
             }
 
-            if(idLong.equals(currentUserId)) {
+            if (idLong.equals(currentUserId)) {
                 return "redirect:/user/index?error=" + ControllerErrorParser.getError(ControllerDefaultErrors.IllegalAccess);
             }
 
@@ -118,7 +120,5 @@ public class UserController {
         } catch (Exception ex) {
             return "redirect:/user/index?error=" + ControllerErrorParser.getError(ex);
         }
-
-
     }
 }

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Loan Interests</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+        <strong><span th:text="#{${param.error}}"></span></strong>
+    </div>
+
+    <form action="#" th:action="@{/loan_interest/calcInterests}" th:object="${loanInterestSearchDto}" method="post">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="interest-rate" class="form-label">Interest Rate</label>
+                    <input type="datetime-local" class="form-control" id="interest-rate" placeholder=""
+                           th:field="*{fromDate}"
+                           autocapitalize="none" autofocus required/>
+
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="start-date" class="form-label">Start Date</label>
+                    <input type="datetime-local" class="form-control" id="start-date" placeholder=""
+                           th:field="*{toDate}"
+                           autocapitalize="none" required/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-3">
+            <div class="col-2">
+                <button class="btn btn-primary" type="submit">Calculate</button>
+            </div>
+        </div>
+
+        <div th:if="${#fields.hasErrors('global')}" class="row row-cols-1 row-cols-sm-2 row-cols-md-8 g-4 mb-3">
+            <div class="col-8">
+                <div class="alert alert-danger" role="alert">
+                    <strong><span th:each="err : ${#fields.errors('global')}" th:text="#{${err}}"></span></strong>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Currency</th>
+                <th scope="col">Sum Interest</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="loanInterestStatisticsDtoItem,iterStat : ${loanInterestStatisticsDtoList}"
+                th:class="${iterStat.odd}? 'odd'">
+                <td class="align-middle" th:text="${loanInterestStatisticsDtoItem.currency}"></td>
+                <td class="align-middle" th:text="${loanInterestStatisticsDtoItem.sumInterest}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

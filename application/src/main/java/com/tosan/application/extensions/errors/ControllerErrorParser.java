@@ -29,15 +29,8 @@ public final class ControllerErrorParser {
         return defaultErrors.getDisplayMessage();
     }
 
-
-
     public static void setError(BindingResult bindingResult, Exception ex) {
         var error = new ObjectError("globalError", getError(ex));
-        bindingResult.addError(error);
-    }
-
-    public static void setPasswordMisMatchedError(BindingResult bindingResult) {
-        var error = new ObjectError("globalError", "the password not matched");
         bindingResult.addError(error);
     }
 }

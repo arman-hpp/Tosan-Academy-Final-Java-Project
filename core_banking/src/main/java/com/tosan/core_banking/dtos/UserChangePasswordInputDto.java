@@ -11,7 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public final class UserChangePasswordInputDto extends BaseDto {
-    private String username;
+    private Long id;
     private String oldPassword;
     private String newPassword;
+    private String repeatNewPassword;
 }

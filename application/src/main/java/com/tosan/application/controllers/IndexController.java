@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class IndexController {
     @GetMapping({"/", "/index"})
     public String index() {
-        return "redirect:/auth/index";
+        return "redirect:/auth/login";
     }
 }

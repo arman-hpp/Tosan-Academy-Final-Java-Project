@@ -10,13 +10,15 @@
         <strong><span th:text="#{${param.error}}"></span></strong>
     </div>
 
-    <form action="#" th:action="@{/transaction_report/exportTransactions}" th:object="${transactionReportInputDto}"  method="get">
+    <form action="#" th:action="@{/transaction_report/exportTransactions}" th:object="${transactionReportInputDto}"
+          method="get">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
             <div class="col-4">
                 <div class="mb-3">
                     <label for="fromDate" class="form-label">From Date</label>
-                    <input type="datetime-local" class="form-control" id="fromDate" placeholder="" th:field="*{fromDate}"
-                           autocapitalize="none" required />
+                    <input type="datetime-local" class="form-control" id="fromDate" placeholder=""
+                           th:field="*{fromDate}"
+                           autocapitalize="none" autofocus required/>
 
                 </div>
             </div>
@@ -24,7 +26,7 @@
                 <div class="mb-3">
                     <label for="to-date" class="form-label">To Date</label>
                     <input type="datetime-local" class="form-control" id="to-date" placeholder="" th:field="*{toDate}"
-                           autocapitalize="none" required />
+                           autocapitalize="none" required/>
                 </div>
             </div>
         </div>
@@ -33,8 +35,9 @@
             <div class="col-4">
                 <div class="mb-3">
                     <label for="currencies" class="form-label">Currency</label>
-                    <select id="currencies" th:field="*{exportType}"  class="form-select" aria-label="select currency">
-                        <option th:each="exportType : ${T(com.tosan.application.extensions.exporters.ExportTypes).values()}" th:value="${exportType}" th:text="${exportType}">
+                    <select id="currencies" th:field="*{exportType}" class="form-select" aria-label="select currency">
+                        <option th:each="exportType : ${T(com.tosan.application.extensions.exporters.ExportTypes).values()}"
+                                th:value="${exportType}" th:text="${exportType}">
                         </option>
                     </select>
                 </div>

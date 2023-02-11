@@ -1,6 +1,7 @@
 package com.tosan.loan.services;
 
 import com.tosan.core_banking.services.AccountService;
+import com.tosan.core_banking.services.CustomerService;
 import com.tosan.loan.dtos.LoanDto;
 import com.tosan.loan.dtos.LoanInterestStatisticsDto;
 import com.tosan.loan.interfaces.ILoanValidator;
@@ -26,18 +27,22 @@ public class LoanService {
     private final ILoanValidator _loanValidator;
     private final LoanConditionsService _loanConditionsService;
     private final AccountService _accountService;
+    private final CustomerService _customerService;
     private final ModelMapper _modelMapper;
 
     public LoanService(LoanRepository loanRepository,
                        InstallmentRepository installmentRepository,
                        ILoanValidator loanValidator,
                        LoanConditionsService loanConditionsService,
-                       AccountService accountService, ModelMapper modelMapper) {
+                       AccountService accountService,
+                       CustomerService customerService,
+                       ModelMapper modelMapper) {
         _loanRepository = loanRepository;
         _installmentRepository = installmentRepository;
         _loanValidator = loanValidator;
         _loanConditionsService = loanConditionsService;
         _accountService = accountService;
+        _customerService = customerService;
         _modelMapper = modelMapper;
     }
 
@@ -62,6 +67,10 @@ public class LoanService {
     }
 
     public List<LoanDto> loadLoansByCustomerId(Long customerId) {
+        var customerDto = _customerService.loadCustomer(customerId);
+        if(customerDto == null)
+            throw new DomainException("error.customer.notFound");
+
         var loans = _loanRepository.findByCustomerIdOrderByRequestDate(customerId);
         var loanDtoList = new ArrayList<LoanDto>();
         for (var loan : loans) {
@@ -74,6 +83,10 @@ public class LoanService {
     }
 
     public List<LoanDto> loadLoansByAccountId(Long accountId) {
+        var accountDto = _accountService.loadAccount(accountId);
+        if(accountDto == null)
+            throw new DomainException("error.account.notFound");
+
         var loans = _loanRepository.findByAccountIdOrderByRequestDate(accountId);
         var loanDtoList = new ArrayList<LoanDto>();
         for (var loan : loans) {

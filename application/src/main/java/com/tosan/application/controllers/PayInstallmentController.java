@@ -2,7 +2,7 @@ package com.tosan.application.controllers;
 
 import com.tosan.application.extensions.errors.ControllerDefaultErrors;
 import com.tosan.application.extensions.errors.ControllerErrorParser;
-import com.tosan.application.extensions.web.RequestParamsBuilder;
+import com.tosan.web.RequestParamsBuilder;
 import com.tosan.application.extensions.thymeleaf.Layout;
 import com.tosan.core_banking.dtos.AccountSearchInputDto;
 import com.tosan.core_banking.dtos.TransactionDto;
@@ -15,6 +15,7 @@ import com.tosan.loan.services.InstallmentService;
 import com.tosan.loan.services.PayInstallmentService;
 import com.tosan.model.Currencies;
 import com.tosan.utils.ConvertorUtils;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 @Controller
 @RequestMapping("/pay_installment")
 @Layout(title = "Pay Installments", value = "layouts/default")
+@RolesAllowed("ROLE_USER")
 public class PayInstallmentController {
     private final InstallmentService _installmentService;
     private final PayInstallmentService _payInstallmentService;
@@ -42,7 +44,7 @@ public class PayInstallmentController {
         _authenticationService = authenticationService;
     }
 
-    @GetMapping("/index")
+    @GetMapping({"/","/index"})
     public String loadForm(
             @RequestParam(name = "loan_id", required = false) String loanId,
             @RequestParam(name = "installment_count", required = false) String installmentCount,
@@ -90,7 +92,7 @@ public class PayInstallmentController {
 
             model.addAttribute("transactionDto", new TransactionDto());
 
-            return "pay_installment";
+            return "views/user/pay_installment";
         } catch (Exception ex) {
             if(loanIdLong != null) {
                 return new RequestParamsBuilder("redirect:/pay_installment/index")
@@ -184,7 +186,7 @@ public class PayInstallmentController {
             model.addAttribute("installmentDtoList", installments);
             ControllerErrorParser.setError(bindingResult, ex);
 
-            return "pay_installment";
+            return "views/user/pay_installment";
         }
     }
 }

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Transactions</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+        <strong><span th:text="#{${param.error}}"></span></strong>
+    </div>
+
+    <form action="#" th:action="@{/account_transaction/searchAccount}" th:object="${accountSearchInputDto}"
+          method="post">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <label for="search-input" class="form-label">Account Id</label>
+                <div class="input-group mb-3">
+                    <input type="search" class="form-control" id="search-input" placeholder=""
+                           aria-label="Search By Account Id" aria-describedby="search-submit" th:field="*{accountId}"
+                           autofocus required>
+                    <button class="btn btn-outline-secondary" type="submit" id="search-submit">Find</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Account Id</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Transaction Type</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="transactionDtoItem,iterStat : ${transactionDtoList}" th:class="${iterStat.odd}? 'odd'">
+                <td class="align-middle" th:text="${transactionDtoItem.id}"></td>
+                <td class="align-middle" th:text="${transactionDtoItem.accountId}"></td>
+                <td class="align-middle" th:text="${transactionDtoItem.amount}"></td>
+                <td class="align-middle" th:text="${transactionDtoItem.transactionType}"></td>
+                <td class="align-middle" th:text="${transactionDtoItem.currency}"></td>
+                <td class="align-middle"
+                    th:text="${transactionDtoItem.description.length() < 20 ? transactionDtoItem.description : transactionDtoItem.description.substring(0, 20).concat('...') }"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

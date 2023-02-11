@@ -49,7 +49,7 @@ public class ApplicationBeanConfiguration {
     @Bean
     public MessageSource messageSource() {
         var messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasenames("classpath:/messages");
+        messageSource.setBasenames("classpath:/messages/messages");
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setCacheSeconds(30);
         return messageSource;

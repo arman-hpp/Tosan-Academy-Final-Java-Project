@@ -1,4 +1,4 @@
-package com.tosan.application.extensions.web;
+package com.tosan.web;
 
 public final class RequestParamsBuilder {
     private final StringBuilder queryString;

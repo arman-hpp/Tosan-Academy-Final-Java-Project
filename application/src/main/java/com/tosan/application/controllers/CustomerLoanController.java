@@ -6,6 +6,7 @@ import com.tosan.core_banking.dtos.CustomerSearchInputDto;
 import com.tosan.loan.dtos.LoanDto;
 import com.tosan.loan.services.LoanService;
 import com.tosan.utils.ConvertorUtils;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 @Controller
 @RequestMapping("/customer_loan")
 @Layout(title = "Customer Loans", value = "layouts/default")
+@RolesAllowed("ROLE_USER")
 public class CustomerLoanController {
     private final LoanService _loanService;
 
@@ -23,7 +25,7 @@ public class CustomerLoanController {
         _loanService = loanService;
     }
 
-    @GetMapping("/index")
+    @GetMapping({"/","/index"})
     public String loadForm(@RequestParam(name = "customer_id", required = false) String customerId, Model model) {
         var customerIdLong = ConvertorUtils.tryParseLong(customerId, null);
 
@@ -37,7 +39,7 @@ public class CustomerLoanController {
                 model.addAttribute("loanDtoList", loanDtoList);
             }
 
-            return "customer_loan";
+            return "views/user/customer_loan";
         } catch (Exception ex) {
             return "redirect:/customer_loan/index?error=" + ControllerErrorParser.getError(ex);
         }

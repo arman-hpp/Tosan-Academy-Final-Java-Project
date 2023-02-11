@@ -6,6 +6,7 @@ import com.tosan.core_banking.dtos.AccountDto;
 import com.tosan.core_banking.dtos.CustomerSearchInputDto;
 import com.tosan.core_banking.services.AccountService;
 import com.tosan.utils.ConvertorUtils;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 @Controller
 @RequestMapping("/customer_account")
 @Layout(title = "Customer Accounts", value = "layouts/default")
+@RolesAllowed("ROLE_USER")
 public class CustomerAccountController {
     private final AccountService _accountService;
 
@@ -23,7 +25,7 @@ public class CustomerAccountController {
         _accountService = accountService;
     }
 
-    @GetMapping("/index")
+    @GetMapping({"/","/index"})
     public String loadForm(@RequestParam(name = "customer_id", required = false) String customerId,
                            Model model) {
         var customerIdLong = ConvertorUtils.tryParseLong(customerId, null);
@@ -38,7 +40,7 @@ public class CustomerAccountController {
                 model.addAttribute("accountDtoList", accountDtoList);
             }
 
-            return "customer_account";
+            return "views/user/customer_account";
         } catch (Exception ex) {
             return "redirect:/customer_account/index?error=" + ControllerErrorParser.getError(ex);
         }

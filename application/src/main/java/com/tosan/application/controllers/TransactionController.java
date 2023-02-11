@@ -31,7 +31,7 @@ public class TransactionController {
         _authenticationService = authenticationService;
     }
 
-    @GetMapping("/index")
+    @GetMapping({"/","/index"})
     public String loadForm(@RequestParam(name = "account_id", required = false) String accountId, Model model) {
         var accountIdLong = ConvertorUtils.tryParseLong(accountId, null);
 
@@ -72,7 +72,7 @@ public class TransactionController {
                 model.addAttribute("transactionDto", transactionDto);
             }
 
-            return "transaction";
+            return "views/general/transaction";
         } catch (Exception ex) {
             return "redirect:/transaction/index?error=" + ControllerErrorParser.getError(ex);
         }

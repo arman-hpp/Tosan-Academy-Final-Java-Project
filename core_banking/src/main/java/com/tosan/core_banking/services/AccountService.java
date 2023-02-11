@@ -3,6 +3,7 @@ package com.tosan.core_banking.services;
 import com.tosan.core_banking.dtos.AccountDto;
 import com.tosan.model.*;
 import com.tosan.repository.AccountRepository;
+import com.tosan.repository.CustomerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +14,12 @@ import java.util.List;
 @Service
 public class AccountService {
     private final AccountRepository _accountRepository;
+    private final CustomerRepository _customerRepository;
     private final ModelMapper _modelMapper;
 
-    public AccountService(AccountRepository accountRepository, ModelMapper modelMapper) {
+    public AccountService(AccountRepository accountRepository, CustomerRepository customerRepository, ModelMapper modelMapper) {
         _accountRepository = accountRepository;
+        _customerRepository = customerRepository;
         _modelMapper = modelMapper;
     }
 
@@ -65,6 +68,10 @@ public class AccountService {
     }
 
     public List<AccountDto> loadCustomerAccounts(Long customerId) {
+        var customer = _customerRepository.findById(customerId).orElse(null);
+        if(customer == null)
+            throw new DomainException("error.customer.notFound");
+
         var accounts = _accountRepository.findByCustomerIdOrderByIdDesc(customerId);
         var accountDtoList = new ArrayList<AccountDto>();
         for(var account : accounts) {

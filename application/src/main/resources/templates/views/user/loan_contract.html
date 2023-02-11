@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Loan Contracts</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+        <strong><span th:text="#{${param.error}}"></span></strong>
+    </div>
+
+    <form action="#" th:action="@{/loan_contract/searchLoan}" th:object="${loanSearchInputDto}" method="post">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <label for="search-input" class="form-label">Loan Id</label>
+                <div class="input-group mb-3">
+                    <input type="search" class="form-control" id="search-input" placeholder=""
+                           aria-label="Search By Loan Id" aria-describedby="search-submit" th:field="*{loanId}"
+                           autofocus required>
+                    <button class="btn btn-outline-secondary" type="submit" id="search-submit">Find</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form action="#" th:action="@{/loan_contract/depositLoan}" th:object="${loanDto}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="customerId" class="form-label">Customer Id</label>
+                    <input type="text" class="form-control" id="customerId" placeholder="" th:field="*{customerId}"
+                           readonly/>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="fullName" class="form-label">Owner Name</label>
+                    <input type="text" class="form-control" id="fullName" placeholder=""
+                           th:field="*{accountCustomerName}" readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="accountId" class="form-label">Account Id</label>
+                    <input type="text" class="form-control" id="accountId" placeholder="" th:field="*{accountId}"
+                           readonly/>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="requestDate" class="form-label">Request Date</label>
+                    <input type="datetime-local" class="form-control" id="requestDate" placeholder=""
+                           th:field="*{requestDate}" value="" readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Amount</label>
+                    <input type="number" class="form-control" id="amount" placeholder="" th:field="*{amount}" readonly/>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="currency" class="form-label">Currency</label>
+                    <input type="text" class="form-control" id="currency" placeholder="" th:field="*{currency}"
+                           readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="interestRate" class="form-label">Interest Rate</label>
+                    <input type="text" class="form-control" id="interestRate" placeholder="" th:field="*{interestRate}"
+                           readonly/>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="duration" class="form-label">Refund Duration</label>
+                    <input type="number" class="form-control" id="duration" placeholder="" th:field="*{refundDuration}"
+                           readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="depositDate" class="form-label">Deposit Date</label>
+                    <input type="datetime-local" class="form-control" id="depositDate" placeholder=""
+                           th:field="*{depositDate}" value="" readonly/>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="firstPaymentDate" class="form-label">First Payment Date</label>
+                    <input type="date" class="form-control" id="firstPaymentDate" placeholder=""
+                           th:field="*{firstPaymentDate}" value="" readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="*{paid == false}" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-3">
+            <div class="col-2">
+                <button class="btn btn-primary" type="submit">Deposit</button>
+            </div>
+        </div>
+
+        <div th:if="${#fields.hasErrors('global')}" class="row row-cols-1 row-cols-sm-2 row-cols-md-8 g-4 mb-3">
+            <div class="col-8">
+                <div class="alert alert-danger" role="alert">
+                    <strong><span th:each="err : ${#fields.errors('global')}" th:text="#{${err}}"></span></strong>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Installment No</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Interest Amount</th>
+                <th scope="col">Principal Amount</th>
+                <th scope="col">Payment Amount</th>
+                <th scope="col">Loan Balance</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="installmentDtoItem,iterStat : ${installmentDtoList}" th:class="${iterStat.odd}? 'odd'">
+                <td class="align-middle" th:text="${installmentDtoItem.installmentNo}"></td>
+                <td class="align-middle" th:text="${installmentDtoItem.dueDate}"></td>
+                <td class="align-middle" th:text="${installmentDtoItem.interestAmount}"></td>
+                <td class="align-middle" th:text="${installmentDtoItem.principalAmount}"></td>
+                <td class="align-middle" th:text="${installmentDtoItem.paymentAmount}"></td>
+                <td class="align-middle" th:text="${installmentDtoItem.loanBalanceAmount}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

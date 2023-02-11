@@ -8,6 +8,7 @@ import com.tosan.core_banking.services.AccountService;
 import com.tosan.loan.dtos.LoanDto;
 import com.tosan.loan.services.LoanService;
 import com.tosan.utils.ConvertorUtils;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/loan_request")
 @Layout(title = "Loan Requests", value = "layouts/default")
+@RolesAllowed("ROLE_USER")
 public class LoanRequestController {
     private final LoanService _loanService;
     private final AccountService _accountService;
@@ -25,7 +27,7 @@ public class LoanRequestController {
         _accountService = accountService;
     }
 
-    @GetMapping("/index")
+    @GetMapping({"/","/index"})
     public String loadForm(@RequestParam(name = "account_id", required = false) String accountId, Model model) {
         var accountIdLong = ConvertorUtils.tryParseLong(accountId, null);
         try {
@@ -48,7 +50,7 @@ public class LoanRequestController {
                 model.addAttribute("loanDto", loanDto);
             }
 
-            return "loan_request";
+            return "views/user/loan_request";
         } catch (Exception ex) {
            return "redirect:/loan_request/index?error=" + ControllerErrorParser.getError(ex);
         }
@@ -72,7 +74,7 @@ public class LoanRequestController {
             model.addAttribute("accountSearchInputDto",
                     new AccountSearchInputDto(foundLoan.getAccountId()));
 
-            return "loan_request";
+            return "views/user/loan_request";
         } catch (Exception ex) {
             return "redirect:/loan_request/index?error=" + ControllerErrorParser.getError(ex);
         }
@@ -103,7 +105,7 @@ public class LoanRequestController {
             model.addAttribute("accountSearchInputDto", new AccountSearchInputDto(loanDto.getAccountId()));
             ControllerErrorParser.setError(bindingResult, ex);
 
-            return "loan_request";
+            return "views/user/loan_request";
         }
     }
 

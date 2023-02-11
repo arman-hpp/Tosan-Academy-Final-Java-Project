@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bank Accounts</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+        <strong><span th:text="#{${param.error}}"></span></strong>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Balance</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="accountDtoItem,iterStat : ${accountDtoList}" th:class="${iterStat.odd}? 'odd'">
+                <td class="align-middle" th:text="${accountDtoItem.id}"></td>
+                <td class="align-middle" th:text="${accountDtoItem.balance}"></td>
+                <td class="align-middle" th:text="${accountDtoItem.currency}"></td>
+                <td class="align-middle">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"
+                                   th:href="@{/transaction/index(account_id=${accountDtoItem.id})}">Do Transaction</a>
+                            </li>
+                            <li><a class="dropdown-item"
+                                   th:href="@{/account_transaction/index(account_id=${accountDtoItem.id})}">Show
+                                Transactions</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

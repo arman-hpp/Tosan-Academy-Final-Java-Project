@@ -23,7 +23,7 @@ public class AccountLoanController {
         _loanService = loanService;
     }
 
-    @GetMapping("/index")
+    @GetMapping({"/","/index"})
     public String loadForm(@RequestParam(name = "account_id", required = false) String accountId,
                            Model model) {
         var accountIdLong = ConvertorUtils.tryParseLong(accountId, null);
@@ -39,7 +39,7 @@ public class AccountLoanController {
                 model.addAttribute("loanDtoList", loanDtoList);
             }
 
-            return "account_loan";
+            return "views/general/account_loan";
         } catch (Exception ex) {
             return "redirect:/account_loan/index?error=" + ControllerErrorParser.getError(ex);
         }

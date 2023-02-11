@@ -18,7 +18,7 @@ public class ProfileController {
         _authenticationService = authenticationService;
     }
 
-    @GetMapping("/index")
+    @GetMapping({"/","/index"})
     public String loadForm(Model model) {
         try {
             var userDto = _authenticationService.loadCurrentUser();
@@ -27,6 +27,6 @@ public class ProfileController {
             return "redirect:/profile/index?error=" + ControllerErrorParser.getError(ex);
         }
 
-        return "profile";
+        return "views/general/profile";
     }
 }

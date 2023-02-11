@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+<div th:fragment="content">
+    <form action="#" th:action="@{/register/addUser}" th:object="${userRegisterInputDto}" method="post">
+        <div class="form-outline mb-4 position-relative">
+            <input type="text" id="username" th:field="*{username}"
+                   class="form-control"
+                   placeholder="Username" autocomplete="off" spellcheck="false" autocapitalize="none"
+                   aria-label="Username" aria-describedby="username-tooltip"
+                   tabindex="1" required minlength="3" maxlength="30" autofocus/>
+        </div>
+        <div class="form-outline mb-4 position-relative">
+            <input type="password" id="password" th:field="*{password}"
+                   class="form-control"
+                   placeholder="Password" autocomplete="new-password" spellcheck="false" autocapitalize="none"
+                   aria-label="Password" aria-describedby="password-tooltip"
+                   tabindex="2" required minlength="8" maxlength="30"/>
+        </div>
+        <div class="form-outline mb-4 position-relative">
+            <input type="password" id="repeatPassword" th:field="*{repeatPassword}" class="form-control"
+                   placeholder="Repeat Password" autocomplete="off" spellcheck="false" autocapitalize="none"
+                   aria-label="Repeat Password" aria-describedby="repeatPassword-tooltip"
+                   tabindex="3" required/>
+        </div>
+        <div class="form-check d-flex justify-content-center mb-4">
+            <input class="form-check-input me-2" type="checkbox" value="" id="registerCheck" th:field="*{agreeTerms}"
+                   aria-describedby="registerCheck" checked required/>
+            <label class="form-check-label" for="registerCheck"> I have read and agree to the terms </label>
+        </div>
+        <button type="submit" class="btn btn-outline-success btn-block mb-4">Sign Up</button>
+        <div th:if="${#fields.hasErrors('global')}" class="alert alert-danger">
+            <strong><span th:each="err : ${#fields.errors('global')}" th:text="#{${err}}"></span></strong>
+        </div>
+    </form>
+    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+        <strong><span th:text="#{${param.error}}"></span></strong>
+    </div>
+</div>
+</body>
+</html>

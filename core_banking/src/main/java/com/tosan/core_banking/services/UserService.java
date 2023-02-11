@@ -6,23 +6,29 @@ import com.tosan.core_banking.dtos.UserLoginInputDto;
 import com.tosan.core_banking.dtos.UserRegisterInputDto;
 import com.tosan.model.DomainException;
 import com.tosan.model.User;
+import com.tosan.model.UserState;
 import com.tosan.model.UserTypes;
 import com.tosan.repository.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 @Service
 public class UserService {
     private final UserRepository _userRepository;
     private final ModelMapper _modelMapper;
+    private final PasswordEncoder _passwordEncoder;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper) {
-        this._userRepository = userRepository;
-        this._modelMapper = modelMapper;
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
+        _userRepository = userRepository;
+        _modelMapper = modelMapper;
+        _passwordEncoder = passwordEncoder;
     }
 
     public UserDto loadUser(Long userId) {
@@ -53,6 +59,11 @@ public class UserService {
 
     public void addUser(UserDto userDto) {
         var user = _modelMapper.map(userDto, User.class);
+        user.setPassword(_passwordEncoder.encode(userDto.getPassword()));
+        user.setUserState(UserState.Enabled);
+        user.setFailedAttempt(0);
+        user.setLastPasswordChangedDate(LocalDateTime.now());
+
         _userRepository.save(user);
     }
 
@@ -87,20 +98,36 @@ public class UserService {
         if(_userRepository.findByUsername(userRegisterInputDto.getUsername()).orElse(null) != null)
             throw new DomainException("error.auth.username.duplicate");
 
+        if(!userRegisterInputDto.getPassword().equals(userRegisterInputDto.getRepeatPassword()))
+            throw new DomainException("error.auth.password.mismatch");
+
         var user = _modelMapper.map(userRegisterInputDto, User.class);
-        user.setUserType(UserTypes.User);
+        user.setUserType(UserTypes.ROLE_USER);
+        user.setPassword(_passwordEncoder.encode(userRegisterInputDto.getPassword()));
+        user.setUserState(UserState.Enabled);
+        user.setFailedAttempt(0);
+        user.setLastPasswordChangedDate(LocalDateTime.now());
+
         _userRepository.save(user);
     }
 
     public void changePassword(UserChangePasswordInputDto userChangePasswordInputDto) {
-        var user = _userRepository.findByUsername(userChangePasswordInputDto.getUsername()).orElse(null);
+        if(!Objects.equals(userChangePasswordInputDto.getNewPassword(), userChangePasswordInputDto.getRepeatNewPassword()))
+            throw new DomainException("error.auth.password.mismatch");
+
+        if(Objects.equals(userChangePasswordInputDto.getOldPassword(), userChangePasswordInputDto.getNewPassword()))
+            throw new DomainException("error.auth.password.samePassword");
+
+        var user = _userRepository.findById(userChangePasswordInputDto.getId()).orElse(null);
         if(user == null)
             throw new DomainException("error.auth.notFound");
 
-        if (!Objects.equals(user.getPassword(), userChangePasswordInputDto.getOldPassword()))
+        if (!_passwordEncoder.matches(userChangePasswordInputDto.getOldPassword(), user.getPassword()))
             throw new DomainException("error.auth.credentials.invalid");
 
-        user.setPassword(userChangePasswordInputDto.getNewPassword());
+        user.setPassword(_passwordEncoder.encode(userChangePasswordInputDto.getNewPassword()));
+        user.setLastPasswordChangedDate(LocalDateTime.now());
+
         _userRepository.save(user);
     }
 
@@ -109,6 +136,6 @@ public class UserService {
         if(user == null)
             throw new DomainException("error.auth.notFound");
 
-        return user.getUserType() == UserTypes.Administrator;
+        return user.getUserType() == UserTypes.ROLE_ADMIN;
     }
 }

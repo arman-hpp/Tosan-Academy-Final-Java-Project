@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+        <strong><span th:text="#{${param.error}}"></span></strong>
+    </div>
+
+    <div th:object="${userDto}">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="id" class="form-label">Id</label>
+                    <input type="text" class="form-control" id="id" placeholder="" th:field="*{id}" readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="" th:field="*{username}"
+                           readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="last-login-date" class="form-label">Last Login Date</label>
+                    <input type="datetime-local" class="form-control" id="last-login-date" placeholder=""
+                           th:field="*{lastLoginDate}" readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="last-password-change-date" class="form-label">Last Password Changed Date</label>
+                    <input type="datetime-local" class="form-control" id="last-password-change-date" placeholder=""
+                           th:field="*{lastPasswordChangedDate}" readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="userTypes" class="form-label">User Type</label>
+                    <input type="text" class="form-control" id="userTypes" placeholder="" th:field="*{userType}"
+                           readonly/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

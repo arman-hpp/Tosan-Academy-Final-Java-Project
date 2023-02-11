@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Sidebar</title>
 </head>
 <body>
-<nav th:fragment="sidebar" id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse overflow-auto">
+<nav th:fragment="sidebar" id="sidebarMenu"
+     class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse overflow-auto">
     <svg xmlns="http://www.w3.org/2000/svg" class="visually-hidden">
         <symbol preserveAspectRatio="xMidYMid meet" viewBox="0 0 91.000000 61.000000" id="tosan">
             <g transform="translate(0.000000,61.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
@@ -43,7 +45,8 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
         </symbol>
         <symbol id="people-circle" viewBox="0 0 16 16">
             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
-            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"></path>
+            <path fill-rule="evenodd"
+                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"></path>
         </symbol>
         <symbol id="grid" viewBox="0 0 16 16">
             <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"></path>
@@ -67,11 +70,13 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
         </symbol>
         <symbol id="speedometer" viewBox="0 0 16 16">
             <path d="M8 2a.5.5 0 0 1 .5.5V4a.5.5 0 0 1-1 0V2.5A.5.5 0 0 1 8 2zM3.732 3.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 8a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 7.31A.91.91 0 1 0 8.85 8.569l3.434-4.297a.389.389 0 0 0-.029-.518z"></path>
-            <path fill-rule="evenodd" d="M6.664 15.889A8 8 0 1 1 9.336.11a8 8 0 0 1-2.672 15.78zm-4.665-4.283A11.945 11.945 0 0 1 8 10c2.186 0 4.236.585 6.001 1.606a7 7 0 1 0-12.002 0z"></path>
+            <path fill-rule="evenodd"
+                  d="M6.664 15.889A8 8 0 1 1 9.336.11a8 8 0 0 1-2.672 15.78zm-4.665-4.283A11.945 11.945 0 0 1 8 10c2.186 0 4.236.585 6.001 1.606a7 7 0 1 0-12.002 0z"></path>
         </symbol>
         <symbol id="speedometer2" viewBox="0 0 16 16">
             <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"></path>
-            <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"></path>
+            <path fill-rule="evenodd"
+                  d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"></path>
         </symbol>
         <symbol id="tools" viewBox="0 0 16 16">
             <path d="M1 0L0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.356 3.356a1 1 0 0 0 1.414 0l1.586-1.586a1 1 0 0 0 0-1.414l-3.356-3.356a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814L1 0zm9.646 10.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708zM3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026L3 11z"></path>
@@ -90,13 +95,22 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
                     <strong class="text-gray-dark">Tosan Academy Project</strong>
                 </div>
                 <div class="dropdown">
-                    <a href="#" class="pt-1 d-flex align-items-center link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <strong>@usernames</strong>
+                    <a href="#" class="pt-1 d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <span style="letter-spacing: 1px;"><strong>@<span sec:authentication="name">username</span></strong></span>
                     </a>
                     <ul class="dropdown-menu text-small shadow">
                         <li><a class="dropdown-item" th:href="@{/profile/index}">Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" th:href="@{/auth/logout}">Sign out</a></li>
+                        <li><a class="dropdown-item" th:href="@{/change_password/index}">Change Password</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript: document.logoutForm.submit()">Sign out</a>
+                            <form name="logoutForm" th:action="@{/auth/logout}" method="post" th:hidden="true">
+                                <input hidden type="submit" value="Sign Out"/>
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -105,144 +119,159 @@ m-150 -88 c0 -10 -227 -17 -243 -8 -4 2 -5 8 -2 13 7 12 245 7 245 -5z m-100
         <!--/*@thymesVar id="title" type="java.lang.String"*/-->
         <ul class="nav nav-pills flex-column mb-auto pb-3">
             <li class="nav-item">
-                <a th:href="@{/home/index}" class="nav-link" th:classappend="${title} == 'Home' ? 'active' : 'link-dark'">
+                <a th:href="@{/home/index}" class="nav-link"
+                   th:classappend="${title} == 'Home' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                    <use xlink:href="#home" />
+                        <use xlink:href="#home"/>
                     </svg>
                     Home
                 </a>
             </li>
-            <li>
-                <a th:href="@{/customer/index}" class="nav-link" th:classappend="${title} == 'Customers' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('USER')">
+                <a th:href="@{/customer/index}" class="nav-link"
+                   th:classappend="${title} == 'Customers' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#people-circle" />
+                        <use xlink:href="#people-circle"/>
                     </svg>
                     Customers
                 </a>
             </li>
-            <li>
-                <a th:href="@{/account/index}" class="nav-link" th:classappend="${title} == 'Accounts' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('USER')">
+                <a th:href="@{/account/index}" class="nav-link"
+                   th:classappend="${title} == 'Accounts' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#collection" />
+                        <use xlink:href="#collection"/>
                     </svg>
                     Accounts
                 </a>
             </li>
-            <li>
-                <a th:href="@{/bank_account/index}" class="nav-link" th:classappend="${title} == 'Bank Accounts' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/bank_account/index}" class="nav-link"
+                   th:classappend="${title} == 'Bank Accounts' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#collection" />
+                        <use xlink:href="#collection"/>
                     </svg>
                     Bank Accounts
                 </a>
             </li>
-            <li>
-                <a th:href="@{/customer_account/index}" class="nav-link" th:classappend="${title} == 'Customer Accounts' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('USER')">
+                <a th:href="@{/customer_account/index}" class="nav-link"
+                   th:classappend="${title} == 'Customer Accounts' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#collection" />
+                        <use xlink:href="#collection"/>
                     </svg>
                     Customer Accounts
                 </a>
             </li>
             <li>
-                <a th:href="@{/transaction/index}" class="nav-link" th:classappend="${title} == 'Transactions' ? 'active' : 'link-dark'">
+                <a th:href="@{/transaction/index}" class="nav-link"
+                   th:classappend="${title} == 'Transactions' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#grid" />
+                        <use xlink:href="#grid"/>
                     </svg>
                     Transactions
                 </a>
             </li>
             <li>
-                <a th:href="@{/account_transaction/index}" class="nav-link" th:classappend="${title} == 'Account Transactions' ? 'active' : 'link-dark'">
+                <a th:href="@{/account_transaction/index}" class="nav-link"
+                   th:classappend="${title} == 'Account Transactions' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#grid" />
+                        <use xlink:href="#grid"/>
                     </svg>
                     Account Transactions
                 </a>
             </li>
-            <li>
-                <a th:href="@{/branch_transaction/index}" class="nav-link" th:classappend="${title} == 'Branch Transactions' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/branch_transaction/index}" class="nav-link"
+                   th:classappend="${title} == 'Branch Transactions' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#grid" />
+                        <use xlink:href="#grid"/>
                     </svg>
                     Branch Transactions
                 </a>
             </li>
-            <li>
-                <a th:href="@{/transaction_report/index}" class="nav-link" th:classappend="${title} == 'Transactions Report' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/transaction_report/index}" class="nav-link"
+                   th:classappend="${title} == 'Transactions Report' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#grid" />
+                        <use xlink:href="#grid"/>
                     </svg>
                     Transactions Report
                 </a>
             </li>
-            <li>
-                <a th:href="@{/loan_request/index}" class="nav-link" th:classappend="${title} == 'Loan Requests' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('USER')">
+                <a th:href="@{/loan_request/index}" class="nav-link"
+                   th:classappend="${title} == 'Loan Requests' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#calendar" />
+                        <use xlink:href="#calendar"/>
                     </svg>
                     Loan Requests
                 </a>
             </li>
-            <li>
-                <a th:href="@{/loan_contract/index}" class="nav-link" th:classappend="${title} == 'Loan Contracts' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('USER')">
+                <a th:href="@{/loan_contract/index}" class="nav-link"
+                   th:classappend="${title} == 'Loan Contracts' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#calendar" />
+                        <use xlink:href="#calendar"/>
                     </svg>
                     Loan Contracts
                 </a>
             </li>
-            <li>
-                <a th:href="@{/pay_installment/index}" class="nav-link" th:classappend="${title} == 'Pay Installments' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('USER')">
+                <a th:href="@{/pay_installment/index}" class="nav-link"
+                   th:classappend="${title} == 'Pay Installments' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#calendar" />
+                        <use xlink:href="#calendar"/>
                     </svg>
                     Pay Installments
                 </a>
             </li>
-            <li>
-                <a th:href="@{/loan_condition/index}" class="nav-link" th:classappend="${title} == 'Loan Conditions' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/loan_condition/index}" class="nav-link"
+                   th:classappend="${title} == 'Loan Conditions' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#calendar" />
+                        <use xlink:href="#calendar"/>
                     </svg>
                     Loan Conditions
                 </a>
             </li>
-            <li>
-                <a th:href="@{/loan_interest/index}" class="nav-link" th:classappend="${title} == 'Loan Interests' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/loan_interest/index}" class="nav-link"
+                   th:classappend="${title} == 'Loan Interests' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#calendar" />
+                        <use xlink:href="#calendar"/>
                     </svg>
                     Loan Interests
                 </a>
             </li>
-            <li>
-                <a th:href="@{/customer_loan/index}" class="nav-link" th:classappend="${title} == 'Customer Loans' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('USER')">
+                <a th:href="@{/customer_loan/index}" class="nav-link"
+                   th:classappend="${title} == 'Customer Loans' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#calendar" />
+                        <use xlink:href="#calendar"/>
                     </svg>
                     Customer Loans
                 </a>
             </li>
-            <li>
-                <a th:href="@{/account_loan/index}" class="nav-link" th:classappend="${title} == 'Account Loans' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('USER')">
+                <a th:href="@{/account_loan/index}" class="nav-link"
+                   th:classappend="${title} == 'Account Loans' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#calendar" />
+                        <use xlink:href="#calendar"/>
                     </svg>
                     Account Loans
                 </a>
             </li>
-            <li>
-                <a th:href="@{/user/index}" class="nav-link" th:classappend="${title} == 'Users' ? 'active' : 'link-dark'">
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/views/user/index}" class="nav-link"
+                   th:classappend="${title} == 'Users' ? 'active' : 'link-dark'">
                     <svg class="bi me-2" width="16" height="16">
-                        <use xlink:href="#gear-fill" />
+                        <use xlink:href="#gear-fill"/>
                     </svg>
                     Users
                 </a>
             </li>
-
         </ul>
-
     </div>
 </nav>
 </body>

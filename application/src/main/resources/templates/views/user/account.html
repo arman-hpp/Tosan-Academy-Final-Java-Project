@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Accounts</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+        <strong><span th:text="#{${param.error}}"></span></strong>
+    </div>
+
+    <form action="#" th:action="@{/account/searchCustomer}" th:object="${customerSearchInputDto}" method="post">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <label for="search-input" class="form-label">Customer Id</label>
+                <div class="input-group mb-3">
+                    <input type="search" class="form-control" id="search-input" placeholder="" autocapitalize="none"
+                           aria-label="Search By Customer Id" aria-describedby="search-submit" th:field="*{customerId}"
+                           required autofocus>
+                    <button class="btn btn-outline-secondary" type="submit" id="search-submit">Find</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form action="#" th:action="@{/account/addAccount}" th:object="${accountDto}" method="post">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <input type="hidden" th:field="*{customerId}">
+                    <label for="fullName" class="form-label">Customer Name</label>
+                    <input type="text" class="form-control" id="fullName" placeholder="" th:field="*{customerName}"
+                           autocapitalize="none" maxlength="40" minlength="1" readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="currencies" class="form-label">Currency</label>
+                    <select id="currencies" th:field="*{currency}" class="form-select" aria-label="select currency">
+                        <option th:each="currency : ${T(com.tosan.model.Currencies).values()}" th:value="${currency}"
+                                th:text="${currency}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-3">
+            <div class="col-2">
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+        </div>
+
+        <div th:if="${#fields.hasErrors('global')}" class="row row-cols-1 row-cols-sm-2 row-cols-md-8 g-4 mb-3">
+            <div class="col-8">
+                <div class="alert alert-danger" role="alert">
+                    <strong><span th:each="err : ${#fields.errors('global')}" th:text="#{${err}}"></span></strong>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Owner</th>
+                <th scope="col">Balance</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="accountDtoItem,iterStat : ${accountDtoList}" th:class="${iterStat.odd}? 'odd'">
+                <td class="align-middle" th:text="${accountDtoItem.id}"></td>
+                <td class="align-middle" th:text="${accountDtoItem.customerName}"></td>
+                <td class="align-middle" th:text="${accountDtoItem.balance}"></td>
+                <td class="align-middle" th:text="${accountDtoItem.currency}"></td>
+                <td class="align-middle">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"
+                                   th:href="@{/loan_request/index(account_id=${accountDtoItem.id})}">Request Loan</a>
+                            </li>
+                            <li><a class="dropdown-item"
+                                   th:href="@{/transaction/index(account_id=${accountDtoItem.id})}">Do Transaction</a>
+                            </li>
+                            <li><a class="dropdown-item"
+                                   th:href="@{/account_loan/index(account_id=${accountDtoItem.id})}">Show Loans</a></li>
+                            <li><a class="dropdown-item"
+                                   th:href="@{/account_transaction/index(account_id=${accountDtoItem.id})}">Show
+                                Transactions</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

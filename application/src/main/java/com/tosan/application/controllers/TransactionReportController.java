@@ -7,6 +7,7 @@ import com.tosan.application.extensions.errors.ControllerErrorParser;
 import com.tosan.core_banking.dtos.TransactionDto;
 import com.tosan.core_banking.dtos.TransactionReportInputDto;
 import com.tosan.core_banking.services.TransactionService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 @Controller
 @RequestMapping("/transaction_report")
 @Layout(title = "Transactions Report", value = "layouts/default")
+@RolesAllowed("ROLE_ADMIN")
 public class TransactionReportController {
     private final TransactionService _transactionService;
     private final IExporterFactory _exporterFactory;
@@ -32,14 +34,14 @@ public class TransactionReportController {
         _exporterFactory = exporterFactory;
     }
 
-    @GetMapping("/index")
+    @GetMapping({"/","/index"})
     public String loadForm(Model model) {
         var fromDateTime = LocalDateTime.now().minusYears(1).toLocalDate().atTime(LocalTime.MIN);
         var toDateTime = LocalDateTime.now().toLocalDate().atTime(LocalTime.MAX);
         model.addAttribute("transactionReportInputDto",
                 new TransactionReportInputDto(fromDateTime, toDateTime, ExportTypes.CSV.toString()));
 
-        return "transaction_report";
+        return "views/admin/transaction_report";
     }
 
     @GetMapping("/exportTransactions")

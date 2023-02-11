@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Loan Conditions</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+        <strong><span th:text="#{${param.error}}"></span></strong>
+    </div>
+
+    <form action="#" th:action="@{/loan_condition/searchCurrency}" th:object="${loanConditionsDto}" method="post">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <label for="currencies" class="form-label">Currency</label>
+                <div class="input-group mb-3">
+                    <select id="currencies" th:field="*{currency}" class="form-select" aria-label="select currency"
+                            autofocus>
+                        <option th:each="currency : ${T(com.tosan.model.Currencies).values()}" th:value="${currency}"
+                                th:text="${currency}">
+                        </option>
+                    </select>
+                    <button class="btn btn-outline-secondary" type="submit" id="search-submit">Find</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form action="#" th:action="@{/loan_condition/editLoanConditions}" th:object="${loanConditionsDto}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{currency}">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="min-refund-duration" class="form-label">Min Refund Duration</label>
+                    <input type="number" class="form-control" id="min-refund-duration" placeholder=""
+                           th:field="*{minRefundDuration}"
+                           autocapitalize="none" min="1" max="999" required/>
+
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="max-refund-duration" class="form-label">Max Refund Duration</label>
+                    <input type="number" class="form-control" id="max-refund-duration" placeholder=""
+                           th:field="*{maxRefundDuration}"
+                           autocapitalize="none" min="1" max="999" required/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="min-amount" class="form-label">Min Amount</label>
+                    <input type="number" class="form-control" id="min-amount" placeholder="" th:field="*{minAmount}"
+                           autocapitalize="none" min="1" max="999999999999999" required/>
+
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="max-amount" class="form-label">Max Refund Duration</label>
+                    <input type="number" class="form-control" id="max-amount" placeholder="" th:field="*{maxAmount}"
+                           autocapitalize="none" min="1" max="999999999999999" required/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="interest-rate" class="form-label">Interest Rate</label>
+                    <input type="number" class="form-control" id="interest-rate" placeholder=""
+                           th:field="*{interestRate}"
+                           autocapitalize="none" min="1" max="100" step=".1" required/>
+
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="start-date" class="form-label">Start Date</label>
+                    <input type="datetime-local" class="form-control" id="start-date" placeholder=""
+                           th:field="*{startDate}"
+                           autocapitalize="none" readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-3">
+            <div class="col-2">
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+        </div>
+
+        <div th:if="${#fields.hasErrors('global')}" class="row row-cols-1 row-cols-sm-2 row-cols-md-8 g-4 mb-3">
+            <div class="col-8">
+                <div class="alert alert-danger" role="alert">
+                    <strong><span th:each="err : ${#fields.errors('global')}" th:text="#{${err}}"></span></strong>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

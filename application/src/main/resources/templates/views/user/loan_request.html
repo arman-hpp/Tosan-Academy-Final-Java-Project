@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Loan Requests</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+        <strong><span th:text="#{${param.error}}"></span></strong>
+    </div>
+
+    <form action="#" th:action="@{/loan_request/searchAccount}" th:object="${accountSearchInputDto}" method="post">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <label for="search-input" class="form-label">Account Id</label>
+                <div class="input-group mb-3">
+                    <input type="search" class="form-control" id="search-input" placeholder=""
+                           aria-label="Search By Account Id" aria-describedby="search-submit" th:field="*{accountId}"
+                           autofocus required/>
+                    <button class="btn btn-outline-secondary" type="submit" id="search-submit">Find</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form action="#" th:action="@{/loan_request/addLoanRequest}" th:object="${loanDto}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{accountId}">
+        <input type="hidden" th:field="*{customerId}">
+        <input type="hidden" th:field="*{currency}">
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="fullName" class="form-label">Account Customer Name</label>
+                    <input type="text" class="form-control" id="fullName" placeholder=""
+                           th:field="*{accountCustomerName}"
+                           autocapitalize="none" maxlength="40" minlength="1" readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="balance" class="form-label">Account Balance</label>
+                    <input type="text" class="form-control" id="balance" placeholder="" th:field="*{accountBalance}"
+                           autocapitalize="none" maxlength="40" minlength="1" readonly/>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="currency" class="form-label">Account Currency</label>
+                    <input type="text" class="form-control" id="currency" placeholder="" th:field="*{accountCurrency}"
+                           autocapitalize="none" maxlength="80" minlength="1" readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-2">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Amount</label>
+                    <input type="number" class="form-control" id="amount" placeholder="" th:field="*{amount}"
+                           autocapitalize="none" min="1" max="999999999999999" required/>
+
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="duration" class="form-label">Refund Duration</label>
+                    <input type="number" class="form-control" id="duration" placeholder="" th:field="*{refundDuration}"
+                           autocapitalize="none" min="1" max="999" required/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-3">
+            <div class="col-2">
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+        </div>
+
+        <div th:if="${#fields.hasErrors('global')}" class="row row-cols-1 row-cols-sm-2 row-cols-md-8 g-4 mb-3">
+            <div class="col-8">
+                <div class="alert alert-danger" role="alert">
+                    <strong><span th:each="err : ${#fields.errors('global')}" th:text="#{${err}}"></span></strong>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Account Id</th>
+                <th scope="col">Owner</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="loanDtoItem,iterStat : ${loanDtoList}" th:class="${iterStat.odd}? 'odd'">
+                <td class="align-middle" th:text="${loanDtoItem.id}"></td>
+                <td class="align-middle" th:text="${loanDtoItem.accountId}"></td>
+                <td class="align-middle" th:text="${loanDtoItem.accountCustomerName}"></td>
+                <td class="align-middle" th:text="${loanDtoItem.amount}"></td>
+                <td class="align-middle" th:text="${loanDtoItem.refundDuration}"></td>
+                <td class="align-middle" th:text="${loanDtoItem.currency}"></td>
+                <td class="align-middle">
+                    <form method="POST" th:action="@{/loan_request/editLoanRequest/{id}(id=${loanDtoItem.id})}">
+                        <button class="btn btn-primary btn-sm" type="submit">Edit</button>
+                    </form>
+                </td>
+                <td class="align-middle">
+                    <form method="POST" th:action="@{/loan_request/deleteLoanRequest/{id}(id=${loanDtoItem.id})}">
+                        <button class="btn btn-secondary btn-sm" type="submit">Delete</button>
+                    </form>
+                </td>
+                <td class="align-middle">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" th:href="@{/loan_contract/index(loan_id=${loanDtoItem.id})}">Show
+                                Contract</a></li>
+                            <li th:if="${loanDtoItem.paid == true}"><a class="dropdown-item"
+                                                                       th:href="@{/pay_installment/index(loan_id=${loanDtoItem.id})}">Pay
+                                Installments</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
